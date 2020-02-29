@@ -13,8 +13,8 @@ Prefix : **`c! or @mention`**
 | Command | Description |
 | ------- | ----------- |
 | **`c!help`** | Views help command |
-| **`c!info`** | Views informations about country choosen |
-| **`c!country [COUNTRY]`** | Viewss 6 riven mod sorted by ascending prices and status (Online in game) |
+| **`c!info`** | Views every confirmed cases |
+| **`c!country [COUNTRY]`** | Views informations about country choosen |
 | **`c!about`** | Views informations about the bot |
 
 ## Few examples
