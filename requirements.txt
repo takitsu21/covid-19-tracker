@@ -1,0 +1,3 @@
+requests
+python-decouple
+git+https://github.com/Rapptz/discord.py
