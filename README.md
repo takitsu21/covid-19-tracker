@@ -20,7 +20,11 @@ Prefix : **`c! or @mention`**
 
 ## Few examples
 
-![Example info](https://i.imgur.com/UCKf9NA.png)
+![Example info](https://i.imgur.com/h502DQL.png)
+
+![Example Stats](https://media.discordapp.net/attachments/528940321141424138/684076556049580095/data_stats.png)
+
+![Example country filter](https://i.imgur.com/lLYU6qa.png)
 
 ## Built With
 
