@@ -1,5 +1,5 @@
 import csv
-from typing import List, Dict, Iterable
+from typing import List, Dict
 import functools
 from discord.ext import commands
 import datetime as dt
@@ -44,7 +44,10 @@ def last_key(csv_data: List[dict]) -> int:
 
 def last_update():
     last_csv_update = dt.datetime.utcfromtimestamp(os.path.getctime(_CONFIRMED_PATH))
-    return f"Last update {last_csv_update.year}-{last_csv_update.month}-{last_csv_update.day} {last_csv_update.hour}H:{last_csv_update.minute}M"
+    return f"Last update {last_csv_update.month}-{last_csv_update.day}-{last_csv_update.year} {last_csv_update.hour:0<2}:{last_csv_update.minute:0<2} GMT"
+
+def percentage(total, x):
+    return "{:.2f}%".format(x * 100 / total)
 
 def format_csv(csv_confirmed, csv_recovered, csv_deaths) -> Dict[str, int]:
     lk = last_key(csv_confirmed)
@@ -83,7 +86,9 @@ def format_csv(csv_confirmed, csv_recovered, csv_deaths) -> Dict[str, int]:
 
 def string_formatting(formatted_data: Dict[str, int], param=None) -> str:
     total = formatted_data['total']
-    header = f"Total confirmed : **{total['total_confirmed']}**\nTotal recovered : **{total['total_recovered']}**\nTotal deaths : **{total['total_deaths']}**\n"
+    p_r = percentage(total['total_confirmed'], total['total_recovered'])
+    p_d = percentage(total['total_confirmed'], total['total_deaths'])
+    header = f"Total confirmed : **{total['total_confirmed']}**\nTotal recovered : **{total['total_recovered']}** ({p_r})\nTotal deaths : **{total['total_deaths']}** ({p_d})\n"
     res = ""
     del formatted_data["total"]
     if param is not None:

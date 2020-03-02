@@ -14,6 +14,7 @@ class Datacmds(commands.Cog):
         self.thumb = "https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/COVID-19_Outbreak_World_Map.svg/langfr-280px-COVID-19_Outbreak_World_Map.svg.png"
 
     @commands.command(name="info")
+    @utils.trigger_typing
     async def info(self, ctx):
         string_data = utils.string_formatting(
                 utils.format_csv(
@@ -38,6 +39,7 @@ class Datacmds(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command(name="country")
+    @utils.trigger_typing
     async def country(self, ctx, *country):
         country = ' '.join(list(x.lower() for x in country))
         string_data = utils.string_formatting(
@@ -48,7 +50,6 @@ class Datacmds(commands.Cog):
                 ),
                 country
             )
-        last_csv_update = dt.datetime.utcfromtimestamp(os.path.getctime(utils._CONFIRMED_PATH))
         if len(string_data[1]) > 0:
             embed = discord.Embed(
                 description=string_data[0] + "\n" + string_data[1],
@@ -70,6 +71,12 @@ class Datacmds(commands.Cog):
             icon_url=ctx.guild.me.avatar_url
         )
         await ctx.send(embed=embed)
+
+    @commands.command(name="stats", aliases=["stat", "statistic", "s"])
+    @utils.trigger_typing
+    async def stats(self, ctx):
+        with open("data/stats.png", "rb") as p:
+            await ctx.send(file=discord.File(p, "data/stats.png"))
 
 
 def setup(bot):

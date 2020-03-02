@@ -13,6 +13,7 @@ class Help(commands.Cog):
         self.thumb = "https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/COVID-19_Outbreak_World_Map.svg/langfr-280px-COVID-19_Outbreak_World_Map.svg.png"
 
     @commands.command(name="help", aliases=["h"])
+    @utils.trigger_typing
     async def help(self, ctx):
         last_csv_update = dt.datetime.utcfromtimestamp(os.path.getctime(utils._CONFIRMED_PATH))
 
@@ -24,12 +25,17 @@ class Help(commands.Cog):
         )
         embed.add_field(
             name="**`c!info`**",
-            value="Views every confirmed cases, deaths and recovery",
+            value="Views every confirmed cases, deaths and recovery.",
             inline=False
         )
         embed.add_field(
             name="**`c!country [COUNTRY]`**",
-            value="Views informations about country choosen",
+            value="Views information about the country/region choosen, Valid country/region are listed with **`c!info`** command.",
+            inline=False
+        )
+        embed.add_field(
+            name="**`c!<stats | s>`**",
+            value="Views graphical statistics",
             inline=False
         )
         embed.add_field(
@@ -37,15 +43,17 @@ class Help(commands.Cog):
             value="Views informations about the bot",
             inline=False
         )
+
         embed.set_thumbnail(url=self.thumb)
         embed.set_footer(
-            text=f"Last update {last_csv_update.year}-{last_csv_update.month}-{last_csv_update.day} {last_csv_update.hour}H:{last_csv_update.minute}M",
+            text=utils.last_update(),
             icon_url=ctx.guild.me.avatar_url
         )
 
         await ctx.send(embed=embed)
 
     @commands.command(name="about")
+    @utils.trigger_typing
     async def about(self, ctx):
         data = utils.format_csv(
                     utils.data_reader(utils._CONFIRMED_PATH),
@@ -76,15 +84,16 @@ class Help(commands.Cog):
         embed.add_field(name="Total deaths", value=data["total"]["total_deaths"], inline=False)
         embed.add_field(name="Servers", value=len(self.bot.guilds))
         embed.add_field(name="Members", value=nb_users)
-        embed.set_footer(text="Made by Taki#0853 (WIP)",
+        embed.set_footer(text="Made by Taki#0853 (WIP) " + utils.last_update(),
                         icon_url=ctx.guild.me.avatar_url)
         await ctx.send(embed=embed)
 
     @commands.command(name="reload")
     @commands.is_owner()
-    async def reload(self, ctx):
+    async def r(self, ctx):
         self.bot._unload_extensions()
         self.bot._load_extensions()
+        await ctx.send("Reloaded")
 
 def setup(bot):
     bot.add_cog(Help(bot))

@@ -8,6 +8,7 @@ import logging
 import os
 
 import src.utils as utils
+from src.plotting import plot_csv
 
 
 logger = logging.getLogger("covid-19")
@@ -23,7 +24,7 @@ class AutoUpdater(commands.Cog):
             for uri, fpath in utils.DICT.items():
                 download = s.get(uri)
                 decoded_content = download.content.decode('utf-8')
-                with open(fpath, "w+") as f:
+                with open(fpath, "w") as f:
                     f.write(decoded_content)
         logger.info("csv downloaded")
 
@@ -42,10 +43,14 @@ class AutoUpdater(commands.Cog):
         while True:
             if not os.path.exists(utils._CONFIRMED_PATH):
                 self._csv_update()
+                plot_csv()
+                logger.info("data has been plotted")
             if self.diff_checker(utils.data_reader(utils._CONFIRMED_PATH)):
                 logger.info("csv are up to date")
             else:
                 self._csv_update()
+                plot_csv()
+                logger.info("data has been plotted")
             await asyncio.sleep(3600)
 
 

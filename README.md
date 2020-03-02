@@ -14,7 +14,8 @@ Prefix : **`c! or @mention`**
 | ------- | ----------- |
 | **`c!help`** | Views help command |
 | **`c!info`** | Views every confirmed cases |
-| **`c!country [COUNTRY]`** | Views informations about country choosen |
+| **`c!country [COUNTRY]`** | Views information about the country/region choosen, Valid country/region are listed with **`c!info`** command. |
+| **`c!<stats | s>`** | Views graphical statistics |
 | **`c!about`** | Views informations about the bot |
 
 ## Few examples
