@@ -26,16 +26,56 @@ DICT = {
     }
 
 COLOR = 0x5A12DF
+USER_AGENT = 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:55.0) Gecko/20100101 Firefox/55.0'
+
 
 def cache_data(uri):
     r = requests.get(URI_DATA)
     with open("data/datas.py", "w") as f:
         f.write("DATA = {}".format(r.json()))
 
+def parse_data(data):
+    d = {}
+    for f in features["features"]:
+        for k, v in f.items():
+            if k == "Country_Region":
+                if k not in d:
+                    d[k] = v
+            if type(v) == int:
+                if d[]
+
 def te(data: dict):
     features = data["features"]
+    total_confirmed = 0
+    total_recovered = 0
+    total_deaths = 0
+    text = ""
+    d = {}
+    header = "Total confirmed {}\nTotal recovered {} ({})\nTotal deaths {} ({})"
     for f in features:
-        print(f)
+        tmp = {}
+        for k, v in f["attributes"].items():
+            if k == "Country_Region":
+                if k not in d:
+                    d[k] = v
+
+            if k in ("Confirmed", "Recovered", "Deaths"):
+                if k == "Confirmed":
+                    total_confirmed += v
+                    text += str(v) + " Confirmed\n"
+                elif k == "Recovered":
+                    total_recovered += v
+                else:
+                    total_deaths += v
+    print(d)
+    header = header.format(
+        total_confirmed,
+        total_recovered,
+        percentage(total_confirmed, total_recovered),
+        total_deaths,
+        percentage(total_confirmed, total_deaths)
+        )
+    return header, text
 # def g
 
 def trigger_typing(func):
@@ -117,4 +157,4 @@ def string_formatting(formatted_data: Dict[str, int], param=None) -> str:
 if __name__ == "__main__":
     # cache_data(URI_DATA)
     # print(DATA["objectIdFieldName"])
-    te(DATA)
+    print(te(DATA)[1])
