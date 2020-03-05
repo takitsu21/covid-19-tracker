@@ -22,11 +22,20 @@ class AutoUpdater(commands.Cog):
     def cache(self) -> None:
         utils.cache_data(utils.URI_DATA)
 
+    def _csv_update(self) -> None:
+        with requests.Session() as s:
+            for uri, fpath in utils.DICT.items():
+                download = s.get(uri)
+                decoded_content = download.content.decode('utf-8')
+                with open(fpath, "w") as f:
+                    f.write(decoded_content)
+        logger.info("CSV downloaded")
+
     async def send_notifications(self, channels_id):
-        for id in channels_id:
-            channel = self.bot.get_channel(id)
-            embed = discord.Embed()
-            await channel.send(embed=embed)
+        # for id in channels_id:
+        #     channel = self.bot.get_channel(id)
+        #     embed = discord.Embed()
+        #     await channel.send(embed=embed)
         logger.info("Notifications sended")
         pass
 
@@ -42,22 +51,22 @@ class AutoUpdater(commands.Cog):
         raise requests.RequestException(f"Request error : {r.status_code}")
 
     async def update(self, channels_id):
-        self.cache()
-        logger.info("New data downloaded")
+        self._csv_update()
         plot_csv()
         logger.info("New plot generated")
         await self.send_notifications(channels_id)
 
     async def main(self):
+        channels_id = []
         while True:
-            if not os.path.exists(utils.DATA_PATH):
-                channels_id = []
+            if not os.path.exists(utils._CONFIRMED_PATH):
                 await self.update(channels_id)
-            if self.diff_checker(utils.data_reader(utils.DATA_PATH)):
+            if self.diff_checker(utils.data_reader(utils._CONFIRMED_PATH)):
                 logger.info("Datas are up to date")
             else:
-                channels_id = []
                 await self.update(channels_id)
+            self.cache()
+            logger.info("New data downloaded")
             await asyncio.sleep(3600)
 
 

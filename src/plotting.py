@@ -30,7 +30,7 @@ def plot_csv():
     ticks = [i for i in range(len(y_c)) if i % 7 == 0]
     plt.xticks(ticks)
     plt.grid(True)
-    plt.title("Coronavirus COVID-19 " + utils.last_update())
+    plt.title("Coronavirus COVID-19 " + utils.last_update(utils._CONFIRMED_PATH))
     plt.ylabel("Total confirmed cases")
     plt.xlabel("Timeline (MM/DD/YYYY)")
     plt.legend(["Total confirmed", "Total recovered", "Total deaths"])

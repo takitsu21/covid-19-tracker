@@ -3,7 +3,9 @@ import discord
 from discord.ext import commands
 import os
 import datetime as dt
+
 import src.utils as utils
+from data.datas import DATA
 
 
 class Help(commands.Cog):
@@ -15,8 +17,6 @@ class Help(commands.Cog):
     @commands.command(name="help", aliases=["h"])
     @utils.trigger_typing
     async def help(self, ctx):
-        last_csv_update = dt.datetime.utcfromtimestamp(os.path.getctime(utils._CONFIRMED_PATH))
-
         embed = discord.Embed(
             title=":newspaper: Coronavirus COVID-19 Commands",
             description="[Wold Health Organization advices](https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public)",
@@ -46,7 +46,7 @@ class Help(commands.Cog):
 
         embed.set_thumbnail(url=self.thumb)
         embed.set_footer(
-            text=utils.last_update(),
+            text=utils.last_update(utils.DATA_PATH),
             icon_url=ctx.guild.me.avatar_url
         )
 
@@ -55,11 +55,6 @@ class Help(commands.Cog):
     @commands.command(name="about")
     @utils.trigger_typing
     async def about(self, ctx):
-        data = utils.format_csv(
-                    utils.data_reader(utils._CONFIRMED_PATH),
-                    utils.data_reader(utils._RECOVERED_PATH),
-                    utils.data_reader(utils._DEATH_PATH)
-                )
         embed = discord.Embed(
                 description="[Wold Health Organization advices](https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public)",
                 timestamp=utils.discord_timestamp(),
@@ -79,12 +74,12 @@ class Help(commands.Cog):
         nb_users = 0
         for s in self.bot.guilds:
             nb_users += len(s.members)
-        embed.add_field(name="Total confirmed", value=data["total"]["total_confirmed"], inline=False)
-        embed.add_field(name="Total recovered", value=data["total"]["total_recovered"], inline=False)
-        embed.add_field(name="Total deaths", value=data["total"]["total_deaths"], inline=False)
+        embed.add_field(name="Total confirmed", value=DATA["total"]["confirmed"], inline=False)
+        embed.add_field(name="Total recovered", value=DATA["total"]["recovered"], inline=False)
+        embed.add_field(name="Total deaths", value=DATA["total"]["deaths"], inline=False)
         embed.add_field(name="Servers", value=len(self.bot.guilds))
         embed.add_field(name="Members", value=nb_users)
-        embed.set_footer(text="Made by Taki#0853 (WIP) " + utils.last_update(),
+        embed.set_footer(text="Made by Taki#0853 (WIP) " + utils.last_update(utils.DATA_PATH),
                         icon_url=ctx.guild.me.avatar_url)
         await ctx.send(embed=embed)
 

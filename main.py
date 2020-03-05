@@ -11,6 +11,7 @@ from discord.ext import commands
 from discord.ext.commands import when_mentioned_or
 
 import src.utils as utils
+from data.datas import DATA
 
 
 logger = logging.getLogger('covid-19')
@@ -36,6 +37,7 @@ class Covid(commands.AutoShardedBot):
         )
         self.remove_command("help")
         self._load_extensions()
+        self.data = DATA
 
     def _load_extensions(self):
         for file in os.listdir("cogs/"):
@@ -59,11 +61,6 @@ class Covid(commands.AutoShardedBot):
     async def on_guild_join(self, guild: discord.Guild):
         general = find(lambda x: x.name == "general", guild.text_channels)
         if general and general.permissions_for(guild.me).send_messages:
-            data = utils.format_csv(
-                    utils.data_reader(utils._CONFIRMED_PATH),
-                    utils.data_reader(utils._RECOVERED_PATH),
-                    utils.data_reader(utils._DEATH_PATH)
-                )
             embed = discord.Embed(
                     title="Coronavirus COVID-19 Tracker",
                     description="[Wold Health Organization advices](https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public)",
@@ -83,9 +80,9 @@ class Covid(commands.AutoShardedBot):
             nb_users = 0
             for s in self.guilds:
                 nb_users += len(s.members)
-            embed.add_field(name="Total confirmed", value=data["total"]["total_confirmed"], inline=False)
-            embed.add_field(name="Total recovered", value=data["total"]["total_recovered"], inline=False)
-            embed.add_field(name="Total deaths", value=data["total"]["total_deaths"], inline=False)
+            embed.add_field(name="Total confirmed", value=DATA["total"]["confirmed"], inline=False)
+            embed.add_field(name="Total recovered", value=DATA["total"]["recovered"], inline=False)
+            embed.add_field(name="Total deaths", value=DATA["total"]["deaths"], inline=False)
             embed.add_field(name="Servers", value=len(self.guilds))
             embed.add_field(name="Members", value=nb_users)
             embed.set_footer(text="Made by Taki#0853 (WIP)",
@@ -97,35 +94,30 @@ class Covid(commands.AutoShardedBot):
         await self.wait_until_ready()
         i = 0
         while True:
-            data = utils.format_csv(
-                    utils.data_reader(utils._CONFIRMED_PATH),
-                    utils.data_reader(utils._RECOVERED_PATH),
-                    utils.data_reader(utils._DEATH_PATH)
-                )
             try:
                 if i == 0:
-                    confirmed = data["total"]["total_confirmed"]
+                    confirmed = self.data["total"]["confirmed"]
                     await self.change_presence(
                         activity=discord.Game(
                             name="[c!help] | Total confirmed {}".format(confirmed)
                             )
                         )
                 elif i == 1:
-                    deaths = data["total"]["total_deaths"]
+                    deaths = self.data["total"]["deaths"]
                     await self.change_presence(
                         activity=discord.Game(
                             name="[c!help] | Total deaths {}".format(deaths)
                             )
                         )
                 else:
-                    recovered = data["total"]["total_recovered"]
+                    recovered = self.data["total"]["recovered"]
                     await self.change_presence(
                         activity=discord.Game(
                             name="[c!help] | Total recovered {}".format(recovered)
                             )
                         )
                 i = (i + 1) % 3
-                await asyncio.sleep(random.randint(10, 20))
+
             except Exception as e:
                 logger.exception(e, exc_info=True)
                 await self.change_presence(
@@ -133,10 +125,11 @@ class Covid(commands.AutoShardedBot):
                             name="[c!help] | Updating data..."
                             )
                         )
+            await asyncio.sleep(10)
 
     def run(self, *args, **kwargs):
         try:
-            self.loop.run_until_complete(self.start(decouple.config("token")))
+            self.loop.run_until_complete(self.start(decouple.config("debug")))
         except KeyboardInterrupt:
             self.loop.run_until_complete(self.logout())
             for task in asyncio.all_tasks(self.loop):

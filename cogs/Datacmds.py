@@ -5,6 +5,7 @@ import os
 import datetime as dt
 
 import src.utils as utils
+from data.datas import DATA
 
 
 class Datacmds(commands.Cog):
@@ -12,28 +13,23 @@ class Datacmds(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.thumb = "https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/COVID-19_Outbreak_World_Map.svg/langfr-280px-COVID-19_Outbreak_World_Map.svg.png"
+        self.author_thumb = "https://www.stickpng.com/assets/images/5bd08abf7aaafa0575d8502b.png"
 
     @commands.command(name="info")
     @utils.trigger_typing
     async def info(self, ctx):
-        string_data = utils.string_formatting(
-                utils.format_csv(
-                    utils.data_reader(utils._CONFIRMED_PATH),
-                    utils.data_reader(utils._RECOVERED_PATH),
-                    utils.data_reader(utils._DEATH_PATH)
-                )
-            )
+        header, text = utils.string_formatting(DATA)
         embed = discord.Embed(
-            description=string_data[0] + "\n" + string_data[1],
+            description=header + "\n" + text,
             color=utils.COLOR,
             timestamp=utils.discord_timestamp()
         )
         embed.set_author(name="Current Region/Country affected by Coronavirus COVID-19",
                          url="https://www.who.int/home",
-                         icon_url=ctx.guild.me.avatar_url)
+                         icon_url=self.author_thumb)
         embed.set_thumbnail(url=self.thumb)
         embed.set_footer(
-            text=utils.last_update(),
+            text=utils.last_update(utils.DATA_PATH),
             icon_url=ctx.guild.me.avatar_url
         )
         await ctx.send(embed=embed)
@@ -41,33 +37,35 @@ class Datacmds(commands.Cog):
     @commands.command(name="country")
     @utils.trigger_typing
     async def country(self, ctx, *country):
-        country = ' '.join(list(x.lower() for x in country))
-        string_data = utils.string_formatting(
-                utils.format_csv(
-                    utils.data_reader(utils._CONFIRMED_PATH),
-                    utils.data_reader(utils._RECOVERED_PATH),
-                    utils.data_reader(utils._DEATH_PATH)
-                ),
-                country
-            )
-        if len(string_data[1]) > 0:
+        if not len(country):
             embed = discord.Embed(
-                description=string_data[0] + "\n" + string_data[1],
-                color=utils.COLOR,
-                timestamp=utils.discord_timestamp()
-            )
+                    description="No args provided, I can't tell you which country/region is affected if you won't tell me everything!",
+                    color=utils.COLOR,
+                    timestamp=utils.discord_timestamp()
+                )
         else:
-            embed = discord.Embed(
-                description="Wrong country selected retry with a valid one!",
-                color=utils.COLOR,
-                timestamp=utils.discord_timestamp()
-            )
+            header, text = utils.string_formatting(
+                    DATA,
+                    country
+                )
+            if len(text) > 0:
+                embed = discord.Embed(
+                    description=header + "\n" + text,
+                    color=utils.COLOR,
+                    timestamp=utils.discord_timestamp()
+                )
+            else:
+                embed = discord.Embed(
+                    description="Wrong country selected retry with a valid one!",
+                    color=utils.COLOR,
+                    timestamp=utils.discord_timestamp()
+                )
         embed.set_author(name="Current Region/Country affected by Coronavirus COVID-19",
                         url="https://www.who.int/home",
-                        icon_url=ctx.guild.me.avatar_url)
+                        icon_url=self.author_thumb)
         embed.set_thumbnail(url=self.thumb)
         embed.set_footer(
-            text=utils.last_update(),
+            text=utils.last_update(utils.DATA_PATH),
             icon_url=ctx.guild.me.avatar_url
         )
         await ctx.send(embed=embed)

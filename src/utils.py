@@ -4,6 +4,7 @@ import functools
 from discord.ext import commands
 import datetime as dt
 import time
+import json
 import os
 import requests
 from data.datas import DATA
@@ -13,18 +14,35 @@ from decouple import config
 URI_DATA      = config("uri_data")
 DATA_PATH     = "data/datas.py"
 COLOR         = 0x5A12DF
-DISCORD_LIMIT = 2 ** 11 # discord limit
+DISCORD_LIMIT = 2 ** 11 # discord limit 2048
 USER_AGENT    = {'User-Agent': 'Mozilla/5.0 (X11; Linux i586; rv:31.0) Gecko/20100101 Firefox/73.0'}
 
+_CONFIRMED_URI  = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv"
+_DEATH_URI      = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Deaths.csv"
+_RECOVERED_URI  = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Recovered.csv"
+_CONFIRMED_PATH = "data/time_series_19-covid-Confirmed.csv"
+_DEATH_PATH     = "data/time_series_19-covid-Deaths.csv"
+_RECOVERED_PATH = "data/time_series_19-covid-Recovered.csv"
+DICT            = {
+        _CONFIRMED_URI: _CONFIRMED_PATH,
+        _DEATH_URI: _DEATH_PATH,
+        _RECOVERED_URI: _RECOVERED_PATH
+    }
 
-def cache_data(uri):
+
+def cache_data(uri: str) -> None:
     r = requests.get(URI_DATA, headers=USER_AGENT)
     if r.status_code >= 200 and r.status_code <= 299:
         with open("data/datas.py", "w") as f:
-            f.write("DATA = {}".format(parse_data(r.json())))
+            f.write("DATA = {}".format(json.dumps(parse_data(r.json()), indent=4)))
+    else:
+        raise requests.RequestException("Status code error : {}".format(r.status_code))
 
 def parse_data(data):
     d = {}
+    t_c = 0
+    t_r = 0
+    t_d = 0
     for iter in data["features"]:
         f = iter["attributes"]
         if f["Country_Region"] not in d:
@@ -37,36 +55,43 @@ def parse_data(data):
             d[f["Country_Region"]]["confirmed"] += f["Confirmed"]
             d[f["Country_Region"]]["recovered"] += f["Recovered"]
             d[f["Country_Region"]]["deaths"] += f["Deaths"]
+        t_c += f["Confirmed"]
+        t_r += f["Recovered"]
+        t_d += f["Deaths"]
+    d["total"] = {
+        "confirmed": t_c,
+        "recovered": t_r,
+        "deaths": t_d
+    }
     return d
 
-def string_formatting(data_parsed: dict) -> Tuple[str, str]:
-    total_confirmed = 0
-    total_recovered = 0
-    total_deaths = 0
+def string_formatting(data_parsed: dict, param=[]) -> Tuple[str, str]:
+    tot = data_parsed["total"]
     max_length = DISCORD_LIMIT - 50
     old_text = ""
     text = ""
     d = {}
-    header = "Total confirmed **{}**\nTotal recovered **{}** ({})\nTotal deaths **{}** ({})"
+    header = "Total confirmed **{}**\nTotal recovered **{}** ({})\nTotal deaths **{}** ({})\n"
     length = len(header)
-    basic_length = 16
+    basic_length = 16 if not len(param) else 38
     for k, v in data_parsed.items():
-        length += len(str(k)) + len(str(v['confirmed'])) + basic_length
-        total_confirmed += v['confirmed']
-        total_recovered += v['recovered']
-        total_deaths += v['deaths']
-        if length < max_length:
+        print([k.lower().startswith(z) for z in param])
+        if len(param) and True in [k.lower().startswith(z) for z in param]:
+            text += f"**{k}** : {v['confirmed']} confirmed, {v['recovered']} recovered, {v['deaths']} deaths\n"
+        elif not len(param):
             text += f"**{k}** {v['confirmed']} Confirmed\n"
+        length += len(str(k)) + len(str(v['confirmed'])) + basic_length
+        if length < max_length:
             old_text = text
 
     if length > max_length:
         text = old_text + "...Too many country to show"
     header = header.format(
-        total_confirmed,
-        total_recovered,
-        percentage(total_confirmed, total_recovered),
-        total_deaths,
-        percentage(total_confirmed, total_deaths)
+        tot["confirmed"],
+        tot["recovered"],
+        percentage(tot["confirmed"], tot["recovered"]),
+        tot["deaths"],
+        percentage(tot["confirmed"], tot["deaths"])
     )
     return header, text
 
@@ -89,8 +114,8 @@ def last_key(csv_data: List[dict]) -> int:
     return list(csv_data[0].keys())[-1]
 
 def last_update(fpath: str):
-    last_csv_update = dt.datetime.utcfromtimestamp(os.path.getctime(fpath))
-    return f"Last update {last_csv_update.month}-{last_csv_update.day}-{last_csv_update.year} {last_csv_update.hour:0<2}:{last_csv_update.minute} GMT"
+    lcu = dt.datetime.utcfromtimestamp(os.path.getctime(fpath))
+    return f"Last update {lcu.strftime('%Y-%m-%d %H:%M:%S')} GMT"
 
 def percentage(total, x):
     return "{:.2f}%".format(x * 100 / total)
@@ -146,7 +171,3 @@ def percentage(total, x):
 #             res += f"**{country}** : {data['confirmed']} Confirmed\n"
 #     return header, res
 
-if __name__ == "__main__":
-    # print(DATA["objectIdFieldName"])
-    # cache_data(URI_DATA)
-    print(string_formatting(DATA))
