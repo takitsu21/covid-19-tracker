@@ -78,9 +78,11 @@ def string_formatting(data_parsed: dict, param=[]) -> Tuple[str, str]:
         print([k.lower().startswith(z) for z in param])
         if len(param) and True in [k.lower().startswith(z) for z in param]:
             text += f"**{k}** : {v['confirmed']} confirmed, {v['recovered']} recovered, {v['deaths']} deaths\n"
+            length += len(str(k)) + len(str(v['confirmed'])) + basic_length
         elif not len(param):
             text += f"**{k}** {v['confirmed']} Confirmed\n"
-        length += len(str(k)) + len(str(v['confirmed'])) + basic_length
+            length += len(str(k)) + len(str(v['confirmed'])) + basic_length
+
         if length < max_length:
             old_text = text
 
