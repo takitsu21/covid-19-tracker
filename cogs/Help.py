@@ -5,7 +5,6 @@ import os
 import datetime as dt
 
 import src.utils as utils
-from data.datas import DATA
 
 
 class Help(commands.Cog):
@@ -30,7 +29,7 @@ class Help(commands.Cog):
         )
         embed.add_field(
             name="**`c!country [COUNTRY]`**",
-            value="Views information about the country/region choosen, Valid country/region are listed with **`c!info`** command.",
+            value="Views information about multiples country/region choosen, Valid country/region are listed with **`c!info`** command. Example : **`c!country fr ita`** will only show you France and Italy datas (it's an infinite filter and work like an autcompleter)",
             inline=False
         )
         embed.add_field(
@@ -55,6 +54,7 @@ class Help(commands.Cog):
     @commands.command(name="about")
     @utils.trigger_typing
     async def about(self, ctx):
+        DATA = utils.from_json(utils.DATA_PATH)
         embed = discord.Embed(
                 description="[Wold Health Organization advices](https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public)",
                 timestamp=utils.discord_timestamp(),

@@ -11,7 +11,6 @@ from discord.ext import commands
 from discord.ext.commands import when_mentioned_or
 
 import src.utils as utils
-from data.datas import DATA
 
 
 logger = logging.getLogger('covid-19')
@@ -37,7 +36,7 @@ class Covid(commands.AutoShardedBot):
         )
         self.remove_command("help")
         self._load_extensions()
-        self.data = DATA
+        self.data = utils.from_json(utils.DATA_PATH)
 
     def _load_extensions(self):
         for file in os.listdir("cogs/"):
@@ -80,9 +79,9 @@ class Covid(commands.AutoShardedBot):
             nb_users = 0
             for s in self.guilds:
                 nb_users += len(s.members)
-            embed.add_field(name="Total confirmed", value=DATA["total"]["confirmed"], inline=False)
-            embed.add_field(name="Total recovered", value=DATA["total"]["recovered"], inline=False)
-            embed.add_field(name="Total deaths", value=DATA["total"]["deaths"], inline=False)
+            embed.add_field(name="Total confirmed", value=self.data["total"]["confirmed"], inline=False)
+            embed.add_field(name="Total recovered", value=self.data["total"]["recovered"], inline=False)
+            embed.add_field(name="Total deaths", value=self.data["total"]["deaths"], inline=False)
             embed.add_field(name="Servers", value=len(self.guilds))
             embed.add_field(name="Members", value=nb_users)
             embed.set_footer(text="Made by Taki#0853 (WIP)",
@@ -125,7 +124,7 @@ class Covid(commands.AutoShardedBot):
                             name="[c!help] | Updating data..."
                             )
                         )
-            await asyncio.sleep(10)
+            await asyncio.sleep(random.randint(5, 10))
 
     def run(self, *args, **kwargs):
         try:

@@ -7,12 +7,11 @@ import time
 import json
 import os
 import requests
-from data.datas import DATA
 from decouple import config
 
 
 URI_DATA      = config("uri_data")
-DATA_PATH     = "data/datas.py"
+DATA_PATH     = "data/datas.json"
 COLOR         = 0x5A12DF
 DISCORD_LIMIT = 2 ** 11 # discord limit 2048
 USER_AGENT    = {'User-Agent': 'Mozilla/5.0 (X11; Linux i586; rv:31.0) Gecko/20100101 Firefox/73.0'}
@@ -33,10 +32,16 @@ DICT            = {
 def cache_data(uri: str) -> None:
     r = requests.get(URI_DATA, headers=USER_AGENT)
     if r.status_code >= 200 and r.status_code <= 299:
-        with open("data/datas.py", "w") as f:
-            f.write("DATA = {}".format(json.dumps(parse_data(r.json()), indent=4)))
+        with open(DATA_PATH, "w") as f:
+            f.write("{}".format(json.dumps(parse_data(r.json()), indent=4)))
     else:
         raise requests.RequestException("Status code error : {}".format(r.status_code))
+
+def from_json(fpath: str) -> dict:
+    with open(DATA_PATH, "r") as f:
+        jso = json.load(f)
+    return jso
+
 
 def parse_data(data):
     d = {}
@@ -75,7 +80,6 @@ def string_formatting(data_parsed: dict, param=[]) -> Tuple[str, str]:
     length = len(header)
     basic_length = 16 if not len(param) else 38
     for k, v in data_parsed.items():
-        print([k.lower().startswith(z) for z in param])
         if len(param) and True in [k.lower().startswith(z) for z in param]:
             text += f"**{k}** : {v['confirmed']} confirmed, {v['recovered']} recovered, {v['deaths']} deaths\n"
             length += len(str(k)) + len(str(v['confirmed'])) + basic_length
@@ -121,6 +125,7 @@ def last_update(fpath: str):
 
 def percentage(total, x):
     return "{:.2f}%".format(x * 100 / total)
+cache_data(URI_DATA)
 
 # def format_csv(csv_confirmed, csv_recovered, csv_deaths) -> Dict[str, int]:
 #     lk = last_key(csv_confirmed)

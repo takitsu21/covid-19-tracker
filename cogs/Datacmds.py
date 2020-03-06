@@ -5,7 +5,6 @@ import os
 import datetime as dt
 
 import src.utils as utils
-from data.datas import DATA
 
 
 class Datacmds(commands.Cog):
@@ -18,6 +17,7 @@ class Datacmds(commands.Cog):
     @commands.command(name="info")
     @utils.trigger_typing
     async def info(self, ctx):
+        DATA = utils.from_json(utils.DATA_PATH)
         header, text = utils.string_formatting(DATA)
         embed = discord.Embed(
             description=header + "\n" + text,
@@ -44,6 +44,7 @@ class Datacmds(commands.Cog):
                     timestamp=utils.discord_timestamp()
                 )
         else:
+            DATA = utils.from_json(utils.DATA_PATH)
             header, text = utils.string_formatting(
                     DATA,
                     country
