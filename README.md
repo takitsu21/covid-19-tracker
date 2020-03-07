@@ -15,10 +15,10 @@ Prefix : **`c! or @mention`**
 | **`c!help`** | Views help command |
 | **`c!info`** | Views every confirmed cases |
 | **`c!country [COUNTRY]`** | Views information about multiples country/region choosen, Valid country/region are listed with **`c!info`** command. Example : **`c!country fr ita`** will only show you France and Italy datas (it's an infinite filter separate by spaces and work like an autocompleter). |
-| **`c!<stats | s>`** | Views graphical statistics |
+| **`c!<stats / s>`** | Views graphical statistics |
 | **`c!about`** | Views informations about the bot |
 | **`c!source`** | Views source data which the bot is based on. |
-| **`c!notification <enable | disable>`** | (Only administrator) When new datas are downloaded the bot will send you a notification where you typed the command. |
+| **`c!notification <enable / disable>`** | (Only administrator) When new datas are downloaded the bot will send you a notification where you typed the command. |
 
 
 ## Few examples
