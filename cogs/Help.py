@@ -42,7 +42,15 @@ class Help(commands.Cog):
             value="Views informations about the bot",
             inline=False
         )
-
+        embed.add_field(
+            name="**`c!source`**",
+            value="Views source data which the bot is based on.",
+            inline=False
+        )
+        embed.add_field(
+            name="**`c!notification <enable | disable>`**",
+            value="(Only administrator) When new datas are downloaded the bot will send you a notification where you typed the command."
+        )
         embed.set_thumbnail(url=self.thumb)
         embed.set_footer(
             text=utils.last_update(utils.DATA_PATH),
@@ -74,13 +82,32 @@ class Help(commands.Cog):
         nb_users = 0
         for s in self.bot.guilds:
             nb_users += len(s.members)
-        embed.add_field(name="Total confirmed", value=DATA["total"]["confirmed"], inline=False)
-        embed.add_field(name="Total recovered", value=DATA["total"]["recovered"], inline=False)
-        embed.add_field(name="Total deaths", value=DATA["total"]["deaths"], inline=False)
+        embed.add_field(name="Confirmed", value=DATA["total"]["confirmed"])
+        embed.add_field(name="Recovered", value=DATA["total"]["recovered"])
+        embed.add_field(name="Deaths", value=DATA["total"]["deaths"])
         embed.add_field(name="Servers", value=len(self.bot.guilds))
         embed.add_field(name="Members", value=nb_users)
         embed.set_footer(text="Made by Taki#0853 (WIP) " + utils.last_update(utils.DATA_PATH),
                         icon_url=ctx.guild.me.avatar_url)
+        await ctx.send(embed=embed)
+
+    @commands.command(name="sources", aliases=["source"])
+    @utils.trigger_typing
+    async def sources(self, ctx):
+        embed = discord.Embed(
+            description="[CSSEGISandData](https://github.com/CSSEGISandData/COVID-19)",
+            color=utils.COLOR,
+            timestamp=utils.discord_timestamp()
+            )
+        embed.set_author(
+            name="Source used for stats",
+            icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Octicons-mark-github.svg/1200px-Octicons-mark-github.svg.png"
+        )
+        embed.set_thumbnail(url=self.thumb)
+        embed.set_footer(
+            text="Made by Taki#0853 (WIP)",
+            icon_url=ctx.guild.me.avatar_url
+        )
         await ctx.send(embed=embed)
 
     @commands.command(name="reload")

@@ -70,6 +70,15 @@ def parse_data(data):
     }
     return d
 
+def difference_on_update(old_data, new_data):
+    old_c = old_data["total"]["confirmed"]
+    old_r = old_data["total"]["recovered"]
+    old_d = old_data["total"]["deaths"]
+    new_c = new_data["total"]["confirmed"]
+    new_r = new_data["total"]["recovered"]
+    new_d = new_data["total"]["deaths"]
+    return new_c - old_c, new_r - old_r, new_d - old_d
+
 def string_formatting(data_parsed: dict, param=[]) -> Tuple[str, str]:
     tot = data_parsed["total"]
     max_length = DISCORD_LIMIT - 50
@@ -79,16 +88,19 @@ def string_formatting(data_parsed: dict, param=[]) -> Tuple[str, str]:
     header = "Total confirmed **{}**\nTotal recovered **{}** ({})\nTotal deaths **{}** ({})\n"
     length = len(header)
     basic_length = 16 if not len(param) else 38
+    param_length = len(param)
     for k, v in data_parsed.items():
-        if len(param) and True in [k.lower().startswith(z) for z in param]:
+        if param_length and True in [k.lower().startswith(z) for z in param]:
             text += f"**{k}** : {v['confirmed']} confirmed, {v['recovered']} recovered, {v['deaths']} deaths\n"
             length += len(str(k)) + len(str(v['confirmed'])) + basic_length
-        elif not len(param):
+        elif not param_length:
             text += f"**{k}** {v['confirmed']} Confirmed\n"
             length += len(str(k)) + len(str(v['confirmed'])) + basic_length
 
+
         if length < max_length:
             old_text = text
+
 
     if length > max_length:
         text = old_text + "...Too many country to show"
@@ -125,7 +137,6 @@ def last_update(fpath: str):
 
 def percentage(total, x):
     return "{:.2f}%".format(x * 100 / total)
-cache_data(URI_DATA)
 
 # def format_csv(csv_confirmed, csv_recovered, csv_deaths) -> Dict[str, int]:
 #     lk = last_key(csv_confirmed)

@@ -11,6 +11,7 @@ from discord.ext import commands
 from discord.ext.commands import when_mentioned_or
 
 import src.utils as utils
+from src.database import db
 
 
 logger = logging.getLogger('covid-19')
@@ -128,7 +129,7 @@ class Covid(commands.AutoShardedBot):
 
     def run(self, *args, **kwargs):
         try:
-            self.loop.run_until_complete(self.start(decouple.config("debug")))
+            self.loop.run_until_complete(self.start(decouple.config("token")))
         except KeyboardInterrupt:
             self.loop.run_until_complete(self.logout())
             for task in asyncio.all_tasks(self.loop):
@@ -140,6 +141,7 @@ class Covid(commands.AutoShardedBot):
             except asyncio.CancelledError:
                 logger.debug("Pending tasks has been cancelled.")
             finally:
+                db._close()
                 logger.info("Shutting down")
 
 if __name__ == "__main__":
