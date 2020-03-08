@@ -81,7 +81,7 @@ def difference_on_update(old_data, new_data):
 
 def string_formatting(data_parsed: dict, param=[]) -> Tuple[str, str]:
     tot = data_parsed["total"]
-    max_length = DISCORD_LIMIT - 50
+    max_length = DISCORD_LIMIT - 80
     old_text = ""
     text = ""
     d = {}
@@ -90,7 +90,7 @@ def string_formatting(data_parsed: dict, param=[]) -> Tuple[str, str]:
     basic_length = 16 if not len(param) else 38
     param_length = len(param)
     for k, v in data_parsed.items():
-        if param_length and True in [k.lower().startswith(z) for z in param]:
+        if param_length and True in [k.lower().startswith(z.lower()) for z in param]:
             text += f"**{k}** : {v['confirmed']} confirmed, {v['recovered']} recovered, {v['deaths']} deaths\n"
             length += len(str(k)) + len(str(v['confirmed'])) + basic_length
         elif not param_length:

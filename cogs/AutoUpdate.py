@@ -40,9 +40,9 @@ class AutoUpdater(commands.Cog):
         __, text = utils.string_formatting(new_data)
         tot = new_data["total"]
         c, r, d = utils.difference_on_update(old_data, new_data)
-        header = f"""Total Confirmed **{tot['confirmed']}** (+ {c})
-        Total Recovered **{tot['recovered']}** (+ {r})
-        Total Deaths **{tot['deaths']}** (+ {d})\n"""
+        header = f"""Total Confirmed **{tot['confirmed']}** [+{c}]
+        Total Recovered **{tot['recovered']}** ({utils.percentage(tot['confirmed'], tot['recovered'])}) [+{r}]
+        Total Deaths **{tot['deaths']}** ({utils.percentage(tot['confirmed'], tot['deaths'])}) [+{d}]\n"""
         embed = discord.Embed(
             description=header + "\n" + text,
             color=utils.COLOR,
@@ -52,19 +52,25 @@ class AutoUpdater(commands.Cog):
                          url="https://www.who.int/home",
                          icon_url=self.author_thumb)
         embed.set_thumbnail(url=self.thumb)
-        try:
-            embed.set_footer(
-                text=utils.last_update(utils.DATA_PATH),
-                icon_url=self.bot.me.avatar_url
-            )
-        except: pass
 
         for _ in channels_id:
-            with open("stats.png", "rb") as p:
-                img = discord.File(p, filename="stats.png")
-            channel = self.bot.get_channel(int(_["channel_id"]))
-            embed.set_image(url=f'attachment://stats.png')
-            await channel.send(file=img, embed=embed)
+            try:
+                with open("stats.png", "rb") as p:
+                    img = discord.File(p, filename="stats.png")
+                embed.set_image(url=f'attachment://stats.png')
+                channel = self.bot.get_channel(int(_["channel_id"]))
+                try:
+                    guild = self.bot.get_guild(int(_["guild_id"]))
+                    embed.set_footer(
+                        text=utils.last_update(utils.DATA_PATH),
+                        icon_url=guild.me.avatar_url
+                    )
+                except:
+                    pass
+                await channel.send(file=img, embed=embed)
+                # await asyncio.sleep(.5)
+            except Exception as e:
+                pass
         logger.info("Notifications sended")
 
     def diff_checker(self, csv_data: List[dict]) -> bool:
@@ -79,6 +85,7 @@ class AutoUpdater(commands.Cog):
         raise requests.RequestException(f"Request error : {r.status_code}")
 
     async def main(self):
+        await self.bot.wait_until_ready()
         starting = True
         while True:
             channels_id = db.to_send()

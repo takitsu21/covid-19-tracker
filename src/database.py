@@ -2,10 +2,10 @@ import asyncio
 import pymysql
 from decouple import config
 import logging
-import functools
 
 
 logger = logging.getLogger("covid-19")
+
 
 class Database:
     def __init__(self, conn=None):

@@ -140,7 +140,7 @@ class Datacmds(commands.Cog):
                 description="Notifications are now interrupted in this channel."
             )
 
-        embed.color = color=utils.COLOR
+        embed.color = utils.COLOR
         embed.timestamp = utils.discord_timestamp()
         embed.set_thumbnail(url=self.thumb)
         embed.set_footer(

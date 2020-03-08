@@ -18,7 +18,10 @@ class Help(commands.Cog):
     async def help(self, ctx):
         embed = discord.Embed(
             title=":newspaper: Coronavirus COVID-19 Commands",
-            description="[Wold Health Organization advices](https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public)",
+            description="""[Wold Health Organization advices](https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public)
+            **`<something>`** is required
+            **`[something]`** is optional
+            **`arg1 | arg2`** mean arg1 or arg2\n""",
             color=utils.COLOR,
             timestamp=utils.discord_timestamp()
         )
@@ -28,12 +31,12 @@ class Help(commands.Cog):
             inline=False
         )
         embed.add_field(
-            name="**`c!country [COUNTRY]`**",
+            name="**`c!country <COUNTRY>`**",
             value="Views information about multiples country/region choosen, Valid country/region are listed with **`c!info`** command. Example : **`c!country fr ita`** will only show you France and Italy datas (it's an infinite filter and work like an autcompleter)",
             inline=False
         )
         embed.add_field(
-            name="**`c!<stats | s>`**",
+            name="**`c!stats`**",
             value="Views graphical statistics",
             inline=False
         )
