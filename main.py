@@ -9,8 +9,10 @@ import random
 from discord.utils import find
 from discord.ext import commands
 from discord.ext.commands import when_mentioned_or
+import json
 
 import src.utils as utils
+from src.database import db
 
 
 logger = logging.getLogger('covid-19')
@@ -27,16 +29,18 @@ handler.setFormatter(logging.Formatter(
 logger.addHandler(handler)
 
 
+
 class Covid(commands.AutoShardedBot):
     def __init__(self, *args, loop=None, **kwargs):
         super().__init__(
             command_prefix=when_mentioned_or("c!"),
             activity=discord.Game(name="Starting..."),
-            status=discord.Status.dnd
-        )
+            status=discord.Status.dnd,
+            shard_count=3
+            )
         self.remove_command("help")
         self._load_extensions()
-        self.data = utils.from_json(utils.DATA_PATH)
+        data = utils.from_json(utils.DATA_PATH)
 
     def _load_extensions(self):
         for file in os.listdir("cogs/"):
@@ -60,6 +64,7 @@ class Covid(commands.AutoShardedBot):
     async def on_guild_join(self, guild: discord.Guild):
         general = find(lambda x: x.name == "general", guild.text_channels)
         if general and general.permissions_for(guild.me).send_messages:
+            data = utils.from_json(utils.DATA_PATH)
             embed = discord.Embed(
                     title="Coronavirus COVID-19 Tracker",
                     description="[Wold Health Organization advices](https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public)",
@@ -79,14 +84,17 @@ class Covid(commands.AutoShardedBot):
             nb_users = 0
             for s in self.guilds:
                 nb_users += len(s.members)
-            embed.add_field(name="Total confirmed", value=self.data["total"]["confirmed"], inline=False)
-            embed.add_field(name="Total recovered", value=self.data["total"]["recovered"], inline=False)
-            embed.add_field(name="Total deaths", value=self.data["total"]["deaths"], inline=False)
+            embed.add_field(name="Total confirmed", value=data["total"]["confirmed"], inline=False)
+            embed.add_field(name="Total recovered", value=data["total"]["recovered"], inline=False)
+            embed.add_field(name="Total deaths", value=data["total"]["deaths"], inline=False)
             embed.add_field(name="Servers", value=len(self.guilds))
             embed.add_field(name="Members", value=nb_users)
             embed.set_footer(text="Made by Taki#0853 (WIP)",
                             icon_url=guild.me.avatar_url)
             await general.send(embed=embed)
+
+    async def on_guild_remove(self, guild: discord.Guild):
+        db.delete_notif(guild.id)
 
     async def on_ready(self):
         # waiting internal cache to be ready
@@ -94,22 +102,23 @@ class Covid(commands.AutoShardedBot):
         i = 0
         while True:
             try:
+                data = utils.from_json(utils.DATA_PATH)
                 if i == 0:
-                    confirmed = self.data["total"]["confirmed"]
+                    confirmed = data["total"]["confirmed"]
                     await self.change_presence(
                         activity=discord.Game(
                             name="[c!help] | Total confirmed {}".format(confirmed)
                             )
                         )
                 elif i == 1:
-                    deaths = self.data["total"]["deaths"]
+                    deaths = data["total"]["deaths"]
                     await self.change_presence(
                         activity=discord.Game(
                             name="[c!help] | Total deaths {}".format(deaths)
                             )
                         )
                 else:
-                    recovered = self.data["total"]["recovered"]
+                    recovered = data["total"]["recovered"]
                     await self.change_presence(
                         activity=discord.Game(
                             name="[c!help] | Total recovered {}".format(recovered)
@@ -128,7 +137,7 @@ class Covid(commands.AutoShardedBot):
 
     def run(self, *args, **kwargs):
         try:
-            self.loop.run_until_complete(self.start(decouple.config("debug")))
+            self.loop.run_until_complete(self.start(decouple.config("token")))
         except KeyboardInterrupt:
             self.loop.run_until_complete(self.logout())
             for task in asyncio.all_tasks(self.loop):
@@ -140,6 +149,7 @@ class Covid(commands.AutoShardedBot):
             except asyncio.CancelledError:
                 logger.debug("Pending tasks has been cancelled.")
             finally:
+                db._close()
                 logger.info("Shutting down")
 
 if __name__ == "__main__":

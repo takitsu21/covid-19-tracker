@@ -16,26 +16,41 @@ class LengthError(Exception):
         super().__init__(*args, **kwargs)
 
 
-def plot_csv():
+def plot_csv(dark=True):
     x_c, y_c = make_courbe(utils._CONFIRMED_PATH)
     x_r, y_r = make_courbe(utils._RECOVERED_PATH)
     x_d, y_d = make_courbe(utils._DEATH_PATH)
     fig, ax = plt.subplots()
+    ax.spines['bottom'].set_visible(False)
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+    ax.spines['left'].set_visible(False)
+
     ax.xaxis.set_major_locator(MultipleLocator(7))
-    ax.xaxis.set_minor_locator(MultipleLocator(1))
-    ax.plot(x_c, y_c, "k.-")
+
+    ax.plot(x_c, y_c, "w.-")
     ax.plot(x_r, y_r, "g.-")
     ax.plot(x_d, y_d, "r.-")
 
     ticks = [i for i in range(len(y_c)) if i % 7 == 0]
     plt.xticks(ticks)
     plt.grid(True)
-    plt.title("Coronavirus COVID-19 " + utils.last_update(utils._CONFIRMED_PATH))
     plt.ylabel("Total confirmed cases")
-    plt.xlabel("Timeline (MM/DD/YYYY)")
-    plt.legend(["Total confirmed", "Total recovered", "Total deaths"])
-    plt.savefig("data/stats.png")
-    plt.show()
+    plt.xlabel("Timeline (MM/DD/YY)")
+
+    if dark:
+        ax.xaxis.label.set_color('white')
+        ax.yaxis.label.set_color('white')
+        ax.tick_params(axis='x', colors='white')
+        ax.tick_params(axis='y', colors='white')
+        leg = plt.legend(["Total confirmed", "Total recovered", "Total deaths"], facecolor='0.1')
+        for text in leg.get_texts():
+            text.set_color("white")
+        plt.savefig("stats.png", transparent=True)
+    else:
+        leg = plt.legend(["Total confirmed", "Total recovered", "Total deaths"])
+        plt.savefig("stats.png")
+    plt.close(fig)
 
 def make_courbe(fpath: str) -> Tuple[List, List]:
     datas = utils.data_reader(fpath)
