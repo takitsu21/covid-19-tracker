@@ -26,7 +26,6 @@ class Database:
         cur.execute(sql, (guild_id, channel_id, ))
         conn.commit()
         cur.close()
-        # logger.info(f"{guild_id} GUILD ID : {channel_id} CHANNEL ID | ADDED")
 
     def delete_notif(self, guild_id):
         self._ping()
