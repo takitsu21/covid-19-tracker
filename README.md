@@ -22,11 +22,11 @@ Prefix : **`c! or @mention`**
 | ------- | ----------- |
 | **`c!help`** | Views help command |
 | **`c!info`** | Views every confirmed cases |
-| **`c!country <COUNTRY>`** | Views information about multiple chosen country/region. You can either use autocompletion or country code. Valid country/region are listed in `c!info`.\nExample : `c!country fr germ it poland` |
+| **`c!country <COUNTRY>`** | Views information about multiple chosen country/region. You can either use autocompletion or country code. Valid country/region are listed in `c!info`. Example : `c!country fr germ it poland` |
 | **`c!stats`** | Views graphical statistics |
 | **`c!about`** | Views informations about the bot |
 | **`c!source`** | Views source data which the bot is based on. |
-| **`c!notification <enable | disable>`** | (Only administrator) When new datas are downloaded the bot will send you a notification where you typed the command. |
+| **`c!notification <enable / disable>`** | (Only administrator) When new datas are downloaded the bot will send you a notification where you typed the command. |
 | **`c!invite`** | Views bot link invite. |
 
 ## Few examples
