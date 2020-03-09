@@ -3,6 +3,7 @@ import discord
 from discord.ext import commands
 import os
 import datetime as dt
+import time
 
 import src.utils as utils
 
@@ -27,12 +28,12 @@ class Help(commands.Cog):
         )
         embed.add_field(
             name="**`c!info`**",
-            value="Views every confirmed cases, deaths and recovery.",
+            value="Views every confirmed cases",
             inline=False
         )
         embed.add_field(
             name="**`c!country <COUNTRY>`**",
-            value="Views information about multiples country/region choosen, Valid country/region are listed with **`c!info`** command. Example : **`c!country fr ita`** will only show you France and Italy datas (it's an infinite filter and work like an autcompleter)",
+            value="Views information about multiple chosen country/region. You can either use autocompletion or country code. Valid country/region are listed in `c!info`.\nExample : `c!country fr germ it poland`",
             inline=False
         )
         embed.add_field(
@@ -54,12 +55,35 @@ class Help(commands.Cog):
             name="**`c!notification <enable | disable>`**",
             value="(Only administrator) When new datas are downloaded the bot will send you a notification where you typed the command."
         )
+        embed.add_field(
+            name="**`c!ping`**",
+            value="Views bot ping.",
+            inline=False
+        )
+        embed.add_field(
+            name="**`c!invite`**",
+            value="Views bot link invite.",
+            inline=False
+        )
         embed.set_thumbnail(url=self.thumb)
         embed.set_footer(
             text=utils.last_update(utils.DATA_PATH),
             icon_url=ctx.guild.me.avatar_url
         )
 
+        await ctx.send(embed=embed)
+
+    @commands.command(name="invite")
+    @utils.trigger_typing
+    async def invite(self, ctx):
+        embed = discord.Embed(
+                description="[Click here](https://discordapp.com/oauth2/authorize?client_id=682946560417333283&scope=bot&permissions=313408)",
+                timestamp=utils.discord_timestamp(),
+                color=utils.COLOR
+            )
+        embed.set_author(name="Coronavirus COVID-19 Invite link", icon_url=ctx.guild.me.avatar_url)
+        embed.set_thumbnail(url=self.thumb)
+        embed.set_footer(text="Made by Taki#0853", icon_url=ctx.guild.me.avatar_url)
         await ctx.send(embed=embed)
 
     @commands.command(name="about")
@@ -112,6 +136,25 @@ class Help(commands.Cog):
             icon_url=ctx.guild.me.avatar_url
         )
         await ctx.send(embed=embed)
+
+    @commands.command(name="ping")
+    @utils.trigger_typing
+    async def ping(self, ctx):
+        """Ping's Bot"""
+        before = time.monotonic()
+        message = await ctx.send("🏓Ping!")
+        ping = (time.monotonic() - before) * 1000
+        embed = discord.Embed(
+                        colour=utils.COLOR,
+                        title="Ping",
+                        description="🏓 Pong!\n**`{0}`** ms".format(int(ping))
+                        )
+        embed.set_thumbnail(url=self.thumb)
+        embed.set_footer(
+            text="Made by Taki#0853 (WIP)",
+            icon_url=ctx.guild.me.avatar_url
+        )
+        await message.edit(content="", embed=embed)
 
     @commands.command(name="reload")
     @commands.is_owner()

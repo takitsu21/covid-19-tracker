@@ -23,7 +23,6 @@ class AutoUpdater(commands.Cog):
         self.author_thumb = "https://www.stickpng.com/assets/images/5bd08abf7aaafa0575d8502b.png"
         self.bot.loop.create_task(self.main())
 
-
     def cache(self) -> None:
         utils.cache_data(utils.URI_DATA)
 
@@ -34,25 +33,43 @@ class AutoUpdater(commands.Cog):
                 decoded_content = download.content.decode('utf-8')
                 with open(fpath, "w") as f:
                     f.write(decoded_content)
-        logger.info("CSV downloaded")
+        utils.csv_parse()
+        logger.info("CSV downloaded and parsed")
 
     async def send_notifications(self, channels_id, old_data, new_data):
-        __, text = utils.string_formatting(new_data)
-        tot = new_data["total"]
-        c, r, d = utils.difference_on_update(old_data, new_data)
-        header = f"""Total Confirmed **{tot['confirmed']}** [+{c}]
-        Total Recovered **{tot['recovered']}** ({utils.percentage(tot['confirmed'], tot['recovered'])}) [+{r}]
-        Total Deaths **{tot['deaths']}** ({utils.percentage(tot['confirmed'], tot['deaths'])}) [+{d}]\n"""
+        # __, text = utils.string_formatting(new_data)
+        confirmed = new_data['total']['confirmed']
+        recovered = new_data['total']['recovered']
+        deaths = new_data['total']['deaths']
+        t, r, c = utils.difference_on_update(old_data, new_data)
+        # header = f"""Total Confirmed **{tot['confirmed']}** [+{c}]
+        # Total Recovered **{tot['recovered']}** ({utils.percentage(tot['confirmed'], tot['recovered'])}) [+{r}]
+        # Total Deaths **{tot['deaths']}** ({utils.percentage(tot['confirmed'], tot['deaths'])}) [+{d}]\n"""
         embed = discord.Embed(
-            description=header + "\n" + text,
+            # description=header + "\n" + text,
+            description="Below you can find the new stats for the past hour. (Data are updated ~ every 1 hour)",
             color=utils.COLOR,
             timestamp=utils.discord_timestamp()
         )
-        embed.set_author(name="Current Region/Country affected by Coronavirus COVID-19",
+        embed.set_author(name="Notification Coronavirus COVID-19",
                          url="https://www.who.int/home",
                          icon_url=self.author_thumb)
         embed.set_thumbnail(url=self.thumb)
-
+        embed.add_field(
+            name="Confirmed",
+            value=f"**{confirmed}** [+**{t}**]",
+            inline=False
+            )
+        embed.add_field(
+                    name="Recovered",
+                    value=f"**{recovered}** ({utils.percentage(confirmed, recovered)}) [+**{r}**]",
+                    inline=False
+                    )
+        embed.add_field(
+            name="Deaths",
+            value=f"**{deaths}** ({utils.percentage(confirmed, deaths)}) [+**{c}**]",
+            inline=False
+            )
         for _ in channels_id:
             try:
                 with open("stats.png", "rb") as p:
@@ -68,7 +85,6 @@ class AutoUpdater(commands.Cog):
                 except:
                     pass
                 await channel.send(file=img, embed=embed)
-                # await asyncio.sleep(.5)
             except Exception as e:
                 pass
         logger.info("Notifications sended")

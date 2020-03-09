@@ -36,7 +36,7 @@ def plot_csv(dark=True):
     plt.xticks(ticks)
     plt.grid(True)
     plt.ylabel("Total confirmed cases")
-    plt.xlabel("Timeline (MM/DD/YYYY)")
+    plt.xlabel("Timeline (MM/DD/YY)")
 
     if dark:
         ax.xaxis.label.set_color('white')

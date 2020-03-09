@@ -9,6 +9,7 @@ import random
 from discord.utils import find
 from discord.ext import commands
 from discord.ext.commands import when_mentioned_or
+import json
 
 import src.utils as utils
 from src.database import db
@@ -28,13 +29,15 @@ handler.setFormatter(logging.Formatter(
 logger.addHandler(handler)
 
 
+
 class Covid(commands.AutoShardedBot):
     def __init__(self, *args, loop=None, **kwargs):
         super().__init__(
             command_prefix=when_mentioned_or("c!"),
             activity=discord.Game(name="Starting..."),
-            status=discord.Status.dnd
-        )
+            status=discord.Status.dnd,
+            shard_count=3
+            )
         self.remove_command("help")
         self._load_extensions()
         data = utils.from_json(utils.DATA_PATH)
@@ -134,7 +137,7 @@ class Covid(commands.AutoShardedBot):
 
     def run(self, *args, **kwargs):
         try:
-            self.loop.run_until_complete(self.start(decouple.config("debug")))
+            self.loop.run_until_complete(self.start(decouple.config("token")))
         except KeyboardInterrupt:
             self.loop.run_until_complete(self.logout())
             for task in asyncio.all_tasks(self.loop):
