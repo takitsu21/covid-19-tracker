@@ -42,6 +42,8 @@ def csv_parse():
     for data in confirmed_data:
         i = 0
         current_country = data["Country/Region"]
+        if current_country == "US":
+            current_country = "United States"
         if current_country not in dic:
             dic[current_country] = {
                 "confirmed": int(data[lk]),
@@ -55,12 +57,18 @@ def csv_parse():
     for data in recovered_data:
         i = 0
         current_country = data["Country/Region"]
+        if current_country == "US":
+            current_country = "United States"
+
         dic[current_country]["recovered"] += int(data[lk])
         r += int(data[lk])
 
     for data in deaths_data:
         i = 0
         current_country = data["Country/Region"]
+        if current_country == "US":
+            current_country = "United States"
+
         dic[current_country]["deaths"] += int(data[lk])
         d += int(data[lk])
 
@@ -73,11 +81,11 @@ def csv_parse():
     with open(CSV_DATA_PATH, "w") as f:
         f.write(json.dumps(dic, indent=4))
 
-def cache_data(uri: str) -> None:
+def cache_data() -> None:
     r = requests.get(URI_DATA, headers=USER_AGENT)
     if r.status_code >= 200 and r.status_code <= 299:
         with open(DATA_PATH, "w") as f:
-            f.write("{}".format(json.dumps(parse_data(r.json()), indent=4)))
+            f.write("{}".format(json.dumps(r.json(), indent=4)))
     else:
         raise requests.RequestException("Status code error : {}".format(r.status_code))
 
@@ -161,22 +169,38 @@ def string_formatting(data_parsed: dict, param: list=[]) -> Tuple[str, str]:
     header_length = len(header)
     param_length = len(param)
     my_csv = from_json(CSV_DATA_PATH)
+    # my_csv = from_json("parsed_csv.json")
     if param_length:
         buffer = []
         for p in param:
-            for k, v in data_parsed.items():
-                country_v = country_verifier(k, p)
-                if k not in buffer and k.lower() == country_v.lower():
-                    text += f"**{special_case(country_v)}** : {v['confirmed']} confirmed [+**{diff_confirmed(my_csv, k, v, 'confirmed')}**], {v['recovered']} recovered [+**{diff_confirmed(my_csv, k, v, 'recovered')}**], {v['deaths']} deaths [+**{diff_confirmed(my_csv, k, v, 'deaths')}**]\n"
-                    buffer.append(k)
-                length = len(text) + header_length
+            p = p.lower()
+            p_length = len(p)
+            for k, v in data_parsed["data"].items():
+                # country = country_verifier(k, p)
+                try:
+                    country = v["country"]["name"] if v["country"]["name"] is not None else "."
+                    code = v['country']['code'] if v["country"]["code"] is not None else "."
+                    stats = v['statistics']
+                    # if k not in buffer and k.lower() == country.lower():
+                    if (p_length == 2 and p == code.lower()):
+                        text += f"**{country}** : {stats['confirmed']} confirmed [+**{diff_confirmed(my_csv, country, stats, 'confirmed')}**], {stats['recovered']} recovered [+**{diff_confirmed(my_csv, country, stats, 'recovered')}**], {stats['deaths']} deaths [+**{diff_confirmed(my_csv, country, stats, 'deaths')}**]\n"
+                        length = len(text) + header_length
+                        break
+                    elif country.lower().startswith(p) and p_length != 2:
+                        text += f"**{country}** : {stats['confirmed']} confirmed [+**{diff_confirmed(my_csv, country, stats, 'confirmed')}**], {stats['recovered']} recovered [+**{diff_confirmed(my_csv, country, stats, 'recovered')}**], {stats['deaths']} deaths [+**{diff_confirmed(my_csv, country, stats, 'deaths')}**]\n"
+                        length = len(text) + header_length
+                except KeyError:
+                    pass
             if length < max_length:
                 old_text = text
     else:
-        for k, v in data_parsed.items():
-
-            text += f"**{special_case(k)}** {v['confirmed']} [+{diff_confirmed(my_csv, k, v, 'confirmed')}]\n"
-            length = len(text) + header_length
+        for v in data_parsed["sorted"]:
+            confirmed = v['statistics']['confirmed']
+            country = v['country']['name'] if v["country"]["name"] is not None else "."
+            stats = v['statistics']
+            if stats['confirmed']:
+                text += f"**{country}** {confirmed} [+{diff_confirmed(my_csv, country, v['statistics'], 'confirmed')}]\n"
+                length = len(text) + header_length
             if length > max_length:
                 break
             else:
@@ -209,6 +233,10 @@ def data_reader(fpath: str) -> List[dict]:
         cr = csv.DictReader(f.read().splitlines(), delimiter=',')
     return list(cr)
 
+def matching_path(fpath: str):
+    fpath = fpath.split("-")
+    return fpath[2].lower()[:-4]
+
 def discord_timestamp():
     return dt.datetime.utcfromtimestamp(time.time())
 
@@ -222,3 +250,11 @@ def last_update(fpath: str):
 def percentage(total, x):
     return "{:.2f}%".format(x * 100 / total) if total > 0 else 0
 
+def get_data():
+    r = requests.get("https://coronavirus-stats.stantabcorp.co.uk/")
+    with open("thibault.json", "w") as f:
+        f.write(json.dumps(r.json(), indent=4))
+
+if __name__ == "__main__":
+    # get_data()
+    print(string_formatting(from_json("thibault.json")))

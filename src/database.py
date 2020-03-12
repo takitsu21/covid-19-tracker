@@ -56,6 +56,48 @@ class Database:
         conn.commit()
         cur.close()
 
+    def insert_tracker(self, user_id, guild_id, country):
+        self._ping()
+        cur = conn.cursor()
+        sql = """INSERT INTO tracker(user_id, guild_id, country) VALUES(%s, %s, %s)"""
+        cur.execute(sql, (user_id, guild_id, country, ))
+        conn.commit()
+        cur.close()
+
+    def delete_tracker(self, user_id):
+        self._ping()
+        cur = conn.cursor()
+        sql = """DELETE FROM tracker WHERE user_id=%s"""
+        cur.execute(sql, (user_id, ))
+        conn.commit()
+        cur.close()
+
+    def update_tracker(self, user_id, country):
+        self._ping()
+        cur = conn.cursor()
+        sql = """UPDATE tracker SET
+                country=%s
+                WHERE user_id=%s"""
+        cur.execute(sql, (country, user_id, ))
+        conn.commit()
+        cur.close()
+
+    def send_tracker(self):
+        self._ping()
+        cur = self.conn.cursor()
+        cur.execute("SELECT * FROM tracker")
+        r = cur.fetchall()
+        cur.close()
+        return r
+
+    def select_tracker(self, user_id):
+        self._ping()
+        cur = self.conn.cursor()
+        cur.execute("SELECT country FROM tracker WHERE user_id=%s", (user_id, ))
+        r = cur.fetchall()
+        cur.close()
+        return r
+
     def _ping(self):
         self.conn.ping(reconnect=True)
 

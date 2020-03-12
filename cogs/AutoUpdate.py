@@ -24,7 +24,7 @@ class AutoUpdater(commands.Cog):
         self.bot.loop.create_task(self.main())
 
     def cache(self) -> None:
-        utils.cache_data(utils.URI_DATA)
+        utils.cache_data()
 
     def _csv_update(self) -> None:
         with requests.Session() as s:
@@ -36,18 +36,14 @@ class AutoUpdater(commands.Cog):
         utils.csv_parse()
         logger.info("CSV downloaded and parsed")
 
-    async def send_notifications(self, channels_id, old_data, new_data):
-        # __, text = utils.string_formatting(new_data)
+    async def send_notifications(self, old_data, new_data):
         confirmed = new_data['total']['confirmed']
         recovered = new_data['total']['recovered']
         deaths = new_data['total']['deaths']
+        channels_id = db.to_send()
         t, r, c = utils.difference_on_update(old_data, new_data)
-        # header = f"""Total Confirmed **{tot['confirmed']}** [+{c}]
-        # Total Recovered **{tot['recovered']}** ({utils.percentage(tot['confirmed'], tot['recovered'])}) [+{r}]
-        # Total Deaths **{tot['deaths']}** ({utils.percentage(tot['confirmed'], tot['deaths'])}) [+{d}]\n"""
         embed = discord.Embed(
-            # description=header + "\n" + text,
-            description="Below you can find the new stats for the past hour. (Data are updated ~ every 1 hour)",
+            description="Below you can find the new stats for the past hour. (Data are updated ~ every 1 hour)\n`[current_update-morning_update]`",
             color=utils.COLOR,
             timestamp=utils.discord_timestamp()
         )
@@ -89,6 +85,35 @@ class AutoUpdater(commands.Cog):
                 pass
         logger.info("Notifications sended")
 
+    async def send_tracker(self):
+        data = utils.from_json(utils.DATA_PATH)
+        tracked = db.send_tracker()
+        embed = discord.Embed(
+                    color=utils.COLOR,
+                    timestamp=utils.discord_timestamp()
+                )
+        embed.set_author(name="Personal tracker for Coronavirus COVID-19",
+                        url="https://www.who.int/home",
+                        icon_url=self.author_thumb)
+        embed.set_thumbnail(url=self.thumb)
+
+        for t in tracked:
+            try:
+                dm = self.bot.get_user(int(t["user_id"]))
+                header, text = utils.string_formatting(data, t["country"].split(" "))
+                embed.description = header + "\n" + text
+                try:
+                    guild = self.bot.get_guild(int(t["guild_id"]))
+                    embed.set_footer(
+                            text=utils.last_update(utils.DATA_PATH),
+                            icon_url=guild.me.avatar_url
+                        )
+                except:
+                    pass
+                await dm.send(embed=embed)
+            except:
+                pass
+
     def diff_checker(self, csv_data: List[dict]) -> bool:
         """
         Return True if up to date else False
@@ -104,10 +129,9 @@ class AutoUpdater(commands.Cog):
         await self.bot.wait_until_ready()
         starting = True
         while True:
-            channels_id = db.to_send()
             if not os.path.exists(utils._CONFIRMED_PATH):
                 self._csv_update()
-            if self.diff_checker(utils.data_reader(utils._CONFIRMED_PATH)):
+            elif self.diff_checker(utils.data_reader(utils._CONFIRMED_PATH)):
                 logger.info("Datas are up to date")
             else:
                 self._csv_update()
@@ -118,7 +142,8 @@ class AutoUpdater(commands.Cog):
             plot_csv()
             logger.info("New plot generated")
             if not starting:
-                await self.send_notifications(channels_id, old_data, new_data)
+                await self.send_notifications(old_data, new_data)
+                await self.send_tracker()
             else:
                 starting = False
             await asyncio.sleep(3600)

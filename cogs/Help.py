@@ -4,6 +4,7 @@ from discord.ext import commands
 import os
 import datetime as dt
 import time
+import random
 
 import src.utils as utils
 
@@ -12,7 +13,8 @@ class Help(commands.Cog):
     """Help commands"""
     def __init__(self, bot):
         self.bot = bot
-        self.thumb = "https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/COVID-19_Outbreak_World_Map.svg/langfr-280px-COVID-19_Outbreak_World_Map.svg.png"
+        self._id = 162200556234866688
+        self.thumb = "https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/COVID-19_Outbreak_World_Map.svg/langen-1000px-COVID-19_Outbreak_World_Map.svg.png"
 
     @commands.command(name="help", aliases=["h"])
     @utils.trigger_typing
@@ -42,18 +44,18 @@ class Help(commands.Cog):
             inline=False
         )
         embed.add_field(
-            name="**`c!about`**",
-            value="Views informations about the bot",
-            inline=False
-        )
-        embed.add_field(
-            name="**`c!source`**",
-            value="Views source data which the bot is based on.",
+            name="**`c!track <COUNTRY | [disable]>`**",
+            value="Track multiple country (bot will DM you update). `c!track <COUNTRY>` work like `c!country <COUNTRY>` (country code / autocompletion) see `c!help`. `c!track disable` will disable the tracker.",
             inline=False
         )
         embed.add_field(
             name="**`c!notification <enable | disable>`**",
             value="(Only administrator) When new datas are downloaded the bot will send you a notification where you typed the command."
+        )
+        embed.add_field(
+            name="**`c!source`**",
+            value="Views source data which the bot is based on.",
+            inline=False
         )
         embed.add_field(
             name="**`c!ping`**",
@@ -65,12 +67,45 @@ class Help(commands.Cog):
             value="Views bot link invite.",
             inline=False
         )
-        embed.set_thumbnail(url=self.thumb)
+        embed.add_field(
+            name="**`c!suggestion <MESSAGE>`**",
+            value="Send suggestion feedback.",
+            inline=False
+        )
+        embed.add_field(
+            name="**`c!bug <MESSAGE>`**",
+            value="Send bug feedback.",
+            inline=False
+        )
+        embed.add_field(
+            name="**`c!about`**",
+            value="Views informations about the bot",
+            inline=False
+        )
+        embed.add_field(
+            name="**`c!vote`**",
+            value="Views bot link vote.",
+            inline=False
+        )
         embed.set_footer(
             text=utils.last_update(utils.DATA_PATH),
             icon_url=ctx.guild.me.avatar_url
         )
+        embed.set_thumbnail(url=self.thumb)
 
+        await ctx.send(embed=embed)
+
+    @commands.command(name="vote")
+    @utils.trigger_typing
+    async def vote(self, ctx):
+        embed = discord.Embed(
+                description="[Click here](https://top.gg/bot/682946560417333283/vote)",
+                timestamp=utils.discord_timestamp(),
+                color=utils.COLOR
+            )
+        embed.set_author(name="Coronavirus COVID-19 Vote link", icon_url=ctx.guild.me.avatar_url)
+        embed.set_thumbnail(url=self.thumb)
+        embed.set_footer(text="Made by Taki#0853", icon_url=ctx.guild.me.avatar_url)
         await ctx.send(embed=embed)
 
     @commands.command(name="invite")
@@ -106,6 +141,7 @@ class Help(commands.Cog):
         embed.add_field(name = "Source code", value="[Click here](https://github.com/takitsu21/covid-19-tracker)")
         embed.add_field(name="Help command",value="c!help")
         embed.add_field(name="Prefix",value="c!")
+        embed.add_field(name="Donate", value="Buy me a [Ko-fi](https://ko-fi.com/takitsu)")
         nb_users = 0
         for s in self.bot.guilds:
             nb_users += len(s.members)
@@ -145,7 +181,7 @@ class Help(commands.Cog):
         message = await ctx.send("🏓Ping!")
         ping = (time.monotonic() - before) * 1000
         embed = discord.Embed(
-                        colour=utils.COLOR,
+                        color=utils.COLOR,
                         title="Ping",
                         description="🏓 Pong!\n**`{0}`** ms".format(int(ping))
                         )
@@ -155,6 +191,54 @@ class Help(commands.Cog):
             icon_url=ctx.guild.me.avatar_url
         )
         await message.edit(content="", embed=embed)
+
+    @commands.command(name="suggestion")
+    @utils.trigger_typing
+    async def suggestion(self, ctx, *message):
+        if len(message) < 3:
+            embed = discord.Embed(title="Suggestion",
+                                color=utils.COLOR,
+                                description="Message too short at least 3 words required.".format(ctx.author.mention),
+                                icon_url=ctx.guild.me.avatar_url)
+            embed.set_thumbnail(url=ctx.guild.me.avatar_url)
+            embed.set_footer(text="Made by Taki#0853 (WIP)",
+                            icon_url=ctx.guild.me.avatar_url)
+            return await ctx.send(embed=embed)
+        dm = self.bot.get_user(self._id)
+        message = ' '.join(message)
+        await dm.send(f"[{ctx.author} - SUGGEST] -> {message}")
+        embed = discord.Embed(title="Suggestion",
+                            color=utils.COLOR,
+                            description="{} Your suggestion has been sent @Taki#0853.\nThank you for the feedback!".format(ctx.author.mention),
+                            icon_url=ctx.guild.me.avatar_url)
+        embed.set_thumbnail(url=ctx.guild.me.avatar_url)
+        embed.set_footer(text="Made by Taki#0853 (WIP)",
+                        icon_url=ctx.guild.me.avatar_url)
+        return await ctx.send(embed=embed)
+
+    @commands.command(name="bug")
+    @utils.trigger_typing
+    async def bug(self, ctx, *message):
+        if len(message) < 3:
+            embed = discord.Embed(title="Bug report",
+                    color=utils.COLOR,
+                    description="{} Message too short at least 3 words required.".format(ctx.author.mention),
+                    icon_url=ctx.guild.me.avatar_url)
+            embed.set_thumbnail(url=ctx.guild.me.avatar_url)
+            embed.set_footer(text="Made by Taki#0853 (WIP)",
+                            icon_url=ctx.guild.me.avatar_url)
+            return await ctx.send(embed=embed)
+        dm = self.bot.get_user(self._id)
+        message = ' '.join(message)
+        await dm.send(f"[{ctx.author} - BUG] -> {message}")
+        embed = discord.Embed(title="Bug report",
+                            color=utils.COLOR,
+                            description="Your bug report has been sent @Taki#0853.\nThank you for the feedback!".format(ctx.author.mention),
+                            icon_url=ctx.guild.me.avatar_url)
+        embed.set_thumbnail(url=ctx.guild.me.avatar_url)
+        embed.set_footer(text="Made by Taki#0853 (WIP)",
+                        icon_url=ctx.guild.me.avatar_url)
+        return await ctx.send(embed=embed)
 
     @commands.command(name="reload")
     @commands.is_owner()

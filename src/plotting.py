@@ -54,6 +54,8 @@ def plot_csv(dark=True):
 
 def make_courbe(fpath: str) -> Tuple[List, List]:
     datas = utils.data_reader(fpath)
+    updated_data = utils.from_json(utils.DATA_PATH)
+    matcher = utils.matching_path(fpath)
     d = {}
     x = []
     y = []
@@ -69,6 +71,8 @@ def make_courbe(fpath: str) -> Tuple[List, List]:
     for parse_k, parse_v in d.items():
         x.append(parse_k)
         y.append(parse_v)
+    y.pop()
+    y.append(updated_data["total"][matcher])
     if len(x) == len(y):
         return x, y
     raise LengthError(f"x, y have a different length, x = {len(x)}, y = {len(y)}")

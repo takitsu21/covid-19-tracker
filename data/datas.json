@@ -1,557 +1,5574 @@
 {
-    "Mainland China": {
-        "confirmed": 80735,
-        "recovered": 58728,
-        "deaths": 3120
-    },
-    "Italy": {
-        "confirmed": 9172,
-        "recovered": 724,
-        "deaths": 463
-    },
-    "South Korea": {
-        "confirmed": 7478,
-        "recovered": 118,
-        "deaths": 53
-    },
-    "Iran": {
-        "confirmed": 7161,
-        "recovered": 2394,
-        "deaths": 237
-    },
-    "France": {
-        "confirmed": 1209,
-        "recovered": 12,
-        "deaths": 19
-    },
-    "Germany": {
-        "confirmed": 1176,
-        "recovered": 18,
-        "deaths": 2
-    },
-    "Spain": {
-        "confirmed": 1073,
-        "recovered": 32,
-        "deaths": 28
-    },
-    "Others": {
-        "confirmed": 696,
-        "recovered": 40,
-        "deaths": 6
-    },
-    "Japan": {
-        "confirmed": 511,
-        "recovered": 76,
-        "deaths": 17
-    },
-    "Switzerland": {
-        "confirmed": 374,
-        "recovered": 3,
-        "deaths": 2
-    },
-    "Netherlands": {
-        "confirmed": 321,
-        "recovered": 0,
-        "deaths": 3
-    },
-    "UK": {
-        "confirmed": 321,
-        "recovered": 18,
-        "deaths": 4
-    },
-    "Sweden": {
-        "confirmed": 248,
-        "recovered": 1,
-        "deaths": 0
-    },
-    "Belgium": {
-        "confirmed": 239,
-        "recovered": 1,
-        "deaths": 0
-    },
-    "Norway": {
-        "confirmed": 205,
-        "recovered": 1,
-        "deaths": 0
-    },
-    "Singapore": {
-        "confirmed": 150,
-        "recovered": 78,
-        "deaths": 0
-    },
-    "Austria": {
-        "confirmed": 131,
-        "recovered": 2,
-        "deaths": 0
-    },
-    "Malaysia": {
-        "confirmed": 117,
-        "recovered": 24,
-        "deaths": 0
-    },
-    "Hong Kong": {
-        "confirmed": 115,
-        "recovered": 59,
-        "deaths": 3
-    },
-    "US": {
-        "confirmed": 597,
-        "recovered": 8,
-        "deaths": 22
-    },
-    "Bahrain": {
-        "confirmed": 95,
-        "recovered": 14,
-        "deaths": 0
-    },
-    "Denmark": {
-        "confirmed": 90,
-        "recovered": 1,
-        "deaths": 0
-    },
-    "Greece": {
-        "confirmed": 73,
-        "recovered": 0,
-        "deaths": 0
-    },
-    "Kuwait": {
-        "confirmed": 64,
-        "recovered": 1,
-        "deaths": 0
-    },
-    "Iraq": {
-        "confirmed": 60,
-        "recovered": 0,
-        "deaths": 6
-    },
-    "Iceland": {
-        "confirmed": 58,
-        "recovered": 0,
-        "deaths": 0
-    },
-    "Egypt": {
-        "confirmed": 55,
-        "recovered": 12,
-        "deaths": 1
-    },
-    "Thailand": {
-        "confirmed": 50,
-        "recovered": 31,
-        "deaths": 1
-    },
-    "Australia": {
-        "confirmed": 91,
-        "recovered": 21,
-        "deaths": 4
-    },
-    "Taiwan": {
-        "confirmed": 45,
-        "recovered": 15,
-        "deaths": 1
-    },
-    "United Arab Emirates": {
-        "confirmed": 45,
-        "recovered": 7,
-        "deaths": 0
-    },
-    "India": {
-        "confirmed": 43,
-        "recovered": 3,
-        "deaths": 0
-    },
-    "Israel": {
-        "confirmed": 39,
-        "recovered": 2,
-        "deaths": 0
-    },
-    "San Marino": {
-        "confirmed": 36,
-        "recovered": 0,
-        "deaths": 1
-    },
-    "Canada": {
-        "confirmed": 76,
-        "recovered": 8,
-        "deaths": 1
-    },
-    "Lebanon": {
-        "confirmed": 32,
-        "recovered": 1,
-        "deaths": 0
-    },
-    "Czech Republic": {
-        "confirmed": 31,
-        "recovered": 0,
-        "deaths": 0
-    },
-    "Finland": {
-        "confirmed": 30,
-        "recovered": 1,
-        "deaths": 0
-    },
-    "Portugal": {
-        "confirmed": 30,
-        "recovered": 0,
-        "deaths": 0
-    },
-    "Vietnam": {
-        "confirmed": 30,
-        "recovered": 16,
-        "deaths": 0
-    },
-    "Brazil": {
-        "confirmed": 25,
-        "recovered": 0,
-        "deaths": 0
-    },
-    "Palestine": {
-        "confirmed": 22,
-        "recovered": 0,
-        "deaths": 0
-    },
-    "Ireland": {
-        "confirmed": 21,
-        "recovered": 0,
-        "deaths": 0
-    },
-    "Algeria": {
-        "confirmed": 20,
-        "recovered": 0,
-        "deaths": 0
-    },
-    "Philippines": {
-        "confirmed": 20,
-        "recovered": 1,
-        "deaths": 1
-    },
-    "Indonesia": {
-        "confirmed": 19,
-        "recovered": 0,
-        "deaths": 0
-    },
-    "Qatar": {
-        "confirmed": 18,
-        "recovered": 0,
-        "deaths": 0
-    },
-    "Russia": {
-        "confirmed": 17,
-        "recovered": 3,
-        "deaths": 0
-    },
-    "Oman": {
-        "confirmed": 16,
-        "recovered": 2,
-        "deaths": 0
-    },
-    "Poland": {
-        "confirmed": 16,
-        "recovered": 0,
-        "deaths": 0
-    },
-    "Slovenia": {
-        "confirmed": 16,
-        "recovered": 0,
-        "deaths": 0
-    },
-    "Ecuador": {
-        "confirmed": 15,
-        "recovered": 0,
-        "deaths": 0
-    },
-    "Georgia": {
-        "confirmed": 15,
-        "recovered": 0,
-        "deaths": 0
-    },
-    "Romania": {
-        "confirmed": 15,
-        "recovered": 3,
-        "deaths": 0
-    },
-    "Saudi Arabia": {
-        "confirmed": 15,
-        "recovered": 0,
-        "deaths": 0
-    },
-    "Argentina": {
-        "confirmed": 12,
-        "recovered": 0,
-        "deaths": 1
-    },
-    "Croatia": {
-        "confirmed": 12,
-        "recovered": 0,
-        "deaths": 0
-    },
-    "Estonia": {
-        "confirmed": 10,
-        "recovered": 0,
-        "deaths": 0
-    },
-    "Macau": {
-        "confirmed": 10,
-        "recovered": 10,
-        "deaths": 0
-    },
-    "Azerbaijan": {
-        "confirmed": 9,
-        "recovered": 0,
-        "deaths": 0
-    },
-    "Costa Rica": {
-        "confirmed": 9,
-        "recovered": 0,
-        "deaths": 0
-    },
-    "Hungary": {
-        "confirmed": 9,
-        "recovered": 0,
-        "deaths": 0
-    },
-    "Chile": {
-        "confirmed": 8,
-        "recovered": 0,
-        "deaths": 0
-    },
-    "Mexico": {
-        "confirmed": 7,
-        "recovered": 1,
-        "deaths": 0
-    },
-    "Peru": {
-        "confirmed": 7,
-        "recovered": 0,
-        "deaths": 0
-    },
-    "Belarus": {
-        "confirmed": 6,
-        "recovered": 1,
-        "deaths": 0
-    },
-    "Latvia": {
-        "confirmed": 6,
-        "recovered": 0,
-        "deaths": 0
-    },
-    "Pakistan": {
-        "confirmed": 6,
-        "recovered": 1,
-        "deaths": 0
-    },
-    "Dominican Republic": {
-        "confirmed": 5,
-        "recovered": 0,
-        "deaths": 0
-    },
-    "French Guiana": {
-        "confirmed": 5,
-        "recovered": 0,
-        "deaths": 0
-    },
-    "New Zealand": {
-        "confirmed": 5,
-        "recovered": 0,
-        "deaths": 0
-    },
-    "Afghanistan": {
-        "confirmed": 4,
-        "recovered": 0,
-        "deaths": 0
-    },
-    "Bulgaria": {
-        "confirmed": 4,
-        "recovered": 0,
-        "deaths": 0
-    },
-    "Maldives": {
-        "confirmed": 4,
-        "recovered": 0,
-        "deaths": 0
-    },
-    "Senegal": {
-        "confirmed": 4,
-        "recovered": 1,
-        "deaths": 0
-    },
-    "Bangladesh": {
-        "confirmed": 3,
-        "recovered": 0,
-        "deaths": 0
-    },
-    "Bosnia and Herzegovina": {
-        "confirmed": 3,
-        "recovered": 0,
-        "deaths": 0
-    },
-    "Luxembourg": {
-        "confirmed": 3,
-        "recovered": 0,
-        "deaths": 0
-    },
-    "Malta": {
-        "confirmed": 3,
-        "recovered": 0,
-        "deaths": 0
-    },
-    "North Macedonia": {
-        "confirmed": 3,
-        "recovered": 0,
-        "deaths": 0
-    },
-    "Slovakia": {
-        "confirmed": 3,
-        "recovered": 0,
-        "deaths": 0
-    },
-    "South Africa": {
-        "confirmed": 3,
-        "recovered": 0,
-        "deaths": 0
-    },
-    "Albania": {
-        "confirmed": 2,
-        "recovered": 0,
-        "deaths": 0
-    },
-    "Cambodia": {
-        "confirmed": 2,
-        "recovered": 1,
-        "deaths": 0
-    },
-    "Cameroon": {
-        "confirmed": 2,
-        "recovered": 0,
-        "deaths": 0
-    },
-    "Cyprus": {
-        "confirmed": 2,
-        "recovered": 0,
-        "deaths": 0
-    },
-    "Faroe Islands": {
-        "confirmed": 2,
-        "recovered": 0,
-        "deaths": 0
-    },
-    "Martinique": {
-        "confirmed": 2,
-        "recovered": 0,
-        "deaths": 0
-    },
-    "Morocco": {
-        "confirmed": 2,
-        "recovered": 0,
-        "deaths": 0
-    },
-    "Nigeria": {
-        "confirmed": 2,
-        "recovered": 0,
-        "deaths": 0
-    },
-    "St. Martin": {
-        "confirmed": 2,
-        "recovered": 0,
-        "deaths": 0
-    },
-    "Tunisia": {
-        "confirmed": 2,
-        "recovered": 0,
-        "deaths": 0
-    },
-    "Andorra": {
-        "confirmed": 1,
-        "recovered": 0,
-        "deaths": 0
-    },
-    "Armenia": {
-        "confirmed": 1,
-        "recovered": 0,
-        "deaths": 0
-    },
-    "Bhutan": {
-        "confirmed": 1,
-        "recovered": 0,
-        "deaths": 0
-    },
-    "Brunei": {
-        "confirmed": 1,
-        "recovered": 0,
-        "deaths": 0
-    },
-    "Colombia": {
-        "confirmed": 1,
-        "recovered": 0,
-        "deaths": 0
-    },
-    "Gibraltar": {
-        "confirmed": 1,
-        "recovered": 0,
-        "deaths": 0
-    },
-    "Jordan": {
-        "confirmed": 1,
-        "recovered": 0,
-        "deaths": 0
-    },
-    "Liechtenstein": {
-        "confirmed": 1,
-        "recovered": 0,
-        "deaths": 0
-    },
-    "Lithuania": {
-        "confirmed": 1,
-        "recovered": 0,
-        "deaths": 0
-    },
-    "Moldova": {
-        "confirmed": 1,
-        "recovered": 0,
-        "deaths": 0
-    },
-    "Monaco": {
-        "confirmed": 1,
-        "recovered": 0,
-        "deaths": 0
-    },
-    "Nepal": {
-        "confirmed": 1,
-        "recovered": 1,
-        "deaths": 0
-    },
-    "Paraguay": {
-        "confirmed": 1,
-        "recovered": 0,
-        "deaths": 0
-    },
-    "Saint Barthelemy": {
-        "confirmed": 1,
-        "recovered": 0,
-        "deaths": 0
-    },
-    "Serbia": {
-        "confirmed": 1,
-        "recovered": 0,
-        "deaths": 0
-    },
-    "Sri Lanka": {
-        "confirmed": 1,
-        "recovered": 1,
-        "deaths": 0
-    },
-    "Togo": {
-        "confirmed": 1,
-        "recovered": 0,
-        "deaths": 0
-    },
-    "Ukraine": {
-        "confirmed": 1,
-        "recovered": 0,
-        "deaths": 0
-    },
+    "success": true,
     "total": {
-        "confirmed": 113573,
-        "recovered": 62496,
-        "deaths": 3996
-    }
+        "confirmed": 128808,
+        "recovered": 68731,
+        "deaths": 4728
+    },
+    "data": {
+        "BD": {
+            "country": {
+                "code": "BD",
+                "name": "Bangladesh"
+            },
+            "statistics": {
+                "confirmed": 3,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "BE": {
+            "country": {
+                "code": "BE",
+                "name": "Belgium"
+            },
+            "statistics": {
+                "confirmed": 314,
+                "recovered": 1,
+                "deaths": 3
+            }
+        },
+        "BF": {
+            "country": {
+                "code": "BF",
+                "name": "Burkina Faso"
+            },
+            "statistics": {
+                "confirmed": 2,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "BG": {
+            "country": {
+                "code": "BG",
+                "name": "Bulgaria"
+            },
+            "statistics": {
+                "confirmed": 7,
+                "recovered": 0,
+                "deaths": 1
+            }
+        },
+        "BA": {
+            "country": {
+                "code": "BA",
+                "name": "Bosnia and Herzegovina"
+            },
+            "statistics": {
+                "confirmed": 11,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "BB": {
+            "country": {
+                "code": "BB",
+                "name": "Barbados"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "WF": {
+            "country": {
+                "code": "WF",
+                "name": "Wallis and Futuna"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "BL": {
+            "country": {
+                "code": "BL",
+                "name": "Saint Barthelemy"
+            },
+            "statistics": {
+                "confirmed": 1,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "BM": {
+            "country": {
+                "code": "BM",
+                "name": "Bermuda"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "BN": {
+            "country": {
+                "code": "BN",
+                "name": "Brunei"
+            },
+            "statistics": {
+                "confirmed": 11,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "BO": {
+            "country": {
+                "code": "BO",
+                "name": "Bolivia"
+            },
+            "statistics": {
+                "confirmed": 2,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "BH": {
+            "country": {
+                "code": "BH",
+                "name": "Bahrain"
+            },
+            "statistics": {
+                "confirmed": 195,
+                "recovered": 35,
+                "deaths": 0
+            }
+        },
+        "BI": {
+            "country": {
+                "code": "BI",
+                "name": "Burundi"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "BJ": {
+            "country": {
+                "code": "BJ",
+                "name": "Benin"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "BT": {
+            "country": {
+                "code": "BT",
+                "name": "Bhutan"
+            },
+            "statistics": {
+                "confirmed": 1,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "JM": {
+            "country": {
+                "code": "JM",
+                "name": "Jamaica"
+            },
+            "statistics": {
+                "confirmed": 2,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "BV": {
+            "country": {
+                "code": "BV",
+                "name": "Bouvet Island"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "BW": {
+            "country": {
+                "code": "BW",
+                "name": "Botswana"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "WS": {
+            "country": {
+                "code": "WS",
+                "name": "Samoa"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "BQ": {
+            "country": {
+                "code": "BQ",
+                "name": "Bonaire, Saint Eustatius and Saba "
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "BR": {
+            "country": {
+                "code": "BR",
+                "name": "Brazil"
+            },
+            "statistics": {
+                "confirmed": 52,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "BS": {
+            "country": {
+                "code": "BS",
+                "name": "Bahamas"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "JE": {
+            "country": {
+                "code": "JE",
+                "name": "Jersey"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "BY": {
+            "country": {
+                "code": "BY",
+                "name": "Belarus"
+            },
+            "statistics": {
+                "confirmed": 12,
+                "recovered": 3,
+                "deaths": 0
+            }
+        },
+        "BZ": {
+            "country": {
+                "code": "BZ",
+                "name": "Belize"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "RU": {
+            "country": {
+                "code": "RU",
+                "name": "Russia"
+            },
+            "statistics": {
+                "confirmed": 28,
+                "recovered": 3,
+                "deaths": 0
+            }
+        },
+        "RW": {
+            "country": {
+                "code": "RW",
+                "name": "Rwanda"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "RS": {
+            "country": {
+                "code": "RS",
+                "name": "Serbia"
+            },
+            "statistics": {
+                "confirmed": 19,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "TL": {
+            "country": {
+                "code": "TL",
+                "name": "East Timor"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "RE": {
+            "country": {
+                "code": "RE",
+                "name": "Reunion"
+            },
+            "statistics": {
+                "confirmed": 1,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "TM": {
+            "country": {
+                "code": "TM",
+                "name": "Turkmenistan"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "TJ": {
+            "country": {
+                "code": "TJ",
+                "name": "Tajikistan"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "RO": {
+            "country": {
+                "code": "RO",
+                "name": "Romania"
+            },
+            "statistics": {
+                "confirmed": 49,
+                "recovered": 6,
+                "deaths": 0
+            }
+        },
+        "TK": {
+            "country": {
+                "code": "TK",
+                "name": "Tokelau"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "GW": {
+            "country": {
+                "code": "GW",
+                "name": "Guinea-Bissau"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "GU": {
+            "country": {
+                "code": "GU",
+                "name": "Guam"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "GT": {
+            "country": {
+                "code": "GT",
+                "name": "Guatemala"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "GS": {
+            "country": {
+                "code": "GS",
+                "name": "South Georgia and the South Sandwich Islands"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "GR": {
+            "country": {
+                "code": "GR",
+                "name": "Greece"
+            },
+            "statistics": {
+                "confirmed": 99,
+                "recovered": 0,
+                "deaths": 1
+            }
+        },
+        "GQ": {
+            "country": {
+                "code": "GQ",
+                "name": "Equatorial Guinea"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "GP": {
+            "country": {
+                "code": "GP",
+                "name": "Guadeloupe"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "JP": {
+            "country": {
+                "code": "JP",
+                "name": "Japan"
+            },
+            "statistics": {
+                "confirmed": 1339,
+                "recovered": 443,
+                "deaths": 23
+            }
+        },
+        "GY": {
+            "country": {
+                "code": "GY",
+                "name": "Guyana"
+            },
+            "statistics": {
+                "confirmed": 1,
+                "recovered": 0,
+                "deaths": 1
+            }
+        },
+        "GG": {
+            "country": {
+                "code": "GG",
+                "name": "Guernsey"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "GF": {
+            "country": {
+                "code": "GF",
+                "name": "French Guiana"
+            },
+            "statistics": {
+                "confirmed": 6,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "GE": {
+            "country": {
+                "code": "GE",
+                "name": "Georgia"
+            },
+            "statistics": {
+                "confirmed": 24,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "GD": {
+            "country": {
+                "code": "GD",
+                "name": "Grenada"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "GB": {
+            "country": {
+                "code": "GB",
+                "name": "United Kingdom"
+            },
+            "statistics": {
+                "confirmed": 459,
+                "recovered": 19,
+                "deaths": 8
+            }
+        },
+        "GA": {
+            "country": {
+                "code": "GA",
+                "name": "Gabon"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "SV": {
+            "country": {
+                "code": "SV",
+                "name": "El Salvador"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "GN": {
+            "country": {
+                "code": "GN",
+                "name": "Guinea"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "GM": {
+            "country": {
+                "code": "GM",
+                "name": "Gambia"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "GL": {
+            "country": {
+                "code": "GL",
+                "name": "Greenland"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "GI": {
+            "country": {
+                "code": "GI",
+                "name": "Gibraltar"
+            },
+            "statistics": {
+                "confirmed": 1,
+                "recovered": 1,
+                "deaths": 0
+            }
+        },
+        "GH": {
+            "country": {
+                "code": "GH",
+                "name": "Ghana"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "OM": {
+            "country": {
+                "code": "OM",
+                "name": "Oman"
+            },
+            "statistics": {
+                "confirmed": 18,
+                "recovered": 9,
+                "deaths": 0
+            }
+        },
+        "TN": {
+            "country": {
+                "code": "TN",
+                "name": "Tunisia"
+            },
+            "statistics": {
+                "confirmed": 7,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "JO": {
+            "country": {
+                "code": "JO",
+                "name": "Jordan"
+            },
+            "statistics": {
+                "confirmed": 1,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "HR": {
+            "country": {
+                "code": "HR",
+                "name": "Croatia"
+            },
+            "statistics": {
+                "confirmed": 19,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "HT": {
+            "country": {
+                "code": "HT",
+                "name": "Haiti"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "HU": {
+            "country": {
+                "code": "HU",
+                "name": "Hungary"
+            },
+            "statistics": {
+                "confirmed": 16,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "HK": {
+            "country": {
+                "code": "HK",
+                "name": "Hong Kong"
+            },
+            "statistics": {
+                "confirmed": 130,
+                "recovered": 77,
+                "deaths": 3
+            }
+        },
+        "HN": {
+            "country": {
+                "code": "HN",
+                "name": "Honduras"
+            },
+            "statistics": {
+                "confirmed": 2,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "HM": {
+            "country": {
+                "code": "HM",
+                "name": "Heard Island and McDonald Islands"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "VE": {
+            "country": {
+                "code": "VE",
+                "name": "Venezuela"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "PR": {
+            "country": {
+                "code": "PR",
+                "name": "Puerto Rico"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "PS": {
+            "country": {
+                "code": "PS",
+                "name": "Palestinian Territory"
+            },
+            "statistics": {
+                "confirmed": 30,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "PW": {
+            "country": {
+                "code": "PW",
+                "name": "Palau"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "PT": {
+            "country": {
+                "code": "PT",
+                "name": "Portugal"
+            },
+            "statistics": {
+                "confirmed": 61,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "SJ": {
+            "country": {
+                "code": "SJ",
+                "name": "Svalbard and Jan Mayen"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "PY": {
+            "country": {
+                "code": "PY",
+                "name": "Paraguay"
+            },
+            "statistics": {
+                "confirmed": 5,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "IQ": {
+            "country": {
+                "code": "IQ",
+                "name": "Iraq"
+            },
+            "statistics": {
+                "confirmed": 71,
+                "recovered": 15,
+                "deaths": 8
+            }
+        },
+        "PA": {
+            "country": {
+                "code": "PA",
+                "name": "Panama"
+            },
+            "statistics": {
+                "confirmed": 14,
+                "recovered": 0,
+                "deaths": 1
+            }
+        },
+        "PF": {
+            "country": {
+                "code": "PF",
+                "name": "French Polynesia"
+            },
+            "statistics": {
+                "confirmed": 1,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "PG": {
+            "country": {
+                "code": "PG",
+                "name": "Papua New Guinea"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "PE": {
+            "country": {
+                "code": "PE",
+                "name": "Peru"
+            },
+            "statistics": {
+                "confirmed": 17,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "PK": {
+            "country": {
+                "code": "PK",
+                "name": "Pakistan"
+            },
+            "statistics": {
+                "confirmed": 20,
+                "recovered": 2,
+                "deaths": 0
+            }
+        },
+        "PH": {
+            "country": {
+                "code": "PH",
+                "name": "Philippines"
+            },
+            "statistics": {
+                "confirmed": 52,
+                "recovered": 2,
+                "deaths": 2
+            }
+        },
+        "PN": {
+            "country": {
+                "code": "PN",
+                "name": "Pitcairn"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "PL": {
+            "country": {
+                "code": "PL",
+                "name": "Poland"
+            },
+            "statistics": {
+                "confirmed": 49,
+                "recovered": 0,
+                "deaths": 1
+            }
+        },
+        "PM": {
+            "country": {
+                "code": "PM",
+                "name": "Saint Pierre and Miquelon"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "ZM": {
+            "country": {
+                "code": "ZM",
+                "name": "Zambia"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "EH": {
+            "country": {
+                "code": "EH",
+                "name": "Western Sahara"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "EE": {
+            "country": {
+                "code": "EE",
+                "name": "Estonia"
+            },
+            "statistics": {
+                "confirmed": 16,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "EG": {
+            "country": {
+                "code": "EG",
+                "name": "Egypt"
+            },
+            "statistics": {
+                "confirmed": 67,
+                "recovered": 27,
+                "deaths": 1
+            }
+        },
+        "ZA": {
+            "country": {
+                "code": "ZA",
+                "name": "South Africa"
+            },
+            "statistics": {
+                "confirmed": 17,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "EC": {
+            "country": {
+                "code": "EC",
+                "name": "Ecuador"
+            },
+            "statistics": {
+                "confirmed": 17,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "IT": {
+            "country": {
+                "code": "IT",
+                "name": "Italy"
+            },
+            "statistics": {
+                "confirmed": 12462,
+                "recovered": 1045,
+                "deaths": 827
+            }
+        },
+        "VN": {
+            "country": {
+                "code": "VN",
+                "name": "Vietnam"
+            },
+            "statistics": {
+                "confirmed": 39,
+                "recovered": 16,
+                "deaths": 0
+            }
+        },
+        "SB": {
+            "country": {
+                "code": "SB",
+                "name": "Solomon Islands"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "ET": {
+            "country": {
+                "code": "ET",
+                "name": "Ethiopia"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "SO": {
+            "country": {
+                "code": "SO",
+                "name": "Somalia"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "ZW": {
+            "country": {
+                "code": "ZW",
+                "name": "Zimbabwe"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "SA": {
+            "country": {
+                "code": "SA",
+                "name": "Saudi Arabia"
+            },
+            "statistics": {
+                "confirmed": 45,
+                "recovered": 1,
+                "deaths": 0
+            }
+        },
+        "ES": {
+            "country": {
+                "code": "ES",
+                "name": "Spain"
+            },
+            "statistics": {
+                "confirmed": 2277,
+                "recovered": 183,
+                "deaths": 55
+            }
+        },
+        "ER": {
+            "country": {
+                "code": "ER",
+                "name": "Eritrea"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "ME": {
+            "country": {
+                "code": "ME",
+                "name": "Montenegro"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "MD": {
+            "country": {
+                "code": "MD",
+                "name": "Moldova"
+            },
+            "statistics": {
+                "confirmed": 3,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "MG": {
+            "country": {
+                "code": "MG",
+                "name": "Madagascar"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "MF": {
+            "country": {
+                "code": "MF",
+                "name": "Saint Martin"
+            },
+            "statistics": {
+                "confirmed": 2,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "MA": {
+            "country": {
+                "code": "MA",
+                "name": "Morocco"
+            },
+            "statistics": {
+                "confirmed": 6,
+                "recovered": 0,
+                "deaths": 1
+            }
+        },
+        "MC": {
+            "country": {
+                "code": "MC",
+                "name": "Monaco"
+            },
+            "statistics": {
+                "confirmed": 2,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "UZ": {
+            "country": {
+                "code": "UZ",
+                "name": "Uzbekistan"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "MM": {
+            "country": {
+                "code": "MM",
+                "name": "Myanmar"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "ML": {
+            "country": {
+                "code": "ML",
+                "name": "Mali"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "MO": {
+            "country": {
+                "code": "MO",
+                "name": "Macao"
+            },
+            "statistics": {
+                "confirmed": 10,
+                "recovered": 10,
+                "deaths": 0
+            }
+        },
+        "MN": {
+            "country": {
+                "code": "MN",
+                "name": "Mongolia"
+            },
+            "statistics": {
+                "confirmed": 1,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "MH": {
+            "country": {
+                "code": "MH",
+                "name": "Marshall Islands"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "MK": {
+            "country": {
+                "code": "MK",
+                "name": "Macedonia"
+            },
+            "statistics": {
+                "confirmed": 9,
+                "recovered": 1,
+                "deaths": 0
+            }
+        },
+        "MU": {
+            "country": {
+                "code": "MU",
+                "name": "Mauritius"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "MT": {
+            "country": {
+                "code": "MT",
+                "name": "Malta"
+            },
+            "statistics": {
+                "confirmed": 9,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "MW": {
+            "country": {
+                "code": "MW",
+                "name": "Malawi"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "MV": {
+            "country": {
+                "code": "MV",
+                "name": "Maldives"
+            },
+            "statistics": {
+                "confirmed": 8,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "MQ": {
+            "country": {
+                "code": "MQ",
+                "name": "Martinique"
+            },
+            "statistics": {
+                "confirmed": 3,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "MP": {
+            "country": {
+                "code": "MP",
+                "name": "Northern Mariana Islands"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "MS": {
+            "country": {
+                "code": "MS",
+                "name": "Montserrat"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "MR": {
+            "country": {
+                "code": "MR",
+                "name": "Mauritania"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "IM": {
+            "country": {
+                "code": "IM",
+                "name": "Isle of Man"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "UG": {
+            "country": {
+                "code": "UG",
+                "name": "Uganda"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "TZ": {
+            "country": {
+                "code": "TZ",
+                "name": "Tanzania"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "MY": {
+            "country": {
+                "code": "MY",
+                "name": "Malaysia"
+            },
+            "statistics": {
+                "confirmed": 149,
+                "recovered": 26,
+                "deaths": 0
+            }
+        },
+        "MX": {
+            "country": {
+                "code": "MX",
+                "name": "Mexico"
+            },
+            "statistics": {
+                "confirmed": 12,
+                "recovered": 4,
+                "deaths": 0
+            }
+        },
+        "IL": {
+            "country": {
+                "code": "IL",
+                "name": "Israel"
+            },
+            "statistics": {
+                "confirmed": 130,
+                "recovered": 4,
+                "deaths": 0
+            }
+        },
+        "FR": {
+            "country": {
+                "code": "FR",
+                "name": "France"
+            },
+            "statistics": {
+                "confirmed": 2284,
+                "recovered": 12,
+                "deaths": 48
+            }
+        },
+        "IO": {
+            "country": {
+                "code": "IO",
+                "name": "British Indian Ocean Territory"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "SH": {
+            "country": {
+                "code": "SH",
+                "name": "Saint Helena"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "FI": {
+            "country": {
+                "code": "FI",
+                "name": "Finland"
+            },
+            "statistics": {
+                "confirmed": 65,
+                "recovered": 1,
+                "deaths": 0
+            }
+        },
+        "FJ": {
+            "country": {
+                "code": "FJ",
+                "name": "Fiji"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "FK": {
+            "country": {
+                "code": "FK",
+                "name": "Falkland Islands"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "FM": {
+            "country": {
+                "code": "FM",
+                "name": "Micronesia"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "FO": {
+            "country": {
+                "code": "FO",
+                "name": "Faroe Islands"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "NI": {
+            "country": {
+                "code": "NI",
+                "name": "Nicaragua"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "NL": {
+            "country": {
+                "code": "NL",
+                "name": "Netherlands"
+            },
+            "statistics": {
+                "confirmed": 503,
+                "recovered": 2,
+                "deaths": 5
+            }
+        },
+        "NO": {
+            "country": {
+                "code": "NO",
+                "name": "Norway"
+            },
+            "statistics": {
+                "confirmed": 702,
+                "recovered": 1,
+                "deaths": 0
+            }
+        },
+        "NA": {
+            "country": {
+                "code": "NA",
+                "name": "Namibia"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "VU": {
+            "country": {
+                "code": "VU",
+                "name": "Vanuatu"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "NC": {
+            "country": {
+                "code": "NC",
+                "name": "New Caledonia"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "NE": {
+            "country": {
+                "code": "NE",
+                "name": "Niger"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "NF": {
+            "country": {
+                "code": "NF",
+                "name": "Norfolk Island"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "NG": {
+            "country": {
+                "code": "NG",
+                "name": "Nigeria"
+            },
+            "statistics": {
+                "confirmed": 2,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "NZ": {
+            "country": {
+                "code": "NZ",
+                "name": "New Zealand"
+            },
+            "statistics": {
+                "confirmed": 5,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "NP": {
+            "country": {
+                "code": "NP",
+                "name": "Nepal"
+            },
+            "statistics": {
+                "confirmed": 1,
+                "recovered": 1,
+                "deaths": 0
+            }
+        },
+        "NR": {
+            "country": {
+                "code": "NR",
+                "name": "Nauru"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "NU": {
+            "country": {
+                "code": "NU",
+                "name": "Niue"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "CK": {
+            "country": {
+                "code": "CK",
+                "name": "Cook Islands"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "XK": {
+            "country": {
+                "code": "XK",
+                "name": "Kosovo"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "CI": {
+            "country": {
+                "code": "CI",
+                "name": "Ivory Coast"
+            },
+            "statistics": {
+                "confirmed": 1,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "CH": {
+            "country": {
+                "code": "CH",
+                "name": "Switzerland"
+            },
+            "statistics": {
+                "confirmed": 652,
+                "recovered": 4,
+                "deaths": 4
+            }
+        },
+        "CO": {
+            "country": {
+                "code": "CO",
+                "name": "Colombia"
+            },
+            "statistics": {
+                "confirmed": 9,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "CN": {
+            "country": {
+                "code": "CN",
+                "name": "China"
+            },
+            "statistics": {
+                "confirmed": 80932,
+                "recovered": 62892,
+                "deaths": 3172
+            }
+        },
+        "CM": {
+            "country": {
+                "code": "CM",
+                "name": "Cameroon"
+            },
+            "statistics": {
+                "confirmed": 2,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "CL": {
+            "country": {
+                "code": "CL",
+                "name": "Chile"
+            },
+            "statistics": {
+                "confirmed": 23,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "CC": {
+            "country": {
+                "code": "CC",
+                "name": "Cocos Islands"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "CA": {
+            "country": {
+                "code": "CA",
+                "name": "Canada"
+            },
+            "statistics": {
+                "confirmed": 117,
+                "recovered": 8,
+                "deaths": 1
+            }
+        },
+        "CG": {
+            "country": {
+                "code": "CG",
+                "name": "Republic of the Congo"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "CF": {
+            "country": {
+                "code": "CF",
+                "name": "Central African Republic"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "CD": {
+            "country": {
+                "code": "CD",
+                "name": "Democratic Republic of the Congo"
+            },
+            "statistics": {
+                "confirmed": 1,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "CZ": {
+            "country": {
+                "code": "CZ",
+                "name": "Czech Republic"
+            },
+            "statistics": {
+                "confirmed": 94,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "CY": {
+            "country": {
+                "code": "CY",
+                "name": "Cyprus"
+            },
+            "statistics": {
+                "confirmed": 6,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "CX": {
+            "country": {
+                "code": "CX",
+                "name": "Christmas Island"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "CR": {
+            "country": {
+                "code": "CR",
+                "name": "Costa Rica"
+            },
+            "statistics": {
+                "confirmed": 22,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "CW": {
+            "country": {
+                "code": "CW",
+                "name": "Curacao"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "CV": {
+            "country": {
+                "code": "CV",
+                "name": "Cape Verde"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "CU": {
+            "country": {
+                "code": "CU",
+                "name": "Cuba"
+            },
+            "statistics": {
+                "confirmed": 3,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "SZ": {
+            "country": {
+                "code": "SZ",
+                "name": "Swaziland"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "SY": {
+            "country": {
+                "code": "SY",
+                "name": "Syria"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "SX": {
+            "country": {
+                "code": "SX",
+                "name": "Sint Maarten"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "KG": {
+            "country": {
+                "code": "KG",
+                "name": "Kyrgyzstan"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "KE": {
+            "country": {
+                "code": "KE",
+                "name": "Kenya"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "SS": {
+            "country": {
+                "code": "SS",
+                "name": "South Sudan"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "SR": {
+            "country": {
+                "code": "SR",
+                "name": "Suriname"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "KI": {
+            "country": {
+                "code": "KI",
+                "name": "Kiribati"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "KH": {
+            "country": {
+                "code": "KH",
+                "name": "Cambodia"
+            },
+            "statistics": {
+                "confirmed": 3,
+                "recovered": 1,
+                "deaths": 0
+            }
+        },
+        "KN": {
+            "country": {
+                "code": "KN",
+                "name": "Saint Kitts and Nevis"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "KM": {
+            "country": {
+                "code": "KM",
+                "name": "Comoros"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "ST": {
+            "country": {
+                "code": "ST",
+                "name": "Sao Tome and Principe"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "SK": {
+            "country": {
+                "code": "SK",
+                "name": "Slovakia"
+            },
+            "statistics": {
+                "confirmed": 16,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "KR": {
+            "country": {
+                "code": "KR",
+                "name": "South Korea"
+            },
+            "statistics": {
+                "confirmed": 7869,
+                "recovered": 333,
+                "deaths": 66
+            }
+        },
+        "SI": {
+            "country": {
+                "code": "SI",
+                "name": "Slovenia"
+            },
+            "statistics": {
+                "confirmed": 89,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "KP": {
+            "country": {
+                "code": "KP",
+                "name": "North Korea"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "KW": {
+            "country": {
+                "code": "KW",
+                "name": "Kuwait"
+            },
+            "statistics": {
+                "confirmed": 80,
+                "recovered": 5,
+                "deaths": 0
+            }
+        },
+        "SN": {
+            "country": {
+                "code": "SN",
+                "name": "Senegal"
+            },
+            "statistics": {
+                "confirmed": 4,
+                "recovered": 1,
+                "deaths": 0
+            }
+        },
+        "SM": {
+            "country": {
+                "code": "SM",
+                "name": "San Marino"
+            },
+            "statistics": {
+                "confirmed": 69,
+                "recovered": 0,
+                "deaths": 3
+            }
+        },
+        "SL": {
+            "country": {
+                "code": "SL",
+                "name": "Sierra Leone"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "SC": {
+            "country": {
+                "code": "SC",
+                "name": "Seychelles"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "KZ": {
+            "country": {
+                "code": "KZ",
+                "name": "Kazakhstan"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "KY": {
+            "country": {
+                "code": "KY",
+                "name": "Cayman Islands"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "SG": {
+            "country": {
+                "code": "SG",
+                "name": "Singapore"
+            },
+            "statistics": {
+                "confirmed": 178,
+                "recovered": 96,
+                "deaths": 0
+            }
+        },
+        "SE": {
+            "country": {
+                "code": "SE",
+                "name": "Sweden"
+            },
+            "statistics": {
+                "confirmed": 500,
+                "recovered": 1,
+                "deaths": 1
+            }
+        },
+        "SD": {
+            "country": {
+                "code": "SD",
+                "name": "Sudan"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "DO": {
+            "country": {
+                "code": "DO",
+                "name": "Dominican Republic"
+            },
+            "statistics": {
+                "confirmed": 5,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "DM": {
+            "country": {
+                "code": "DM",
+                "name": "Dominica"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "DJ": {
+            "country": {
+                "code": "DJ",
+                "name": "Djibouti"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "DK": {
+            "country": {
+                "code": "DK",
+                "name": "Denmark"
+            },
+            "statistics": {
+                "confirmed": 617,
+                "recovered": 1,
+                "deaths": 0
+            }
+        },
+        "VG": {
+            "country": {
+                "code": "VG",
+                "name": "British Virgin Islands"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "DE": {
+            "country": {
+                "code": "DE",
+                "name": "Germany"
+            },
+            "statistics": {
+                "confirmed": 2078,
+                "recovered": 25,
+                "deaths": 3
+            }
+        },
+        "YE": {
+            "country": {
+                "code": "YE",
+                "name": "Yemen"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "DZ": {
+            "country": {
+                "code": "DZ",
+                "name": "Algeria"
+            },
+            "statistics": {
+                "confirmed": 24,
+                "recovered": 8,
+                "deaths": 1
+            }
+        },
+        "US": {
+            "country": {
+                "code": "US",
+                "name": "United States"
+            },
+            "statistics": {
+                "confirmed": 1323,
+                "recovered": 8,
+                "deaths": 38
+            }
+        },
+        "UY": {
+            "country": {
+                "code": "UY",
+                "name": "Uruguay"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "YT": {
+            "country": {
+                "code": "YT",
+                "name": "Mayotte"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "UM": {
+            "country": {
+                "code": "UM",
+                "name": "United States Minor Outlying Islands"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "LB": {
+            "country": {
+                "code": "LB",
+                "name": "Lebanon"
+            },
+            "statistics": {
+                "confirmed": 68,
+                "recovered": 1,
+                "deaths": 3
+            }
+        },
+        "LC": {
+            "country": {
+                "code": "LC",
+                "name": "Saint Lucia"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "LA": {
+            "country": {
+                "code": "LA",
+                "name": "Laos"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "TV": {
+            "country": {
+                "code": "TV",
+                "name": "Tuvalu"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "TW": {
+            "country": {
+                "code": "TW",
+                "name": "Taiwan"
+            },
+            "statistics": {
+                "confirmed": 49,
+                "recovered": 20,
+                "deaths": 1
+            }
+        },
+        "TT": {
+            "country": {
+                "code": "TT",
+                "name": "Trinidad and Tobago"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "TR": {
+            "country": {
+                "code": "TR",
+                "name": "Turkey"
+            },
+            "statistics": {
+                "confirmed": 1,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "LK": {
+            "country": {
+                "code": "LK",
+                "name": "Sri Lanka"
+            },
+            "statistics": {
+                "confirmed": 2,
+                "recovered": 1,
+                "deaths": 0
+            }
+        },
+        "LI": {
+            "country": {
+                "code": "LI",
+                "name": "Liechtenstein"
+            },
+            "statistics": {
+                "confirmed": 3,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "LV": {
+            "country": {
+                "code": "LV",
+                "name": "Latvia"
+            },
+            "statistics": {
+                "confirmed": 16,
+                "recovered": 1,
+                "deaths": 0
+            }
+        },
+        "TO": {
+            "country": {
+                "code": "TO",
+                "name": "Tonga"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "LT": {
+            "country": {
+                "code": "LT",
+                "name": "Lithuania"
+            },
+            "statistics": {
+                "confirmed": 3,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "LU": {
+            "country": {
+                "code": "LU",
+                "name": "Luxembourg"
+            },
+            "statistics": {
+                "confirmed": 19,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "LR": {
+            "country": {
+                "code": "LR",
+                "name": "Liberia"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "LS": {
+            "country": {
+                "code": "LS",
+                "name": "Lesotho"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "TH": {
+            "country": {
+                "code": "TH",
+                "name": "Thailand"
+            },
+            "statistics": {
+                "confirmed": 70,
+                "recovered": 35,
+                "deaths": 1
+            }
+        },
+        "TF": {
+            "country": {
+                "code": "TF",
+                "name": "French Southern Territories"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "TG": {
+            "country": {
+                "code": "TG",
+                "name": "Togo"
+            },
+            "statistics": {
+                "confirmed": 1,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "TD": {
+            "country": {
+                "code": "TD",
+                "name": "Chad"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "TC": {
+            "country": {
+                "code": "TC",
+                "name": "Turks and Caicos Islands"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "LY": {
+            "country": {
+                "code": "LY",
+                "name": "Libya"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "VA": {
+            "country": {
+                "code": "VA",
+                "name": "Vatican"
+            },
+            "statistics": {
+                "confirmed": 1,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "VC": {
+            "country": {
+                "code": "VC",
+                "name": "Saint Vincent and the Grenadines"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "AE": {
+            "country": {
+                "code": "AE",
+                "name": "United Arab Emirates"
+            },
+            "statistics": {
+                "confirmed": 74,
+                "recovered": 17,
+                "deaths": 0
+            }
+        },
+        "AD": {
+            "country": {
+                "code": "AD",
+                "name": "Andorra"
+            },
+            "statistics": {
+                "confirmed": 1,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "AG": {
+            "country": {
+                "code": "AG",
+                "name": "Antigua and Barbuda"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "AF": {
+            "country": {
+                "code": "AF",
+                "name": "Afghanistan"
+            },
+            "statistics": {
+                "confirmed": 7,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "AI": {
+            "country": {
+                "code": "AI",
+                "name": "Anguilla"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "VI": {
+            "country": {
+                "code": "VI",
+                "name": "U.S. Virgin Islands"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "IS": {
+            "country": {
+                "code": "IS",
+                "name": "Iceland"
+            },
+            "statistics": {
+                "confirmed": 85,
+                "recovered": 1,
+                "deaths": 0
+            }
+        },
+        "IR": {
+            "country": {
+                "code": "IR",
+                "name": "Iran"
+            },
+            "statistics": {
+                "confirmed": 10075,
+                "recovered": 2959,
+                "deaths": 429
+            }
+        },
+        "AM": {
+            "country": {
+                "code": "AM",
+                "name": "Armenia"
+            },
+            "statistics": {
+                "confirmed": 1,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "AL": {
+            "country": {
+                "code": "AL",
+                "name": "Albania"
+            },
+            "statistics": {
+                "confirmed": 15,
+                "recovered": 0,
+                "deaths": 1
+            }
+        },
+        "AO": {
+            "country": {
+                "code": "AO",
+                "name": "Angola"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "AQ": {
+            "country": {
+                "code": "AQ",
+                "name": "Antarctica"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "AS": {
+            "country": {
+                "code": "AS",
+                "name": "American Samoa"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "AR": {
+            "country": {
+                "code": "AR",
+                "name": "Argentina"
+            },
+            "statistics": {
+                "confirmed": 21,
+                "recovered": 0,
+                "deaths": 1
+            }
+        },
+        "AU": {
+            "country": {
+                "code": "AU",
+                "name": "Australia"
+            },
+            "statistics": {
+                "confirmed": 157,
+                "recovered": 24,
+                "deaths": 3
+            }
+        },
+        "AT": {
+            "country": {
+                "code": "AT",
+                "name": "Austria"
+            },
+            "statistics": {
+                "confirmed": 302,
+                "recovered": 4,
+                "deaths": 1
+            }
+        },
+        "AW": {
+            "country": {
+                "code": "AW",
+                "name": "Aruba"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "IN": {
+            "country": {
+                "code": "IN",
+                "name": "India"
+            },
+            "statistics": {
+                "confirmed": 73,
+                "recovered": 4,
+                "deaths": 1
+            }
+        },
+        "AX": {
+            "country": {
+                "code": "AX",
+                "name": "Aland Islands"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "AZ": {
+            "country": {
+                "code": "AZ",
+                "name": "Azerbaijan"
+            },
+            "statistics": {
+                "confirmed": 11,
+                "recovered": 3,
+                "deaths": 0
+            }
+        },
+        "IE": {
+            "country": {
+                "code": "IE",
+                "name": "Ireland"
+            },
+            "statistics": {
+                "confirmed": 43,
+                "recovered": 0,
+                "deaths": 1
+            }
+        },
+        "ID": {
+            "country": {
+                "code": "ID",
+                "name": "Indonesia"
+            },
+            "statistics": {
+                "confirmed": 34,
+                "recovered": 3,
+                "deaths": 1
+            }
+        },
+        "UA": {
+            "country": {
+                "code": "UA",
+                "name": "Ukraine"
+            },
+            "statistics": {
+                "confirmed": 1,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "QA": {
+            "country": {
+                "code": "QA",
+                "name": "Qatar"
+            },
+            "statistics": {
+                "confirmed": 262,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "MZ": {
+            "country": {
+                "code": "MZ",
+                "name": "Mozambique"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "Cruise Ship": {
+            "country": {
+                "code": "Cruise Ship",
+                "name": "Cruise Ship"
+            },
+            "statistics": {
+                "confirmed": 696,
+                "recovered": 325,
+                "deaths": 7
+            }
+        },
+        "Holy See": {
+            "country": {
+                "code": "Holy See",
+                "name": "Holy See"
+            },
+            "statistics": {
+                "confirmed": 1,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        "": {
+            "statistics": {
+                "confirmed": 1,
+                "deaths": null,
+                "recovered": null
+            }
+        }
+    },
+    "sorted": [
+        {
+            "country": {
+                "code": "CN",
+                "name": "China"
+            },
+            "statistics": {
+                "confirmed": 80932,
+                "recovered": 62892,
+                "deaths": 3172
+            }
+        },
+        {
+            "country": {
+                "code": "IT",
+                "name": "Italy"
+            },
+            "statistics": {
+                "confirmed": 12462,
+                "recovered": 1045,
+                "deaths": 827
+            }
+        },
+        {
+            "country": {
+                "code": "IR",
+                "name": "Iran"
+            },
+            "statistics": {
+                "confirmed": 10075,
+                "recovered": 2959,
+                "deaths": 429
+            }
+        },
+        {
+            "country": {
+                "code": "KR",
+                "name": "South Korea"
+            },
+            "statistics": {
+                "confirmed": 7869,
+                "recovered": 333,
+                "deaths": 66
+            }
+        },
+        {
+            "country": {
+                "code": "FR",
+                "name": "France"
+            },
+            "statistics": {
+                "confirmed": 2284,
+                "recovered": 12,
+                "deaths": 48
+            }
+        },
+        {
+            "country": {
+                "code": "ES",
+                "name": "Spain"
+            },
+            "statistics": {
+                "confirmed": 2277,
+                "recovered": 183,
+                "deaths": 55
+            }
+        },
+        {
+            "country": {
+                "code": "DE",
+                "name": "Germany"
+            },
+            "statistics": {
+                "confirmed": 2078,
+                "recovered": 25,
+                "deaths": 3
+            }
+        },
+        {
+            "country": {
+                "code": "JP",
+                "name": "Japan"
+            },
+            "statistics": {
+                "confirmed": 1339,
+                "recovered": 443,
+                "deaths": 23
+            }
+        },
+        {
+            "country": {
+                "code": "US",
+                "name": "United States"
+            },
+            "statistics": {
+                "confirmed": 1323,
+                "recovered": 8,
+                "deaths": 38
+            }
+        },
+        {
+            "country": {
+                "code": "NO",
+                "name": "Norway"
+            },
+            "statistics": {
+                "confirmed": 702,
+                "recovered": 1,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "Cruise Ship",
+                "name": "Cruise Ship"
+            },
+            "statistics": {
+                "confirmed": 696,
+                "recovered": 325,
+                "deaths": 7
+            }
+        },
+        {
+            "country": {
+                "code": "CH",
+                "name": "Switzerland"
+            },
+            "statistics": {
+                "confirmed": 652,
+                "recovered": 4,
+                "deaths": 4
+            }
+        },
+        {
+            "country": {
+                "code": "DK",
+                "name": "Denmark"
+            },
+            "statistics": {
+                "confirmed": 617,
+                "recovered": 1,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "NL",
+                "name": "Netherlands"
+            },
+            "statistics": {
+                "confirmed": 503,
+                "recovered": 2,
+                "deaths": 5
+            }
+        },
+        {
+            "country": {
+                "code": "SE",
+                "name": "Sweden"
+            },
+            "statistics": {
+                "confirmed": 500,
+                "recovered": 1,
+                "deaths": 1
+            }
+        },
+        {
+            "country": {
+                "code": "GB",
+                "name": "United Kingdom"
+            },
+            "statistics": {
+                "confirmed": 459,
+                "recovered": 19,
+                "deaths": 8
+            }
+        },
+        {
+            "country": {
+                "code": "BE",
+                "name": "Belgium"
+            },
+            "statistics": {
+                "confirmed": 314,
+                "recovered": 1,
+                "deaths": 3
+            }
+        },
+        {
+            "country": {
+                "code": "AT",
+                "name": "Austria"
+            },
+            "statistics": {
+                "confirmed": 302,
+                "recovered": 4,
+                "deaths": 1
+            }
+        },
+        {
+            "country": {
+                "code": "QA",
+                "name": "Qatar"
+            },
+            "statistics": {
+                "confirmed": 262,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "BH",
+                "name": "Bahrain"
+            },
+            "statistics": {
+                "confirmed": 195,
+                "recovered": 35,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "SG",
+                "name": "Singapore"
+            },
+            "statistics": {
+                "confirmed": 178,
+                "recovered": 96,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "AU",
+                "name": "Australia"
+            },
+            "statistics": {
+                "confirmed": 157,
+                "recovered": 24,
+                "deaths": 3
+            }
+        },
+        {
+            "country": {
+                "code": "MY",
+                "name": "Malaysia"
+            },
+            "statistics": {
+                "confirmed": 149,
+                "recovered": 26,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "IL",
+                "name": "Israel"
+            },
+            "statistics": {
+                "confirmed": 130,
+                "recovered": 4,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "HK",
+                "name": "Hong Kong"
+            },
+            "statistics": {
+                "confirmed": 130,
+                "recovered": 77,
+                "deaths": 3
+            }
+        },
+        {
+            "country": {
+                "code": "CA",
+                "name": "Canada"
+            },
+            "statistics": {
+                "confirmed": 117,
+                "recovered": 8,
+                "deaths": 1
+            }
+        },
+        {
+            "country": {
+                "code": "GR",
+                "name": "Greece"
+            },
+            "statistics": {
+                "confirmed": 99,
+                "recovered": 0,
+                "deaths": 1
+            }
+        },
+        {
+            "country": {
+                "code": "CZ",
+                "name": "Czech Republic"
+            },
+            "statistics": {
+                "confirmed": 94,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "SI",
+                "name": "Slovenia"
+            },
+            "statistics": {
+                "confirmed": 89,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "IS",
+                "name": "Iceland"
+            },
+            "statistics": {
+                "confirmed": 85,
+                "recovered": 1,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "KW",
+                "name": "Kuwait"
+            },
+            "statistics": {
+                "confirmed": 80,
+                "recovered": 5,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "AE",
+                "name": "United Arab Emirates"
+            },
+            "statistics": {
+                "confirmed": 74,
+                "recovered": 17,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "IN",
+                "name": "India"
+            },
+            "statistics": {
+                "confirmed": 73,
+                "recovered": 4,
+                "deaths": 1
+            }
+        },
+        {
+            "country": {
+                "code": "IQ",
+                "name": "Iraq"
+            },
+            "statistics": {
+                "confirmed": 71,
+                "recovered": 15,
+                "deaths": 8
+            }
+        },
+        {
+            "country": {
+                "code": "TH",
+                "name": "Thailand"
+            },
+            "statistics": {
+                "confirmed": 70,
+                "recovered": 35,
+                "deaths": 1
+            }
+        },
+        {
+            "country": {
+                "code": "SM",
+                "name": "San Marino"
+            },
+            "statistics": {
+                "confirmed": 69,
+                "recovered": 0,
+                "deaths": 3
+            }
+        },
+        {
+            "country": {
+                "code": "LB",
+                "name": "Lebanon"
+            },
+            "statistics": {
+                "confirmed": 68,
+                "recovered": 1,
+                "deaths": 3
+            }
+        },
+        {
+            "country": {
+                "code": "EG",
+                "name": "Egypt"
+            },
+            "statistics": {
+                "confirmed": 67,
+                "recovered": 27,
+                "deaths": 1
+            }
+        },
+        {
+            "country": {
+                "code": "FI",
+                "name": "Finland"
+            },
+            "statistics": {
+                "confirmed": 65,
+                "recovered": 1,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "PT",
+                "name": "Portugal"
+            },
+            "statistics": {
+                "confirmed": 61,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "BR",
+                "name": "Brazil"
+            },
+            "statistics": {
+                "confirmed": 52,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "PH",
+                "name": "Philippines"
+            },
+            "statistics": {
+                "confirmed": 52,
+                "recovered": 2,
+                "deaths": 2
+            }
+        },
+        {
+            "country": {
+                "code": "RO",
+                "name": "Romania"
+            },
+            "statistics": {
+                "confirmed": 49,
+                "recovered": 6,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "TW",
+                "name": "Taiwan"
+            },
+            "statistics": {
+                "confirmed": 49,
+                "recovered": 20,
+                "deaths": 1
+            }
+        },
+        {
+            "country": {
+                "code": "PL",
+                "name": "Poland"
+            },
+            "statistics": {
+                "confirmed": 49,
+                "recovered": 0,
+                "deaths": 1
+            }
+        },
+        {
+            "country": {
+                "code": "SA",
+                "name": "Saudi Arabia"
+            },
+            "statistics": {
+                "confirmed": 45,
+                "recovered": 1,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "IE",
+                "name": "Ireland"
+            },
+            "statistics": {
+                "confirmed": 43,
+                "recovered": 0,
+                "deaths": 1
+            }
+        },
+        {
+            "country": {
+                "code": "VN",
+                "name": "Vietnam"
+            },
+            "statistics": {
+                "confirmed": 39,
+                "recovered": 16,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "ID",
+                "name": "Indonesia"
+            },
+            "statistics": {
+                "confirmed": 34,
+                "recovered": 3,
+                "deaths": 1
+            }
+        },
+        {
+            "country": {
+                "code": "PS",
+                "name": "Palestinian Territory"
+            },
+            "statistics": {
+                "confirmed": 30,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "RU",
+                "name": "Russia"
+            },
+            "statistics": {
+                "confirmed": 28,
+                "recovered": 3,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "GE",
+                "name": "Georgia"
+            },
+            "statistics": {
+                "confirmed": 24,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "DZ",
+                "name": "Algeria"
+            },
+            "statistics": {
+                "confirmed": 24,
+                "recovered": 8,
+                "deaths": 1
+            }
+        },
+        {
+            "country": {
+                "code": "CL",
+                "name": "Chile"
+            },
+            "statistics": {
+                "confirmed": 23,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "CR",
+                "name": "Costa Rica"
+            },
+            "statistics": {
+                "confirmed": 22,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "AR",
+                "name": "Argentina"
+            },
+            "statistics": {
+                "confirmed": 21,
+                "recovered": 0,
+                "deaths": 1
+            }
+        },
+        {
+            "country": {
+                "code": "PK",
+                "name": "Pakistan"
+            },
+            "statistics": {
+                "confirmed": 20,
+                "recovered": 2,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "LU",
+                "name": "Luxembourg"
+            },
+            "statistics": {
+                "confirmed": 19,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "HR",
+                "name": "Croatia"
+            },
+            "statistics": {
+                "confirmed": 19,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "RS",
+                "name": "Serbia"
+            },
+            "statistics": {
+                "confirmed": 19,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "OM",
+                "name": "Oman"
+            },
+            "statistics": {
+                "confirmed": 18,
+                "recovered": 9,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "PE",
+                "name": "Peru"
+            },
+            "statistics": {
+                "confirmed": 17,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "ZA",
+                "name": "South Africa"
+            },
+            "statistics": {
+                "confirmed": 17,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "EC",
+                "name": "Ecuador"
+            },
+            "statistics": {
+                "confirmed": 17,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "SK",
+                "name": "Slovakia"
+            },
+            "statistics": {
+                "confirmed": 16,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "LV",
+                "name": "Latvia"
+            },
+            "statistics": {
+                "confirmed": 16,
+                "recovered": 1,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "EE",
+                "name": "Estonia"
+            },
+            "statistics": {
+                "confirmed": 16,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "HU",
+                "name": "Hungary"
+            },
+            "statistics": {
+                "confirmed": 16,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "AL",
+                "name": "Albania"
+            },
+            "statistics": {
+                "confirmed": 15,
+                "recovered": 0,
+                "deaths": 1
+            }
+        },
+        {
+            "country": {
+                "code": "PA",
+                "name": "Panama"
+            },
+            "statistics": {
+                "confirmed": 14,
+                "recovered": 0,
+                "deaths": 1
+            }
+        },
+        {
+            "country": {
+                "code": "BY",
+                "name": "Belarus"
+            },
+            "statistics": {
+                "confirmed": 12,
+                "recovered": 3,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "MX",
+                "name": "Mexico"
+            },
+            "statistics": {
+                "confirmed": 12,
+                "recovered": 4,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "BA",
+                "name": "Bosnia and Herzegovina"
+            },
+            "statistics": {
+                "confirmed": 11,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "AZ",
+                "name": "Azerbaijan"
+            },
+            "statistics": {
+                "confirmed": 11,
+                "recovered": 3,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "BN",
+                "name": "Brunei"
+            },
+            "statistics": {
+                "confirmed": 11,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "MO",
+                "name": "Macao"
+            },
+            "statistics": {
+                "confirmed": 10,
+                "recovered": 10,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "MT",
+                "name": "Malta"
+            },
+            "statistics": {
+                "confirmed": 9,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "MK",
+                "name": "Macedonia"
+            },
+            "statistics": {
+                "confirmed": 9,
+                "recovered": 1,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "CO",
+                "name": "Colombia"
+            },
+            "statistics": {
+                "confirmed": 9,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "MV",
+                "name": "Maldives"
+            },
+            "statistics": {
+                "confirmed": 8,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "TN",
+                "name": "Tunisia"
+            },
+            "statistics": {
+                "confirmed": 7,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "AF",
+                "name": "Afghanistan"
+            },
+            "statistics": {
+                "confirmed": 7,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "BG",
+                "name": "Bulgaria"
+            },
+            "statistics": {
+                "confirmed": 7,
+                "recovered": 0,
+                "deaths": 1
+            }
+        },
+        {
+            "country": {
+                "code": "MA",
+                "name": "Morocco"
+            },
+            "statistics": {
+                "confirmed": 6,
+                "recovered": 0,
+                "deaths": 1
+            }
+        },
+        {
+            "country": {
+                "code": "CY",
+                "name": "Cyprus"
+            },
+            "statistics": {
+                "confirmed": 6,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "GF",
+                "name": "French Guiana"
+            },
+            "statistics": {
+                "confirmed": 6,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "PY",
+                "name": "Paraguay"
+            },
+            "statistics": {
+                "confirmed": 5,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "NZ",
+                "name": "New Zealand"
+            },
+            "statistics": {
+                "confirmed": 5,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "DO",
+                "name": "Dominican Republic"
+            },
+            "statistics": {
+                "confirmed": 5,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "SN",
+                "name": "Senegal"
+            },
+            "statistics": {
+                "confirmed": 4,
+                "recovered": 1,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "MQ",
+                "name": "Martinique"
+            },
+            "statistics": {
+                "confirmed": 3,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "LT",
+                "name": "Lithuania"
+            },
+            "statistics": {
+                "confirmed": 3,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "CU",
+                "name": "Cuba"
+            },
+            "statistics": {
+                "confirmed": 3,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "KH",
+                "name": "Cambodia"
+            },
+            "statistics": {
+                "confirmed": 3,
+                "recovered": 1,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "MD",
+                "name": "Moldova"
+            },
+            "statistics": {
+                "confirmed": 3,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "LI",
+                "name": "Liechtenstein"
+            },
+            "statistics": {
+                "confirmed": 3,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "BD",
+                "name": "Bangladesh"
+            },
+            "statistics": {
+                "confirmed": 3,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "NG",
+                "name": "Nigeria"
+            },
+            "statistics": {
+                "confirmed": 2,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "CM",
+                "name": "Cameroon"
+            },
+            "statistics": {
+                "confirmed": 2,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "BO",
+                "name": "Bolivia"
+            },
+            "statistics": {
+                "confirmed": 2,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "LK",
+                "name": "Sri Lanka"
+            },
+            "statistics": {
+                "confirmed": 2,
+                "recovered": 1,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "JM",
+                "name": "Jamaica"
+            },
+            "statistics": {
+                "confirmed": 2,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "HN",
+                "name": "Honduras"
+            },
+            "statistics": {
+                "confirmed": 2,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "BF",
+                "name": "Burkina Faso"
+            },
+            "statistics": {
+                "confirmed": 2,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "MC",
+                "name": "Monaco"
+            },
+            "statistics": {
+                "confirmed": 2,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "MF",
+                "name": "Saint Martin"
+            },
+            "statistics": {
+                "confirmed": 2,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "CD",
+                "name": "Democratic Republic of the Congo"
+            },
+            "statistics": {
+                "confirmed": 1,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "RE",
+                "name": "Reunion"
+            },
+            "statistics": {
+                "confirmed": 1,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "JO",
+                "name": "Jordan"
+            },
+            "statistics": {
+                "confirmed": 1,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "TR",
+                "name": "Turkey"
+            },
+            "statistics": {
+                "confirmed": 1,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "GI",
+                "name": "Gibraltar"
+            },
+            "statistics": {
+                "confirmed": 1,
+                "recovered": 1,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "CI",
+                "name": "Ivory Coast"
+            },
+            "statistics": {
+                "confirmed": 1,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "NP",
+                "name": "Nepal"
+            },
+            "statistics": {
+                "confirmed": 1,
+                "recovered": 1,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "GY",
+                "name": "Guyana"
+            },
+            "statistics": {
+                "confirmed": 1,
+                "recovered": 0,
+                "deaths": 1
+            }
+        },
+        {
+            "country": {
+                "code": "TG",
+                "name": "Togo"
+            },
+            "statistics": {
+                "confirmed": 1,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "VA",
+                "name": "Vatican"
+            },
+            "statistics": {
+                "confirmed": 1,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "AD",
+                "name": "Andorra"
+            },
+            "statistics": {
+                "confirmed": 1,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "PF",
+                "name": "French Polynesia"
+            },
+            "statistics": {
+                "confirmed": 1,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "AM",
+                "name": "Armenia"
+            },
+            "statistics": {
+                "confirmed": 1,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "statistics": {
+                "confirmed": 1,
+                "deaths": null,
+                "recovered": null
+            }
+        },
+        {
+            "country": {
+                "code": "UA",
+                "name": "Ukraine"
+            },
+            "statistics": {
+                "confirmed": 1,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "BL",
+                "name": "Saint Barthelemy"
+            },
+            "statistics": {
+                "confirmed": 1,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "Holy See",
+                "name": "Holy See"
+            },
+            "statistics": {
+                "confirmed": 1,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "BT",
+                "name": "Bhutan"
+            },
+            "statistics": {
+                "confirmed": 1,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "MN",
+                "name": "Mongolia"
+            },
+            "statistics": {
+                "confirmed": 1,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "TK",
+                "name": "Tokelau"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "BB",
+                "name": "Barbados"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "TV",
+                "name": "Tuvalu"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "MZ",
+                "name": "Mozambique"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "LA",
+                "name": "Laos"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "LC",
+                "name": "Saint Lucia"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "TM",
+                "name": "Turkmenistan"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "UM",
+                "name": "United States Minor Outlying Islands"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "YT",
+                "name": "Mayotte"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "UY",
+                "name": "Uruguay"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "TJ",
+                "name": "Tajikistan"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "AO",
+                "name": "Angola"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "YE",
+                "name": "Yemen"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "VG",
+                "name": "British Virgin Islands"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "GU",
+                "name": "Guam"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "DJ",
+                "name": "Djibouti"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "DM",
+                "name": "Dominica"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "GT",
+                "name": "Guatemala"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "SD",
+                "name": "Sudan"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "GS",
+                "name": "South Georgia and the South Sandwich Islands"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "GQ",
+                "name": "Equatorial Guinea"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "KY",
+                "name": "Cayman Islands"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "KZ",
+                "name": "Kazakhstan"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "SC",
+                "name": "Seychelles"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "SL",
+                "name": "Sierra Leone"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "GW",
+                "name": "Guinea-Bissau"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "WF",
+                "name": "Wallis and Futuna"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "TT",
+                "name": "Trinidad and Tobago"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "BJ",
+                "name": "Benin"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "BW",
+                "name": "Botswana"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "VI",
+                "name": "U.S. Virgin Islands"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "AI",
+                "name": "Anguilla"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "WS",
+                "name": "Samoa"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "AQ",
+                "name": "Antarctica"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "AG",
+                "name": "Antigua and Barbuda"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "AS",
+                "name": "American Samoa"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "BQ",
+                "name": "Bonaire, Saint Eustatius and Saba "
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "VC",
+                "name": "Saint Vincent and the Grenadines"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "LY",
+                "name": "Libya"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "TC",
+                "name": "Turks and Caicos Islands"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "TD",
+                "name": "Chad"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "TF",
+                "name": "French Southern Territories"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "BV",
+                "name": "Bouvet Island"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "BS",
+                "name": "Bahamas"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "LS",
+                "name": "Lesotho"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "BI",
+                "name": "Burundi"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "LR",
+                "name": "Liberia"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "AW",
+                "name": "Aruba"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "JE",
+                "name": "Jersey"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "BZ",
+                "name": "Belize"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "TO",
+                "name": "Tonga"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "RW",
+                "name": "Rwanda"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "AX",
+                "name": "Aland Islands"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "TL",
+                "name": "East Timor"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "BM",
+                "name": "Bermuda"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "GP",
+                "name": "Guadeloupe"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "ME",
+                "name": "Montenegro"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "GG",
+                "name": "Guernsey"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "FJ",
+                "name": "Fiji"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "ZM",
+                "name": "Zambia"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "PM",
+                "name": "Saint Pierre and Miquelon"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "PN",
+                "name": "Pitcairn"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "PG",
+                "name": "Papua New Guinea"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "IO",
+                "name": "British Indian Ocean Territory"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "SH",
+                "name": "Saint Helena"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "FK",
+                "name": "Falkland Islands"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "UG",
+                "name": "Uganda"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "FM",
+                "name": "Micronesia"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "FO",
+                "name": "Faroe Islands"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "NI",
+                "name": "Nicaragua"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "SJ",
+                "name": "Svalbard and Jan Mayen"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "PW",
+                "name": "Palau"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "NA",
+                "name": "Namibia"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "TZ",
+                "name": "Tanzania"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "IM",
+                "name": "Isle of Man"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "NC",
+                "name": "New Caledonia"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "SO",
+                "name": "Somalia"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "ER",
+                "name": "Eritrea"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "UZ",
+                "name": "Uzbekistan"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "MM",
+                "name": "Myanmar"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "ML",
+                "name": "Mali"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "ZW",
+                "name": "Zimbabwe"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "MH",
+                "name": "Marshall Islands"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "MU",
+                "name": "Mauritius"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "MR",
+                "name": "Mauritania"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "ET",
+                "name": "Ethiopia"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "MW",
+                "name": "Malawi"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "SB",
+                "name": "Solomon Islands"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "EH",
+                "name": "Western Sahara"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "MP",
+                "name": "Northern Mariana Islands"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "MS",
+                "name": "Montserrat"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "VU",
+                "name": "Vanuatu"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "NE",
+                "name": "Niger"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "KP",
+                "name": "North Korea"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "KI",
+                "name": "Kiribati"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "SY",
+                "name": "Syria"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "SX",
+                "name": "Sint Maarten"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "KG",
+                "name": "Kyrgyzstan"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "KE",
+                "name": "Kenya"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "SS",
+                "name": "South Sudan"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "SR",
+                "name": "Suriname"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "GN",
+                "name": "Guinea"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "GM",
+                "name": "Gambia"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "KN",
+                "name": "Saint Kitts and Nevis"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "KM",
+                "name": "Comoros"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "MG",
+                "name": "Madagascar"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "SV",
+                "name": "El Salvador"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "GA",
+                "name": "Gabon"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "GD",
+                "name": "Grenada"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "SZ",
+                "name": "Swaziland"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "CV",
+                "name": "Cape Verde"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "NF",
+                "name": "Norfolk Island"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "HM",
+                "name": "Heard Island and McDonald Islands"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "PR",
+                "name": "Puerto Rico"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "NR",
+                "name": "Nauru"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "NU",
+                "name": "Niue"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "CK",
+                "name": "Cook Islands"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "XK",
+                "name": "Kosovo"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "VE",
+                "name": "Venezuela"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "HT",
+                "name": "Haiti"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "CW",
+                "name": "Curacao"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "CC",
+                "name": "Cocos Islands"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "CG",
+                "name": "Republic of the Congo"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "CF",
+                "name": "Central African Republic"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "GH",
+                "name": "Ghana"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "CX",
+                "name": "Christmas Island"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "GL",
+                "name": "Greenland"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        },
+        {
+            "country": {
+                "code": "ST",
+                "name": "Sao Tome and Principe"
+            },
+            "statistics": {
+                "confirmed": 0,
+                "recovered": 0,
+                "deaths": 0
+            }
+        }
+    ],
+    "sources": [
+        "https://gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6",
+        "https://dash-coronavirus-2020.herokuapp.com/"
+    ]
 }

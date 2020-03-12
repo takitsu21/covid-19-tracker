@@ -14,7 +14,7 @@ class Datacmds(commands.Cog):
     """Help commands"""
     def __init__(self, bot):
         self.bot = bot
-        self.thumb = "https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/COVID-19_Outbreak_World_Map.svg/langfr-280px-COVID-19_Outbreak_World_Map.svg.png"
+        self.thumb = "https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/COVID-19_Outbreak_World_Map.svg/langen-1000px-COVID-19_Outbreak_World_Map.svg.png"
         self.author_thumb = "https://www.stickpng.com/assets/images/5bd08abf7aaafa0575d8502b.png"
 
     # def generate_pages(self, data, header_length):
@@ -200,6 +200,7 @@ class Datacmds(commands.Cog):
         recovered = DATA['total']['recovered']
         deaths = DATA['total']['deaths']
         embed = discord.Embed(
+                            description="`[current_update-morning_update]`",
                             timestamp=utils.discord_timestamp(),
                             color=utils.COLOR,
                             )
@@ -276,6 +277,67 @@ class Datacmds(commands.Cog):
             )
         embed.color = utils.COLOR
         embed.timestamp = utils.discord_timestamp()
+        embed.set_thumbnail(url=self.thumb)
+        embed.set_footer(
+            text=utils.last_update(utils.DATA_PATH),
+            icon_url=ctx.guild.me.avatar_url
+        )
+        await ctx.send(embed=embed)
+
+    @commands.command(name="track", aliases=["tracker"])
+    @utils.trigger_typing
+    async def track(self, ctx, *country):
+        if not len(country):
+            embed = discord.Embed(
+                description="No country provided. **`c!track <COUNTRY>`** work like **`c!country <COUNTRY>`** see `c!help`",
+                color=utils.COLOR,
+                timestamp=utils.discord_timestamp()
+            )
+            embed.set_author(
+                name="c!track",
+                icon_url=self.author_thumb
+            )
+        elif ''.join(country) == "disable":
+            embed = discord.Embed(
+                description="If you want to reactivate the tracker : **`c!track <COUNTRY>`**",
+                color=utils.COLOR,
+                timestamp=utils.discord_timestamp()
+            )
+            embed.set_author(
+                name="Tracker has been disabled!",
+                icon_url=self.author_thumb
+            )
+            try:
+                db.delete_tracker(str(ctx.author.id))
+            except:
+                pass
+        else:
+            header, text = utils.string_formatting(utils.from_json(utils.DATA_PATH), country)
+            if len(text):
+                try:
+                    db.insert_tracker(str(ctx.author.id), str(ctx.guild.id), ' '.join(country))
+                except IntegrityError:
+                    db.update_tracker(str(ctx.author.id), ' '.join(country))
+
+                embed = discord.Embed(
+                        description=header + "\n" + text,
+                        color=utils.COLOR,
+                        timestamp=utils.discord_timestamp()
+                    )
+                embed.set_author(
+                    name="Tracker has been setted up! You can see your tracked list. Update will be send in DM",
+                    icon_url=self.author_thumb
+                )
+            else:
+                embed = discord.Embed(
+                    description="Wrong country selected or this country/region is not affected by Coronavirus COVID-19",
+                    color=utils.COLOR,
+                    timestamp=utils.discord_timestamp()
+                )
+                embed.set_author(
+                    name="`c!track`",
+                    icon_url=self.author_thumb
+                )
         embed.set_thumbnail(url=self.thumb)
         embed.set_footer(
             text=utils.last_update(utils.DATA_PATH),

@@ -5,6 +5,9 @@
 </a>
 
 [![PyPI pyversions](https://img.shields.io/badge/python-3.8-blue)](https://www.python.org/)  ![AppVeyor](https://img.shields.io/appveyor/ci/takitsu21/WarframeTrader) [![Discord](https://img.shields.io/discord/556268083681951759?color=blue&label=discord)](http://discord.gg/wTxbQYb) ![GitHub pull requests](https://img.shields.io/github/issues-pr/takitsu21/covid-19-tracker) ![GitHub issues](https://img.shields.io/github/issues/takitsu21/covid-19-tracker) [![GitHub](https://img.shields.io/github/license/takitsu21/covid-19-tracker)](LICENCE)
+<p align="left"><a href="https://discordbots.org/bot/682946560417333283" >
+  <img src="https://top.gg/api/widget/682946560417333283.svg?usernamecolor=FFFFFF&topcolor=000000" alt="Coronavirus COVID-19" />
+</a></p>
 
 # Coronavirus COVID-19
 
@@ -16,17 +19,20 @@ Prefix : **`c! or @mention`**
 
 **`<something>`** is required
 **`[something]`** is optional
-**`arg1 | arg2`** mean arg1 or arg2
+**`arg1 / arg2`** mean arg1 or arg2
 
 | Command | Description |
 | ------- | ----------- |
-| **`c!help`** | Views help command |
-| **`c!info`** | Views every confirmed cases |
-| **`c!country <COUNTRY>`** | Views information about multiple chosen country/region. You can either use autocompletion or country code. Valid country/region are listed in `c!info`. Example : `c!country fr germ it poland` |
-| **`c!stats`** | Views graphical statistics |
-| **`c!about`** | Views informations about the bot |
-| **`c!source`** | Views source data which the bot is based on. |
+| **`c!help`** | Views help command. |
+| **`c!info`** | Views every confirmed cases. |
+| **`c!stats`** | Views graphical statistics. |
+| **`c!country <COUNTRY>`** | Views information about multiple chosen country/region. You can either use autocompletion or country code. Valid country/region are listed in `c!info`. Example : `c!country fr germ it poland`. |
+| **`c!track <COUNTRY / [disable]>`** | Track multiple country (bot will DM you update). `c!track <COUNTRY>` work like `c!country <COUNTRY>` (country code / autocompletion) see `c!help`. `c!track disable` will disable the tracker. |
 | **`c!notification <enable / disable>`** | (Only administrator) When new datas are downloaded the bot will send you a notification where you typed the command. |
+| **`c!source`** | Views source data which the bot is based on. |
+| **`c!suggestion <MESSAGE>`** | Send suggestion feedback. |
+| **`c!bug <MESSAGE>`** | Send bug feedback. |
+| **`c!about`** | Views informations about the bot. |
 | **`c!invite`** | Views bot link invite. |
 
 ## Few examples
