@@ -7,7 +7,7 @@
 - `c!vote`
 - `c!track <COUNTRY | [disabled]>`
 - `c!suggestion <MESSAGE>`
-- `c!suggestion <MESSAGE>`
+- `c!bug <MESSAGE>`
 - New data sources.
 
 ### Fixed
