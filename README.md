@@ -25,6 +25,7 @@ Prefix : **`c! or @mention`**
 | ------- | ----------- |
 | **`c!help`** | Views help command. |
 | **`c!info`** | Views every confirmed cases. |
+| **`c!news`** | Views recent news about COVID-19 (update every 1 hour). |
 | **`c!stats`** | Views graphical statistics. |
 | **`c!country <COUNTRY>`** | Views information about multiple chosen country/region. You can either use autocompletion or country code. Valid country/region are listed in `c!info`. Example : `c!country fr germ it poland`. |
 | **`c!track <COUNTRY / [disable]>`** | Track multiple country (bot will DM you update). `c!track <COUNTRY>` work like `c!country <COUNTRY>` (country code / autocompletion) see `c!help`. `c!track disable` will disable the tracker. |
@@ -34,6 +35,7 @@ Prefix : **`c! or @mention`**
 | **`c!bug <MESSAGE>`** | Send bug feedback. |
 | **`c!about`** | Views informations about the bot. |
 | **`c!invite`** | Views bot link invite. |
+| **`c!vote`** | Views bot vote link. |
 
 ## Few examples
 
@@ -47,16 +49,51 @@ Prefix : **`c! or @mention`**
 
 ## Built With
 
-* [discord.py](https://discordpy.readthedocs.io/en/latest/)
+* [discord.py]
 
 ## Author
 
-* [**takitsu21**](https://github.com/takitsu21/)
+* [**takitsu21**]
 
 ### License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE.md] file for details.
 
 ### Deployment
 
 * Scaleway
+
+# [Changelog]
+
+## [0.0.2] - 2020-03-13
+
+### Added
+
+- `c!news` recent news about COVID-19 using newsapi.org
+- New field in `c!help` for `c!news`
+
+### Fixed
+
+- Fix typos that didn't match with the current difference visualisation.
+- Fix GMT update typos.
+- Improvements on data update.
+
+## [0.0.1] - 2020-03-12
+
+### Added
+
+- `c!vote`
+- `c!track <COUNTRY | [disabled]>`
+- `c!suggestion <MESSAGE>`
+- `c!bug <MESSAGE>`
+- New data sources.
+
+### Fixed
+
+- Graphical statistics now update the current day cases.
+- You can use country code to get a country data with `c!country <COUNTRY>`
+
+[Changelog]: CHANGELOG
+[discord.py]: https://discordpy.readthedocs.io/en/latest/
+[**takitsu21**]: https://github.com/takitsu21/
+[LICENSE.md]: LICENCE
