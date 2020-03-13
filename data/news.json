@@ -1,0 +1,266 @@
+{
+    "status": "ok",
+    "totalResults": 26,
+    "articles": [
+        {
+            "source": {
+                "id": "cbs-news",
+                "name": "CBS News"
+            },
+            "author": "Irina Ivanova",
+            "title": "Coronavirus closures: List of events, sports, and more canceled amid covid-19 fears",
+            "description": "The spread of the novel coronavirus has caused sporting events, concerts and business conferences to be called off or postponed.",
+            "url": "https://www.cbsnews.com/news/coronavirus-closures-list-of-events-sports-concerts-cancelled-amid-covid-19-fears/",
+            "urlToImage": "https://cbsnews3.cbsistatic.com/hub/i/r/2020/03/11/39b5a3d5-fdb4-4c12-86fa-6962bd853e52/thumbnail/1200x630/6dcc0722b8ddac4f51cdabc3303f548d/coachella-gettyimages-1144320973.jpg",
+            "publishedAt": "2020-03-13T14:41:00+00:00",
+            "content": "The novel coronavirus continues to spread in the U.S., with more than 1,300 people sickened and 42 dead. Cities and states are restricting large gatherings of people, and even presidential hopefuls are canceling rallies. Here is a list of events and destinati\u2026 [+17805 chars]"
+        },
+        {
+            "source": {
+                "id": "news-com-au",
+                "name": "News.com.au"
+            },
+            "author": "Victoria Craw",
+            "title": "Coronavirus: Chinese official claims virus could have started in US as fear over COVID-19 sweeps world",
+            "description": "Coronavirus: Chinese official claims virus could have started in US as fear over COVID-19 sweeps world",
+            "url": "https://www.news.com.au/lifestyle/health/health-problems/coronavirus-chinese-official-claims-virus-could-have-started-in-us-as-fear-over-covid19-sweeps-world/news-story/690e9d9562974444ab85d37161226714",
+            "urlToImage": "https://cdn.newsapi.com.au/image/v1/efa68ca3051b65ce396ec441ce46dc8b?width=650",
+            "publishedAt": "2020-03-13T14:15:00Z",
+            "content": "Chinas Foreign Ministry spokesman Lijian Zhao has suggested the deadly coronavirus could have originated in the US and slammed the country for blaming China for the disease spread.The COVID-19 outbreak has been labelled a pandemic by the World Health Organisa\u2026 [+4334 chars]"
+        },
+        {
+            "source": {
+                "id": "news-com-au",
+                "name": "News.com.au"
+            },
+            "author": null,
+            "title": "Coronavirus: Spanish towns in lockdown as COVID-19 \u2018hurricane\u2019 sweeps across the country",
+            "description": "Coronavirus: Spanish towns in lockdown as COVID-19 \u2018hurricane\u2019 sweeps across the country",
+            "url": "https://www.news.com.au/lifestyle/health/health-problems/coronavirus-spanish-towns-in-lockdown-as-covid19-hurricane-sweeps-across-the-country/news-story/d3e56e2b7948fb08b3d54c8c74a5d596",
+            "urlToImage": "https://cdn.newsapi.com.au/image/v1/61bc25ed227fa05f2d672273c27c71a4?width=650",
+            "publishedAt": "2020-03-13T13:57:00Z",
+            "content": "There are fears Spain could emerge as the next Italy, after a massive surge in the countrys number of coronavirus cases overnight.As of Friday morning, Spain had more than 3,800 confirmed cases of the deadly COVID-19 virus and 84 people had died. But by the a\u2026 [+3113 chars]"
+        },
+        {
+            "source": {
+                "id": "cbc-news",
+                "name": "CBC News"
+            },
+            "author": "CBC News",
+            "title": "Coronavirus: Here's what's happening in Canada and around the world | CBC News",
+            "description": "Prime Minister Justin Trudeau, speaking from self-isolation after his wife tested positive for COVID-19, said his government will be introducing further measures to support Canadians amid growing concerns about the novel coronavirus. Here's a look at what Tru\u2026",
+            "url": "http://www.cbc.ca/news/canada/coronavirus-here-s-what-s-happening-in-canada-and-around-the-world-1.5496334",
+            "urlToImage": "https://i.cbc.ca/1.5496348.1584093108!/fileImage/httpImage/image.jpg_gen/derivatives/16x9_620/1206885636.jpg",
+            "publishedAt": "2020-03-13T13:37:59.5350238Z",
+            "content": "The latest:\r\nPrime Minister Justin Trudeau is set to speak to provincial, territorial and Indigenous leaders today about COVID-19 but he'll do it from self-isolation, as his wife is among the almost 160 Canadians who have tested positive for the novel coronav\u2026 [+15520 chars]"
+        },
+        {
+            "source": {
+                "id": "cbs-news",
+                "name": "CBS News"
+            },
+            "author": "CBS News",
+            "title": "Coronavirus updates: COVID-19 pandemic takes a fast-mounting toll on lives and the economy",
+            "description": "Officials worldwide are being forced to accept that slowing the coronavirus' spread will require Herculean, and incredibly painful sacrifices.",
+            "url": "https://www.cbsnews.com/live-updates/coronavirus-updates-cases-fears-deaths-us-latest-2020-03-13/",
+            "urlToImage": "https://cbsnews1.cbsistatic.com/hub/i/r/2020/03/13/19e8c319-c3ec-4821-89f3-3fc6875e7930/thumbnail/1200x630/cb1523e8e205ab657c31bcb167575d3a/coronavirus-philippines-1206899726.jpg",
+            "publishedAt": "2020-03-13T13:07:56+00:00",
+            "content": "A week of dizzying escalation has seen the coronavirus pandemic spread to more than 120 countries, with senior members of governments around the world among those affected. Every aspect of modern life has been impacted as Western countries, including the U.S.\u2026 [+2125 chars]"
+        },
+        {
+            "source": {
+                "id": "the-hindu",
+                "name": "The Hindu"
+            },
+            "author": "Amol Karhadkar",
+            "title": "Coronavirus | India-South Africa series called off due to COVID-19 threat",
+            "description": "The South African team is expected to fly back",
+            "url": "https://www.thehindu.com/sport/cricket/coronavirus-india-south-africa-series-called-off-due-to-covid-19-threat/article31061061.ece",
+            "urlToImage": "https://www.thehindu.com/sport/cricket/zg2hkl/article31047872.ece/ALTERNATES/LANDSCAPE_615/HPCA",
+            "publishedAt": "2020-03-13T12:40:52Z",
+            "content": "Mumbai The three-match ODI series between India and South Africa has been called off in the aftermath of the coronavirus outbreak.\r\nThe first match in Dharamsala was washed out and the remaining two matches in Lucknow and Eden gardens were to be played behind\u2026 [+645 chars]"
+        },
+        {
+            "source": {
+                "id": "talksport",
+                "name": "TalkSport"
+            },
+            "author": "Billy Hawkins",
+            "title": "Coronavirus: Premier League SUSPENDED amid COVID-19 pandemic with decision made at emergency meeting",
+            "description": "",
+            "url": "https://talksport.com/football/682162/coronavirus-premier-league-suspended-covid-19-pandemic/",
+            "urlToImage": "https://talksport.com/wp-content/uploads/sites/5/2020/03/TALKSPORT-Coronavirus-Live-Blog.jpg?strip=all&quality=100&w=1200&h=800&crop=1",
+            "publishedAt": "2020-03-13T11:04:31Z",
+            "content": "All Premier League football has been suspended until April 3 due to coronavirus, it has been confirmed.\r\nAn emergency phone conference was held on Friday morning and it was decided to postpone top flight football after Arsenal, Chelsea and Everton\u2019s first-tea\u2026 [+1988 chars]"
+        },
+        {
+            "source": {
+                "id": "talksport",
+                "name": "TalkSport"
+            },
+            "author": "Billy Hawkins",
+            "title": "Coronavirus: EFL suspends all matches until April 3 due to COVID-19 pandemic after emergency meeting",
+            "description": "",
+            "url": "https://talksport.com/football/efl/682150/coronavirus-efl-fixtures-suspended-april-3-covid-19/",
+            "urlToImage": "https://talksport.com/wp-content/uploads/sites/5/2019/06/GettyImages-1149591992.jpg?strip=all&quality=100&w=1024&h=680&crop=1",
+            "publishedAt": "2020-03-13T10:57:53Z",
+            "content": "The English Football League has decided to suspend all matches until the start of next month due to the coronavirus epidemic, it has been announced.\r\nThere have been 596 confirmed cases of COVID-19 in the United Kingdom, with ten deaths announced, but health \u2026 [+4319 chars]"
+        },
+        {
+            "source": {
+                "id": "talksport",
+                "name": "TalkSport"
+            },
+            "author": "Joe Moore",
+            "title": "Coronavirus: Mikel Arteta and Callum Hudson-Odoi test positive for COVID-19 with Arsenal and Chelsea squads",
+            "description": "",
+            "url": "https://talksport.com/football/682103/coronavirus-mikel-arteta-callum-hudson-odoi-positive-arsenal-chelsea-quarantine/",
+            "urlToImage": "https://talksport.com/wp-content/uploads/sites/5/2020/02/NINTCHDBPICT000559518565-e1581075737292.jpg?strip=all&quality=100&w=1200&h=800&crop=1",
+            "publishedAt": "2020-03-13T07:58:59Z",
+            "content": "Arsenal manager Mikel Arteta and Chelsea winger Callum Hudson-Odoi have both tested positive for coronavirus, with the whole of the Gunners and the Blues\u2019 first-team squads in self-isolation.\r\nPremier League officials will hold an \u2019emergency club meeting\u2019 on \u2026 [+4083 chars]"
+        },
+        {
+            "source": {
+                "id": "news-com-au",
+                "name": "News.com.au"
+            },
+            "author": "https://www.news.com.au/lifestyle/health/health-problems/live-coverage-of-australias-coronavirus-outbreak/live-coverage/1c9f53b5f9f7c48d7f41daa36d3ec447",
+            "title": "Coronavirus in Australia: Total COVID-19 cases rise to 157, warning 20 per cent could be infected",
+            "description": "As the number of coronavirus cases in Australia passes 155, there are warnings up to 1.5 million people could be infected in NSW alone.",
+            "url": "https://www.news.com.au/lifestyle/health/health-problems/live-coverage-of-australias-coronavirus-outbreak/live-coverage/1c9f53b5f9f7c48d7f41daa36d3ec447",
+            "urlToImage": "https://content.api.news/v3/images/bin/ab3e237c90e5dbc7fdeaad7143153676",
+            "publishedAt": "2020-03-13T03:50:09Z",
+            "content": "Treasurer Josh Frydenberg took a beating on 7.30 last night, as host Leigh Sales grilled him about the now wiped out budget surplus.\r\nLast year you were claiming credit for a surplus that you had not yet delivered, saying the Budget was back in black, Sales s\u2026 [+1752 chars]"
+        },
+        {
+            "source": {
+                "id": "the-times-of-india",
+                "name": "The Times of India"
+            },
+            "author": "TIMESOFINDIA.COM",
+            "title": "'Leave no stone unturned': PM Modi's appeal to Saarc amid coronavirus outbreak",
+            "description": "India News: PM Narendra Modi urged all South Asian nations to chalk out a joint strategy to fight the coronavirus outbreak.\"Our planet is battling the COVID-19 No",
+            "url": "http://timesofindia.indiatimes.com/india/leave-no-stone-unturned-pm-modis-appeal-to-saarc-amid-coronavirus-outbreak/articleshow/74608910.cms",
+            "urlToImage": "https://static.toiimg.com/thumb/msid-74608900,width-1070,height-580,imgsize-276509,resizemode-75,overlay-toi_sw,pt-32,y_pad-40/photo.jpg",
+            "publishedAt": "2020-03-13T02:40:00Z",
+            "content": "Our planet is battling the COVID-19 Novel Coronavirus. At various levels, governments and people are trying their b https://t.co/N1XJIEHG5D\r\n\u2014 Narendra Modi (@narendramodi) 1584085646000"
+        },
+        {
+            "source": {
+                "id": "the-hindu",
+                "name": "The Hindu"
+            },
+            "author": "The Hindu Net Desk",
+            "title": "Coronavirus live updates | Canadian PM Justin Trudeau\u2019s wife tested positive",
+            "description": "India reports its first COVID-19 death in Karnataka after a 76-year-old man who recently died tested positive for the novel coronavirus.",
+            "url": "https://www.thehindu.com/news/national/coronavirus-live-updates-march-13-2020/article31056541.ece",
+            "urlToImage": "https://www.thehindu.com/news/international/xb0l86/article31056566.ece/ALTERNATES/LANDSCAPE_615/justinjpg",
+            "publishedAt": "2020-03-13T02:38:27.1360179Z",
+            "content": "The World Health Organisation said that the new\u00a0coronavirus outbreak\u00a0is a controllable pandemic if countries step up measures to tackle it. WHO director-general Tedros Adhanom Ghebreyesus said countries needed to find the right balance between protecting heal\u2026 [+1043 chars]"
+        },
+        {
+            "source": {
+                "id": "crypto-coins-news",
+                "name": "Crypto Coins News"
+            },
+            "author": null,
+            "title": "Studies: Panicking into Recession Could Kill More Than Coronavirus",
+            "description": "COVID-19 is deadly, and it's smart to keep coronavirus from spreading. But even more people could die if we panic the world into recession.",
+            "url": "https://www.ccn.com/studies-panicking-into-recession-could-kill-more-than-coronavirus/",
+            "urlToImage": "https://www.ccn.com/wp-content/uploads/2020/03/coronavirus-5.jpg",
+            "publishedAt": "2020-03-13T01:46:41Z",
+            "content": "<ul><li>The U.S. federal and state governments, along with private organizations, are taking drastic measures to prevent coronavirus from spreading.</li><li>Theres an outcry against anyone perceived as downplaying the pandemic, or not taking it seriously enou\u2026 [+4342 chars]"
+        },
+        {
+            "source": {
+                "id": "football-italia",
+                "name": "Football Italia"
+            },
+            "author": "Football Italia Staff",
+            "title": "The Coronavirus&#039; effect on football",
+            "description": "As the Coronavirus, or COVID-19 as it&rsquo;s also known, spreads rapidly across Europe, football, and sport, is now coming to a standstill.",
+            "url": "http://www.football-italia.net/node/151141",
+            "urlToImage": "https://www.football-italia.net/sites/default/files/imagecache/main_photo/[type]/[nid]/Coronavirus-masks-family-epa_10 (1).jpg",
+            "publishedAt": "2020-03-13T01:00:00Z",
+            "content": "As the Coronavirus, or COVID-19 as it\u2019s also known, spreads rapidly across Europe, football, and sport, is now coming to a standstill.\r\nSerie A was the first major league to be affected by the virus, with games being postponed, rearranged, cancelled further, \u2026 [+3584 chars]"
+        },
+        {
+            "source": {
+                "id": "bleacher-report",
+                "name": "Bleacher Report"
+            },
+            "author": "Scott Polacek",
+            "title": "Adam Silver: NBA Hiatus Will Be at Least 30 Days, 'It's Possible' Season Is over",
+            "description": "NBA  commissioner  Adam Silver  joined TNT's  Inside the NBA  on Thursday and discussed the league's decision to suspend the season because of concerns about the coronavirus (COVID-19) ...",
+            "url": "https://bleacherreport.com/articles/2880666-adam-silver-nba-hiatus-will-be-at-least-30-days-its-possible-season-is-over",
+            "urlToImage": "https://img.bleacherreport.net/img/images/photos/003/857/264/hi-res-4cc13a170b5238492a02db3223b8f401_crop_exact.jpg?w=1200&h=1200&q=75",
+            "publishedAt": "2020-03-13T00:34:42Z",
+            "content": "Stacy Revere/Getty Images\r\nNBA commissioner Adam Silver joined TNT's Inside the NBA on Thursday and discussed the league's decision to suspend the season because of concerns about the coronavirus (COVID-19) pandemic:\r\nBleacher Report@BleacherReportNBA Commiss\u2026 [+1991 chars]"
+        },
+        {
+            "source": {
+                "id": "nfl-news",
+                "name": "NFL News"
+            },
+            "author": "Jeremy Bergman",
+            "title": "XFL suspends 2020 regular season, committed to '21",
+            "description": "The XFL is the latest American sports league to suspend play amid concerns regarding the new coronavirus known as COVID-19.",
+            "url": "http://www.nfl.com/news/story/0ap3000001106054/article/xfl-suspends-2020-regular-season-committed-to-21",
+            "urlToImage": "http://static.nfl.com/static/content/public/photo/2020/02/07/0ap3000001101547_thumbnail_200_150.jpg",
+            "publishedAt": "2020-03-12T23:31:00Z",
+            "content": null
+        },
+        {
+            "source": {
+                "id": "crypto-coins-news",
+                "name": "Crypto Coins News"
+            },
+            "author": null,
+            "title": "Joe Biden's COVID-19 Plan Is Shamelessly Exploiting Coronavirus",
+            "description": "Joe Biden's plan to combat coronavirus is fundamentally unserious at many levels. He's exploiting a health crisis for cheap political points.",
+            "url": "https://www.ccn.com/joe-bidens-covid-19-plan-is-shamelessly-exploiting-coronavirus/",
+            "urlToImage": "https://www.ccn.com/wp-content/uploads/2020/03/joe-biden-hide.jpg",
+            "publishedAt": "2020-03-12T20:55:37Z",
+            "content": "<ul><li>Joe Biden spoke Thursday to lay out his plan for coronavirus.</li><li>But hes not the president.</li><li>And even if he became president, it wouldnt be until next year. So releasing a plan today is just ridiculous.</li></ul>Joe Biden gave an address T\u2026 [+3878 chars]"
+        },
+        {
+            "source": {
+                "id": "business-insider",
+                "name": "Business Insider"
+            },
+            "author": "Aylin Woodward, Shayanne Gal",
+            "title": "How coronavirus symptoms compare to those of flu, allergies, and the common cold - Business Insider",
+            "description": "Diagnosing COVID-19, the disease the new coronavirus causes, is challenging because some symptoms overlap with the flu, colds, and allergies.",
+            "url": "http://www.businessinsider.com/coronavirus-symptoms-compared-to-flu-common-cold-and-allergies-2020-3",
+            "urlToImage": "https://i.insider.com/5e6a58fee4f9fe5dad7d0932?width=1200&format=jpeg",
+            "publishedAt": "2020-03-12T19:16:00Z",
+            "content": "The symptoms of COVID-19 \u2014 the disease caused by the new coronavirus \u2014 overlap with those associated with commons colds, allergies, and the flu. That can make it tricky to diagnose without a test.\r\nEven President Donald Trump to ask pharmaceutical executives \u2026 [+2212 chars]"
+        },
+        {
+            "source": {
+                "id": "business-insider-uk",
+                "name": "Business Insider (UK)"
+            },
+            "author": "Aylin Woodward, Shayanne Gal",
+            "title": "How coronavirus symptoms compare to those of flu, allergies, and the common cold - Business Insider",
+            "description": "Diagnosing COVID-19, the disease the new coronavirus causes, is challenging because some symptoms overlap with the flu, colds, and allergies.",
+            "url": "http://uk.businessinsider.com/coronavirus-symptoms-compared-to-flu-common-cold-and-allergies-2020-3",
+            "urlToImage": "https://i.insider.com/5e6a58fee4f9fe5dad7d0932?width=1200&format=jpeg",
+            "publishedAt": "2020-03-12T19:16:00Z",
+            "content": "The symptoms of COVID-19 \u2014 the disease caused by the new coronavirus \u2014 overlap with those associated with commons colds, allergies, and the flu. That can make it tricky to diagnose without a test.\r\nEven President Donald Trump to ask pharmaceutical executives \u2026 [+2212 chars]"
+        },
+        {
+            "source": {
+                "id": "the-verge",
+                "name": "The Verge"
+            },
+            "author": "Justine Calma",
+            "title": "An evening in Sephora during the COVID-19 pandemic",
+            "description": "Sephora is just one of the businesses adapting to a new normal amid outbreaks of COVID-19. I stopped by one of their stores just before President Trumped announced unprecedented and convoluted measures intended to slow the spread of the novel coronavirus.",
+            "url": "https://www.theverge.com/2020/3/12/21177144/sephora-coronavirus-preperation-covid-19-store-face-cdc-trump",
+            "urlToImage": "https://cdn.vox-cdn.com/thumbor/UfVdZcNDBkJVnM-_vlAp3oDIEwg=/0x447:5000x3065/fit-in/1200x630/cdn.vox-cdn.com/uploads/chorus_asset/file/19788417/1136090608.jpg.jpg",
+            "publishedAt": "2020-03-12T18:51:52Z",
+            "content": "There was a lot of touching\r\nPhoto by John Greim/LightRocket via Getty Images\r\nFor anyone looking to escape coronavirus headlines last night travel banned, Forrest Gump tested positive, basketball was canceled Sephora was your safe space. Okay, maybe not safe\u2026 [+6507 chars]"
+        }
+    ]
+}

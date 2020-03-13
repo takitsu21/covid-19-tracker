@@ -7,7 +7,6 @@ from pymysql.err import IntegrityError
 
 import src.utils as utils
 from src.database import db
-from src.country_code import CD
 
 
 class Datacmds(commands.Cog):
@@ -37,7 +36,6 @@ class Datacmds(commands.Cog):
     #     return pages
 
     @commands.command(name="info")
-    @utils.trigger_typing
     async def info(self, ctx):
         DATA = utils.from_json(utils.DATA_PATH)
         header, text = utils.string_formatting(DATA)
@@ -112,7 +110,7 @@ class Datacmds(commands.Cog):
         #         await ctx.send(file=img, embed=embed)
         # else:
         embed = discord.Embed(
-            description=header + "\n" + text,
+            description="**Country** X`[current_update-morning_update]`\n" + header + "\n" + text,
             color=utils.COLOR,
             timestamp=utils.discord_timestamp()
         )
@@ -136,7 +134,7 @@ class Datacmds(commands.Cog):
         DATA = utils.from_json(utils.DATA_PATH)
         header, text = utils.string_formatting(DATA)
         embed = discord.Embed(
-            description=header + "\n" + text,
+            description="**Country** X`[current_update-morning_update]`\n" + header + "\n" + text,
             color=utils.COLOR,
             timestamp=utils.discord_timestamp()
         )
@@ -153,8 +151,7 @@ class Datacmds(commands.Cog):
         embed.set_image(url=f'attachment://stats.png')
         await ctx.send(file=img, embed=embed)
 
-    @commands.command(name="country")
-    @utils.trigger_typing
+    @commands.command(name="country", aliases=["c"])
     async def country(self, ctx, *country):
         if not len(country):
             embed = discord.Embed(
@@ -170,7 +167,7 @@ class Datacmds(commands.Cog):
                 )
             if len(text) > 0:
                 embed = discord.Embed(
-                    description=header + "\n" + text,
+                    description="**Country** X`[current_update-morning_update`]\n" + header + "\n" + text,
                     color=utils.COLOR,
                     timestamp=utils.discord_timestamp()
                 )
@@ -191,7 +188,6 @@ class Datacmds(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command(name="stats", aliases=["stat", "statistic", "s"])
-    @utils.trigger_typing
     async def stats(self, ctx):
         DATA = utils.from_json(utils.DATA_PATH)
         my_csv = utils.from_json(utils.CSV_DATA_PATH)
@@ -237,7 +233,6 @@ class Datacmds(commands.Cog):
 
     @commands.command(name="notification", aliases=["notif", "notifications"])
     @commands.has_permissions(administrator=True)
-    @utils.trigger_typing
     async def notification(self, ctx, state=None):
         if state is None:
             embed = discord.Embed(
@@ -273,7 +268,7 @@ class Datacmds(commands.Cog):
     async def notif_perm_err(self, ctx, error):
         embed = discord.Embed(
                 title="c!notification",
-                description="You are missing permissions (Administrator required)"
+                description="Something went wrong! :/"
             )
         embed.color = utils.COLOR
         embed.timestamp = utils.discord_timestamp()
@@ -285,7 +280,6 @@ class Datacmds(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command(name="track", aliases=["tracker"])
-    @utils.trigger_typing
     async def track(self, ctx, *country):
         if not len(country):
             embed = discord.Embed(

@@ -17,20 +17,25 @@ class Help(commands.Cog):
         self.thumb = "https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/COVID-19_Outbreak_World_Map.svg/langen-1000px-COVID-19_Outbreak_World_Map.svg.png"
 
     @commands.command(name="help", aliases=["h"])
-    @utils.trigger_typing
     async def help(self, ctx):
         embed = discord.Embed(
             title=":newspaper: Coronavirus COVID-19 Commands",
             description="""[Wold Health Organization advices](https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public)
-            **`<something>`** is required
-            **`[something]`** is optional
-            **`arg1 | arg2`** mean arg1 or arg2\n""",
+            **`<something>`** something is required
+            **`[something]`** something is optional
+            **`arg1 | arg2`** mean arg1 or arg2
+            **NOTE: DATA MAY NOT BE FULLY ACCURATE**""",
             color=utils.COLOR,
             timestamp=utils.discord_timestamp()
         )
         embed.add_field(
             name="**`c!info`**",
             value="Views every confirmed cases",
+            inline=False
+        )
+        embed.add_field(
+            name="**`c!news`**",
+            value="Views recent news about COVID-19 (update every 1 hour).",
             inline=False
         )
         embed.add_field(
@@ -96,7 +101,6 @@ class Help(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command(name="vote")
-    @utils.trigger_typing
     async def vote(self, ctx):
         embed = discord.Embed(
                 description="[Click here](https://top.gg/bot/682946560417333283/vote)",
@@ -109,7 +113,6 @@ class Help(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command(name="invite")
-    @utils.trigger_typing
     async def invite(self, ctx):
         embed = discord.Embed(
                 description="[Click here](https://discordapp.com/oauth2/authorize?client_id=682946560417333283&scope=bot&permissions=313408)",
@@ -122,7 +125,6 @@ class Help(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command(name="about")
-    @utils.trigger_typing
     async def about(self, ctx):
         DATA = utils.from_json(utils.DATA_PATH)
         embed = discord.Embed(
@@ -155,7 +157,6 @@ class Help(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command(name="sources", aliases=["source"])
-    @utils.trigger_typing
     async def sources(self, ctx):
         embed = discord.Embed(
             description="[CSSEGISandData](https://github.com/CSSEGISandData/COVID-19)",
@@ -174,7 +175,6 @@ class Help(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command(name="ping")
-    @utils.trigger_typing
     async def ping(self, ctx):
         """Ping's Bot"""
         before = time.monotonic()
@@ -193,7 +193,6 @@ class Help(commands.Cog):
         await message.edit(content="", embed=embed)
 
     @commands.command(name="suggestion")
-    @utils.trigger_typing
     async def suggestion(self, ctx, *message):
         if len(message) < 3:
             embed = discord.Embed(title="Suggestion",
@@ -217,7 +216,6 @@ class Help(commands.Cog):
         return await ctx.send(embed=embed)
 
     @commands.command(name="bug")
-    @utils.trigger_typing
     async def bug(self, ctx, *message):
         if len(message) < 3:
             embed = discord.Embed(title="Bug report",

@@ -32,7 +32,6 @@ class Database:
         cur = conn.cursor()
         sql = """DELETE FROM notification WHERE guild_id=%s"""
         cur.execute(sql, (guild_id, ))
-        logger.info(f'{guild_id} removed')
         conn.commit()
         cur.close()
 

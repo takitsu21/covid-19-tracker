@@ -1,20 +1,22 @@
 import csv
-from typing import List, Dict, Tuple
+from typing import List, Dict, Tuple, IO
 import functools
 from discord.ext import commands
 import datetime as dt
 import time
 import json
 import os
-import requests
+import asyncio
 from decouple import config
-
-from src.country_code import CD
+from aiohttp import ClientSession
+import aiofiles
 
 
 URI_DATA      = config("uri_data")
 DATA_PATH     = "data/datas.json"
 CSV_DATA_PATH = "data/parsed_csv.json"
+NEWS_PATH     = "data/news.json"
+
 COLOR         = 0x5A12DF
 DISCORD_LIMIT = 2 ** 11 # discord limit 2048
 USER_AGENT    = {'User-Agent': 'Mozilla/5.0 (X11; Linux i586; rv:31.0) Gecko/20100101 Firefox/73.0'}
@@ -25,11 +27,6 @@ _RECOVERED_URI  = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/mas
 _CONFIRMED_PATH = "data/time_series_19-covid-Confirmed.csv"
 _DEATH_PATH     = "data/time_series_19-covid-Deaths.csv"
 _RECOVERED_PATH = "data/time_series_19-covid-Recovered.csv"
-DICT            = {
-        _CONFIRMED_URI: _CONFIRMED_PATH,
-        _DEATH_URI: _DEATH_PATH,
-        _RECOVERED_URI: _RECOVERED_PATH
-    }
 
 
 def csv_parse():
@@ -81,45 +78,14 @@ def csv_parse():
     with open(CSV_DATA_PATH, "w") as f:
         f.write(json.dumps(dic, indent=4))
 
-def cache_data() -> None:
-    r = requests.get(URI_DATA, headers=USER_AGENT)
-    if r.status_code >= 200 and r.status_code <= 299:
-        with open(DATA_PATH, "w") as f:
-            f.write("{}".format(json.dumps(r.json(), indent=4)))
-    else:
-        raise requests.RequestException("Status code error : {}".format(r.status_code))
+def matching_path(fpath: str):
+    fpath = fpath.split("-")
+    return fpath[2].lower()[:-4]
 
 def from_json(fpath: str) -> dict:
     with open(fpath, "r") as f:
         jso = json.load(f)
     return jso
-
-def parse_data(data: dict) -> dict:
-    d = {}
-    t_c = 0
-    t_r = 0
-    t_d = 0
-    for iter in data["features"]:
-        f = iter["attributes"]
-        if f["Country_Region"] not in d:
-            d[f["Country_Region"]] = {
-                "confirmed": f["Confirmed"],
-                "recovered": f["Recovered"],
-                "deaths": f["Deaths"]
-            }
-        else:
-            d[f["Country_Region"]]["confirmed"] += f["Confirmed"]
-            d[f["Country_Region"]]["recovered"] += f["Recovered"]
-            d[f["Country_Region"]]["deaths"] += f["Deaths"]
-        t_c += f["Confirmed"]
-        t_r += f["Recovered"]
-        t_d += f["Deaths"]
-    d["total"] = {
-        "confirmed": t_c,
-        "recovered": t_r,
-        "deaths": t_d
-    }
-    return d
 
 def difference_on_update(old_data: dict, new_data: dict):
     old_c = old_data["total"]["confirmed"]
@@ -129,26 +95,6 @@ def difference_on_update(old_data: dict, new_data: dict):
     new_r = new_data["total"]["recovered"]
     new_d = new_data["total"]["deaths"]
     return new_c - old_c, new_r - old_r, new_d - old_d
-
-def is_countryCode(v: str) -> bool:
-    return len(v) == 2 and CD.get(v.upper()) is not None
-
-def special_case(country):
-    spec = {
-            "us": "United States",
-            "uk": "United Kingdom"
-    }
-    country = country.lower()
-    if country in spec:
-        return spec[country.lower()]
-    return ' '.join(x.capitalize() for x in country.split(' '))
-
-def country_verifier(k: str, param: str) -> str:
-    if is_countryCode(param) and param.lower() not in ("us", "uk"):
-        return CD[param.upper()]
-    elif k.lower().startswith(param.lower()):
-        return k.lower()
-    return ""
 
 def diff_confirmed(csv: dict, k: str, v: dict, key_getter: str) -> int:
     if type(csv) == list:
@@ -165,23 +111,19 @@ def string_formatting(data_parsed: dict, param: list=[]) -> Tuple[str, str]:
     old_text = ""
     text = ""
     d = {}
-    header = "Country `[current_update-morning_update]`\nConfirmed **{}** [+**{}**]\nRecovered **{}** ({}) [+**{}**]\nDeaths **{}** ({}) [+**{}**]\n"
+    header = "Confirmed **{}** [+**{}**]\nRecovered **{}** ({}) [+**{}**]\nDeaths **{}** ({}) [+**{}**]\n"
     header_length = len(header)
     param_length = len(param)
     my_csv = from_json(CSV_DATA_PATH)
-    # my_csv = from_json("parsed_csv.json")
     if param_length:
-        buffer = []
         for p in param:
             p = p.lower()
             p_length = len(p)
             for k, v in data_parsed["data"].items():
-                # country = country_verifier(k, p)
                 try:
                     country = v["country"]["name"] if v["country"]["name"] is not None else "."
                     code = v['country']['code'] if v["country"]["code"] is not None else "."
                     stats = v['statistics']
-                    # if k not in buffer and k.lower() == country.lower():
                     if (p_length == 2 and p == code.lower()):
                         text += f"**{country}** : {stats['confirmed']} confirmed [+**{diff_confirmed(my_csv, country, stats, 'confirmed')}**], {stats['recovered']} recovered [+**{diff_confirmed(my_csv, country, stats, 'recovered')}**], {stats['deaths']} deaths [+**{diff_confirmed(my_csv, country, stats, 'deaths')}**]\n"
                         length = len(text) + header_length
@@ -201,7 +143,7 @@ def string_formatting(data_parsed: dict, param: list=[]) -> Tuple[str, str]:
             if stats['confirmed']:
                 text += f"**{country}** {confirmed} [+{diff_confirmed(my_csv, country, v['statistics'], 'confirmed')}]\n"
                 length = len(text) + header_length
-            if length > max_length:
+            if length >= max_length:
                 break
             else:
                 old_text = text
@@ -233,10 +175,6 @@ def data_reader(fpath: str) -> List[dict]:
         cr = csv.DictReader(f.read().splitlines(), delimiter=',')
     return list(cr)
 
-def matching_path(fpath: str):
-    fpath = fpath.split("-")
-    return fpath[2].lower()[:-4]
-
 def discord_timestamp():
     return dt.datetime.utcfromtimestamp(time.time())
 
@@ -245,16 +183,61 @@ def last_key(csv_data: List[dict]) -> int:
 
 def last_update(fpath: str):
     lcu = dt.datetime.utcfromtimestamp(os.path.getctime(fpath))
-    return f"Last update {lcu.strftime('%Y-%m-%d %H:%M:%S')} GMT"
+    return f"Last update {lcu.strftime('%Y-%m-%d %H:%M:%S')} GMT +0000"
 
 def percentage(total, x):
     return "{:.2f}%".format(x * 100 / total) if total > 0 else 0
 
-def get_data():
-    r = requests.get("https://coronavirus-stats.stantabcorp.co.uk/")
-    with open("thibault.json", "w") as f:
-        f.write(json.dumps(r.json(), indent=4))
 
-if __name__ == "__main__":
-    # get_data()
-    print(string_formatting(from_json("thibault.json")))
+class UpdateHandler:
+    def __init__(self, lang="en"):
+        self.news_api_key = config("news_api")
+        self.q = "coronavirus covid 19"
+        self.lang = lang
+        self.update_list = self.update_list()
+
+    def is_csv(self, path: str):
+        return path[-4:] == ".csv"
+
+    def update_list(self):
+        return {
+            f"http://newsapi.org/v2/top-headlines?apiKey={self.news_api_key}&language={self.lang}&q={self.q}": NEWS_PATH,
+            config("uri_data"): DATA_PATH,
+            _CONFIRMED_URI: _CONFIRMED_PATH,
+            _RECOVERED_URI: _RECOVERED_PATH,
+            _DEATH_URI: _DEATH_PATH
+        }
+
+    async def fetch(self, url: str, session: ClientSession, **kwargs):
+        resp = await session.request(
+            method="GET",
+            url=url,
+            **kwargs
+        )
+        try:
+            data = await resp.json()
+        except Exception as e:
+            data = await resp.text()
+        return data
+
+    async def parse(self, url: str, session: ClientSession, **kwargs):
+        resp = await self.fetch(url=url, session=session, **kwargs)
+        if self.is_csv(url):
+            return resp
+        return json.dumps(resp, indent=4)
+
+    async def _write(self, url:str, file: IO, session: ClientSession, **kwargs):
+        to_write = await self.parse(url=url, session=session, **kwargs)
+        if not to_write:
+            return None
+        async with aiofiles.open(file, "w+") as f:
+            await f.write(to_write)
+
+    async def update(self, **kwargs):
+        async with ClientSession() as session:
+            tasks = []
+            for url, fpath in self.update_list.items():
+                tasks.append(
+                    self._write(url=url, file=fpath, session=session, **kwargs)
+                )
+            await asyncio.gather(*tasks)

@@ -13,6 +13,7 @@ import json
 
 import src.utils as utils
 from src.database import db
+from src import up
 
 
 logger = logging.getLogger('covid-19')
@@ -36,7 +37,7 @@ class Covid(commands.AutoShardedBot):
             command_prefix=when_mentioned_or("c!"),
             activity=discord.Game(name="Starting..."),
             status=discord.Status.dnd,
-            shard_count=4
+            shard_count=5
             )
         self.remove_command("help")
         self._load_extensions()
@@ -137,7 +138,7 @@ class Covid(commands.AutoShardedBot):
 
     def run(self, *args, **kwargs):
         try:
-            self.loop.run_until_complete(self.start(decouple.config("debug")))
+            self.loop.run_until_complete(self.start(decouple.config("token")))
         except KeyboardInterrupt:
             self.loop.run_until_complete(self.logout())
             for task in asyncio.all_tasks(self.loop):
