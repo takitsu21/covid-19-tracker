@@ -29,6 +29,7 @@ Prefix : **`c! or @mention`**
 | **`c!stats`** | Views graphical statistics. |
 | **`c!country <COUNTRY>`** | Views information about multiple chosen country/region. You can either use autocompletion or country code. Valid country/region are listed in `c!info`. Example : `c!country fr germ it poland`. |
 | **`c!track <COUNTRY / [disable]>`** | Track multiple country (bot will DM you update). `c!track <COUNTRY>` work like `c!country <COUNTRY>` (country code / autocompletion) see `c!help`. `c!track disable` will disable the tracker. |
+| **`c!<r / region> <STATE/PROVINCE / all> in <COUNTRY>`** | Views regions infected in specific country or in all state with all arg. The `in` (mandatory symbol) is interpreted as separator between the country and the region/province so don't forget it. Example 1 : `c!r new york in us`. Example 2 : `c!region all in china`. |
 | **`c!notification <enable / disable>`** | (Only administrator) When new datas are downloaded the bot will send you a notification where you typed the command. |
 | **`c!source`** | Views source data which the bot is based on. |
 | **`c!suggestion <MESSAGE>`** | Send suggestion feedback. |
@@ -39,13 +40,17 @@ Prefix : **`c! or @mention`**
 
 ## Few examples
 
-![Example info](https://i.imgur.com/jbhAfLp.png)
+![Example info](https://i.imgur.com/tI4DslS.png)
 
-![Example Stats](https://i.imgur.com/9ik4lg4.png)
+![Example Stats](https://i.imgur.com/s2IQlwI.png)
 
-![Example country filter](https://i.imgur.com/wt6QNYt.png)
+![Example country filter](https://i.imgur.com/19xhCLZ.png)
 
-![Example notification](https://i.imgur.com/mTvOfyz.png)
+![State/Province](https://i.imgur.com/FUkXgNq.png)
+
+![Example notification](https://i.imgur.com/AhU5yKJ.png)
+
+
 
 ## Built With
 
@@ -63,9 +68,28 @@ This project is licensed under the MIT License - see the [LICENSE.md] file for d
 
 * Scaleway
 
-# [Changelog]
+# Changelog
 
-## [0.0.2] - 2020-03-13
+## 0.0.3 - 2020-03-15
+
+### Added
+
+- New command : `c!<r | region> <STATE/PROVINCE | all> in <COUNTRY>`,
+  now you can get stats from state/province in available countries.
+- New field in `c!help` for `c!<r | region>` command.
+- [Patreon] field added in `c!about`.
+- World Health Organization (WHO) source in `c!source`.
+
+### Fixed
+
+- English typos.
+
+### Changed
+
+- Better formatting visualization for `c!country`, `c!info`, `c!notication`, `c!track`
+- Better graphic visualization on x and y axis, timeline rotation and some color changes.
+
+## 0.0.2 - 2020-03-13
 
 ### Added
 
@@ -78,7 +102,7 @@ This project is licensed under the MIT License - see the [LICENSE.md] file for d
 - Fix GMT update typos.
 - Improvements on data update.
 
-## [0.0.1] - 2020-03-12
+## 0.0.1 - 2020-03-12
 
 ### Added
 
@@ -93,6 +117,7 @@ This project is licensed under the MIT License - see the [LICENSE.md] file for d
 - Graphical statistics now update the current day cases.
 - You can use country code to get a country data with `c!country <COUNTRY>`
 
+[Patreon]: https://www.patreon.com/takitsu
 [Changelog]: CHANGELOG
 [discord.py]: https://discordpy.readthedocs.io/en/latest/
 [**takitsu21**]: https://github.com/takitsu21/

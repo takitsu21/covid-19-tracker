@@ -14,113 +14,31 @@ class Datacmds(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.thumb = "https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/COVID-19_Outbreak_World_Map.svg/langen-1000px-COVID-19_Outbreak_World_Map.svg.png"
-        self.author_thumb = "https://www.stickpng.com/assets/images/5bd08abf7aaafa0575d8502b.png"
-
-    # def generate_pages(self, data, header_length):
-    #     length = header_length
-    #     basic_length = 16
-    #     max_length = utils.DISCORD_LIMIT - 50
-    #     text = ""
-    #     pages = []
-    #     buffer = []
-    #     my_csv = utils.data_reader(utils._CONFIRMED_PATH)
-    #     for k, v in data.items():
-    #         part = f"**{k}** {v['confirmed']} [**+{utils.diff_confirmed(my_csv, k, v)}**]\n"
-    #         text += part
-    #         length = len(text) + header_length
-    #         if length >= max_length:
-    #             pages.append([''.join(buffer)])
-    #             buffer = []
-    #             length = 0
-    #         buffer.append(part)
-    #     return pages
+        self.author_thumb = "https://cdn2.iconfinder.com/data/icons/cornavirus-covid-19/64/_bat_night_animal_virus_disease-256.png"
 
     @commands.command(name="info")
     async def info(self, ctx):
         DATA = utils.from_json(utils.DATA_PATH)
-        header, text = utils.string_formatting(DATA)
-        # pages = self.generate_pages(DATA, len(header))
-        # index = 0
-
-        # page_length = len(pages)
-        # print(page_length)
-        # if page_length > 1:
-            # page_left = "⬅️"
-            # page_right = "➡️"
-            # base_reactions = [page_left, page_right]
-            # embed.set_author(
-            #         name=f"Page {index + 1}",
-            #         url="https://www.who.int/home",
-            #         icon_url=self.author_thumb
-            #         )
-            # pagination = await ctx.send(embed=embed)
-            # for reaction in base_reactions:
-            #     await pagination.add_reaction(reaction)
-            # while True:
-            #     def check(reaction, user):
-            #         return user == ctx.message.author and str(reaction.emoji) in base_reactions
-            #     try:
-            #         reaction, user = await self.bot.wait_for('reaction_add', check=check, timeout=300.0)
-            #         emoji = str(reaction.emoji)
-            #     except asyncio.TimeoutError:
-            #         try:
-            #             await ctx.message.delete()
-            #         except:
-            #             pass
-            #         return await pagination.delete()
-            #     if page_left in emoji and index > 0:
-            #         index -= 1
-            #     elif page_right in emoji and index < page_length:
-            #         index += 1
-            #     if index >= 0 and index <= page_length:
-            #         embed = discord.Embed(
-            #             description=pages[0][index]
-            #         )
-            #         embed.set_author(
-            #             name=f"Page {index + 1}",
-            #             url="https://www.who.int/home",
-            #             icon_url=self.author_thumb
-            #             )
-            #         embed.color = utils.COLOR
-            #         embed.timestamp = utils.discord_timestamp()
-            #         embed.set_thumbnail(url=self.thumb)
-            #         embed.set_footer(text=utils.last_update(utils.DATA_PATH),
-            #                         icon_url=ctx.guild.me.avatar_url)
-
-            #         await pagination.edit(embed=embed)
-        #     for i, _p in enumerate(pages):
-        #         embed = discord.Embed(
-        #             description=header + "\n" + _p[i],
-        #             color=utils.COLOR,
-        #             timestamp=utils.discord_timestamp()
-        #         )
-        #         embed.set_author(
-        #                 name=f"Coronavrius COVID-19 Pages {i + 1}/{page_length} (Cases confirmed)",
-        #                 url="https://www.who.int/home",
-        #                 icon_url=self.author_thumb
-        #                 )
-        #         embed.color = utils.COLOR
-        #         embed.timestamp = utils.discord_timestamp()
-        #         embed.set_thumbnail(url=self.thumb)
-        #         embed.set_footer(text=utils.last_update(utils.DATA_PATH),
-        #                         icon_url=ctx.guild.me.avatar_url)
-        #         with open("stats.png", "rb") as p:
-        #             img = discord.File(p, filename="stats.png")
-        #         embed.set_image(url=f'attachment://stats.png')
-        #         await ctx.send(file=img, embed=embed)
-        # else:
-        embed = discord.Embed(
-            description="**Country** X`[current_update-morning_update]`\n" + header + "\n" + text,
-            color=utils.COLOR,
-            timestamp=utils.discord_timestamp()
-        )
+        embed = utils.make_tab_embed_all()
         embed.set_author(
-                name=f"Country/Region affected by Coronavirus COVID-19 (Cases confirmed)",
+                name=f"All countries affected by Coronavirus COVID-19",
                 url="https://www.who.int/home",
                 icon_url=self.author_thumb
                 )
-        embed.color = utils.COLOR
-        embed.timestamp = utils.discord_timestamp()
+        c, r, d = utils.difference_on_update(utils.from_json(utils.CSV_DATA_PATH), DATA)
+        tot = DATA['total']
+        header = "NOTE: [+**(CURRENT_UPDATE-MORNING_UPDATE)**]\nConfirmed **{}** [+**{}**]\nRecovered **{}** (**{}**) [+**{}**]\nDeaths **{}** (**{}**) [+**{}**]"
+        header = header.format(
+            tot["confirmed"],
+            c,
+            tot["recovered"],
+            utils.percentage(tot["confirmed"], tot["recovered"]),
+            r,
+            tot["deaths"],
+            utils.percentage(tot["confirmed"], tot["deaths"]),
+            d
+        )
+        embed.description = header
         embed.set_thumbnail(url=self.thumb)
         embed.set_footer(text=utils.last_update(utils.DATA_PATH),
                         icon_url=ctx.guild.me.avatar_url)
@@ -131,10 +49,11 @@ class Datacmds(commands.Cog):
 
     @info.error
     async def info_error(self, ctx, error):
+        return await ctx.send(str(error))
         DATA = utils.from_json(utils.DATA_PATH)
         header, text = utils.string_formatting(DATA)
         embed = discord.Embed(
-            description="**Country** X`[current_update-morning_update]`\n" + header + "\n" + text,
+            description="NOTE: [+**(CURRENT_UPDATE-LAST_HOUR_UPDATE)**]\n" + header + "\n" + text,
             color=utils.COLOR,
             timestamp=utils.discord_timestamp()
         )
@@ -160,24 +79,30 @@ class Datacmds(commands.Cog):
                     timestamp=utils.discord_timestamp()
                 )
         else:
-            DATA = utils.from_json(utils.DATA_PATH)
-            header, text = utils.string_formatting(
-                    DATA,
-                    country
+            try:
+                embed = utils.make_tab_embed_all(is_country=True, params=country)
+                DATA = utils.from_json(utils.DATA_PATH)
+                c, r, d = utils.difference_on_update(utils.from_json(utils.CSV_DATA_PATH), DATA)
+                tot = DATA['total']
+                header = "NOTE: [+**(CURRENT_UPDATE-MORNING_UPDATE)**]\nConfirmed **{}** [+**{}**]\nRecovered **{}** (**{}**) [+**{}**]\nDeaths **{}** (**{}**) [+**{}**]"
+                header = header.format(
+                    tot["confirmed"],
+                    c,
+                    tot["recovered"],
+                    utils.percentage(tot["confirmed"], tot["recovered"]),
+                    r,
+                    tot["deaths"],
+                    utils.percentage(tot["confirmed"], tot["deaths"]),
+                    d
                 )
-            if len(text) > 0:
+                embed.description = header
+            except:
                 embed = discord.Embed(
-                    description="**Country** X`[current_update-morning_update`]\n" + header + "\n" + text,
+                    description="Wrong country selected.\nViews information about multiple chosen country/region. You can either use autocompletion or country code. Valid country/region are listed in `c!info`.\nExample : `c!country fr germ it poland`",
                     color=utils.COLOR,
                     timestamp=utils.discord_timestamp()
                 )
-            else:
-                embed = discord.Embed(
-                    description="Wrong country selected or this country/region is not affected by Coronavirus COVID-19",
-                    color=utils.COLOR,
-                    timestamp=utils.discord_timestamp()
-                )
-        embed.set_author(name="Current Region/Country affected by Coronavirus COVID-19",
+        embed.set_author(name="Country affected by COVID-19",
                         url="https://www.who.int/home",
                         icon_url=self.author_thumb)
         embed.set_thumbnail(url=self.thumb)
@@ -196,7 +121,7 @@ class Datacmds(commands.Cog):
         recovered = DATA['total']['recovered']
         deaths = DATA['total']['deaths']
         embed = discord.Embed(
-                            description="`[current_update-morning_update]`",
+                            description="NOTE: `[+(CURRENT_UPDATE-MORNING_UPDATE)]`",
                             timestamp=utils.discord_timestamp(),
                             color=utils.COLOR,
                             )
@@ -208,17 +133,17 @@ class Datacmds(commands.Cog):
             url=self.thumb
             )
         embed.add_field(
-            name="Confirmed",
+            name="<:confirmed:688686089548202004> Confirmed",
             value=f"**{confirmed}** [+**{t}**]",
             inline=False
             )
         embed.add_field(
-                    name="Recovered",
+                    name="<:recov:688686059567185940> Recovered",
                     value=f"**{recovered}** ({utils.percentage(confirmed, recovered)}) [+**{r}**]",
                     inline=False
                     )
         embed.add_field(
-            name="Deaths",
+            name="<:_death:688686194917244928> Deaths",
             value=f"**{deaths}** ({utils.percentage(confirmed, deaths)}) [+**{c}**]",
             inline=False
             )
@@ -268,7 +193,7 @@ class Datacmds(commands.Cog):
     async def notif_perm_err(self, ctx, error):
         embed = discord.Embed(
                 title="c!notification",
-                description="Something went wrong! :/"
+                description=f"Something went wrong! :/ {error}"
             )
         embed.color = utils.COLOR
         embed.timestamp = utils.discord_timestamp()
@@ -319,12 +244,12 @@ class Datacmds(commands.Cog):
                         timestamp=utils.discord_timestamp()
                     )
                 embed.set_author(
-                    name="Tracker has been setted up! You can see your tracked list. Update will be send in DM",
+                    name="Tracker has been set up! You can see your tracked list. Updates will be send in DM",
                     icon_url=self.author_thumb
                 )
             else:
                 embed = discord.Embed(
-                    description="Wrong country selected or this country/region is not affected by Coronavirus COVID-19",
+                    description="Wrong country selected.",
                     color=utils.COLOR,
                     timestamp=utils.discord_timestamp()
                 )
@@ -338,6 +263,36 @@ class Datacmds(commands.Cog):
             icon_url=ctx.guild.me.avatar_url
         )
         await ctx.send(embed=embed)
+
+    @commands.command(name="region", aliases=["r"])
+    async def region(self, ctx, *params):
+        if len(params):
+            embed = utils.make_tab_embed_region(*params)
+            if len(embed.fields[0].value) > 0:
+                pass
+            else:
+                embed = discord.Embed(
+                    description="Wrong province/state or country, see `c!help`.",
+                    color=utils.COLOR,
+                    timestamp=utils.discord_timestamp()
+                )
+        else:
+            embed = discord.Embed(
+                description="Missing args, see `c!help`",
+                color=utils.COLOR,
+                timestamp=utils.discord_timestamp()
+            )
+        embed.set_author(
+            name="Coronavirus COVID-19 (State/Province)",
+            icon_url=self.author_thumb
+        )
+        embed.set_thumbnail(url=self.thumb)
+        embed.set_footer(
+            text=utils.last_update(utils.DATA_PATH),
+            icon_url=ctx.guild.me.avatar_url
+        )
+        await ctx.send(embed=embed)
+
 
 def setup(bot):
     bot.add_cog(Datacmds(bot))

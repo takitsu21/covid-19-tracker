@@ -37,7 +37,7 @@ class Covid(commands.AutoShardedBot):
             command_prefix=when_mentioned_or("c!"),
             activity=discord.Game(name="Starting..."),
             status=discord.Status.dnd,
-            shard_count=5
+            shard_count=6
             )
         self.remove_command("help")
         self._load_extensions()
@@ -108,21 +108,21 @@ class Covid(commands.AutoShardedBot):
                     confirmed = data["total"]["confirmed"]
                     await self.change_presence(
                         activity=discord.Game(
-                            name="[c!help] | Total confirmed {}".format(confirmed)
+                            name="[c!help] | {} Confirmed".format(confirmed)
                             )
                         )
                 elif i == 1:
                     deaths = data["total"]["deaths"]
                     await self.change_presence(
                         activity=discord.Game(
-                            name="[c!help] | Total deaths {}".format(deaths)
+                            name="[c!help] | {} Deaths".format(deaths)
                             )
                         )
                 else:
                     recovered = data["total"]["recovered"]
                     await self.change_presence(
                         activity=discord.Game(
-                            name="[c!help] | Total recovered {}".format(recovered)
+                            name="[c!help] | {} Recovered".format(recovered)
                             )
                         )
                 i = (i + 1) % 3

@@ -22,7 +22,7 @@ class AutoUpdater(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.thumb = "https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/COVID-19_Outbreak_World_Map.svg/langfr-280px-COVID-19_Outbreak_World_Map.svg.png"
-        self.author_thumb = "https://www.stickpng.com/assets/images/5bd08abf7aaafa0575d8502b.png"
+        self.author_thumb = "https://cdn2.iconfinder.com/data/icons/cornavirus-covid-19/64/_bat_night_animal_virus_disease-256.png"
         self.bot.loop.create_task(self.main())
 
     async def send_notifications(self, old_data, new_data):
@@ -32,7 +32,7 @@ class AutoUpdater(commands.Cog):
         channels_id = db.to_send()
         t, r, c = utils.difference_on_update(old_data, new_data)
         embed = discord.Embed(
-            description="Below you can find the new stats for the past hour. (Data are updated ~ every 1 hour)\n`**Status** X`[current_update-last_hour_update]`",
+            description="Below you can find the new stats for the past hour. (Data are updated ~ every 1 hour)\n[+**(CURRENT_UPDATE-LAST_HOUR_UPDATE)**]",
             color=utils.COLOR,
             timestamp=utils.discord_timestamp()
         )
@@ -41,17 +41,17 @@ class AutoUpdater(commands.Cog):
                          icon_url=self.author_thumb)
         embed.set_thumbnail(url=self.thumb)
         embed.add_field(
-            name="Confirmed",
+            name="<:confirmed:688686089548202004> Confirmed",
             value=f"**{confirmed}** [+**{t}**]",
             inline=False
             )
         embed.add_field(
-                    name="Recovered",
+                    name="<:recov:688686059567185940> Recovered",
                     value=f"**{recovered}** ({utils.percentage(confirmed, recovered)}) [+**{r}**]",
                     inline=False
                     )
         embed.add_field(
-            name="Deaths",
+            name="<:_death:688686194917244928> Deaths",
             value=f"**{deaths}** ({utils.percentage(confirmed, deaths)}) [+**{c}**]",
             inline=False
             )
@@ -77,20 +77,30 @@ class AutoUpdater(commands.Cog):
     async def send_tracker(self):
         data = utils.from_json(utils.DATA_PATH)
         tracked = db.send_tracker()
-        embed = discord.Embed(
-                    color=utils.COLOR,
-                    timestamp=utils.discord_timestamp()
-                )
-        embed.set_author(name="Personal tracker for Coronavirus COVID-19",
-                        url="https://www.who.int/home",
-                        icon_url=self.author_thumb)
-        embed.set_thumbnail(url=self.thumb)
-
+        DATA = utils.from_json(utils.DATA_PATH)
+        tot = DATA['total']
+        my_csv = utils.from_json(utils.CSV_DATA_PATH)
+        c, r, d = utils.difference_on_update(my_csv, DATA)
         for t in tracked:
             try:
                 dm = self.bot.get_user(int(t["user_id"]))
-                header, text = utils.string_formatting(data, t["country"].split(" "))
-                embed.description = "**Country** : X`[current_update-last_hour_update]`\n" + header + "\n" + text
+                embed = utils.make_tab_embed_all(is_country=True, params=t["country"].split(" "))
+                embed.set_author(name="Personal tracker for Coronavirus COVID-19",
+                        url="https://www.who.int/home",
+                        icon_url=self.author_thumb)
+                header = "NOTE: [+**(CURRENT_UPDATE-MORNING_UPDATE)**]\nConfirmed **{}** [+**{}**]\nRecovered **{}** (**{}**) [+**{}**]\nDeaths **{}** (**{}**) [+**{}**]"
+                header = header.format(
+                    tot["confirmed"],
+                    c,
+                    tot["recovered"],
+                    utils.percentage(tot["confirmed"], tot["recovered"]),
+                    r,
+                    tot["deaths"],
+                    utils.percentage(tot["confirmed"], tot["deaths"]),
+                    d
+                )
+                embed.set_thumbnail(url=self.thumb)
+                embed.description = header
                 try:
                     guild = self.bot.get_guild(int(t["guild_id"]))
                     embed.set_footer(
@@ -106,7 +116,10 @@ class AutoUpdater(commands.Cog):
     async def parse_and_update(self):
         await up.update()
         logger.info("New data downloaded")
-        utils.csv_parse()
+        try:
+            utils.csv_parse()
+        except:
+            pass
         plot_csv()
         logger.info("New plot generated")
 
@@ -117,9 +130,11 @@ class AutoUpdater(commands.Cog):
         while True:
             before = time.time()
             if not starting:
-
                 old_data = utils.from_json(utils.DATA_PATH)
-                await self.parse_and_update()
+                try:
+                    await self.parse_and_update()
+                except:
+                    pass
                 new_data = utils.from_json(utils.DATA_PATH)
                 await self.send_notifications(old_data, new_data)
                 await self.send_tracker()

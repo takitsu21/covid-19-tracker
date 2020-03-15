@@ -28,14 +28,14 @@ def plot_csv(dark=True):
 
     ax.xaxis.set_major_locator(MultipleLocator(7))
 
-    ax.plot(x_c, y_c, "w.-")
-    ax.plot(x_r, y_r, "g.-")
-    ax.plot(x_d, y_d, "r.-")
+    ax.plot(x_c, y_c, ".-", color="cornflowerblue")
+    ax.plot(x_r, y_r, ".-", color="lightgreen")
+    ax.plot(x_d, y_d, ".-", color="#e62712")
 
     ticks = [i for i in range(len(y_c)) if i % 7 == 0]
-    plt.xticks(ticks)
+    plt.xticks(ticks, rotation=30, ha="center")
     plt.grid(True)
-    plt.ylabel("Total confirmed cases")
+    plt.ylabel("Total cases")
     plt.xlabel("Timeline (MM/DD/YY)")
 
     if dark:
@@ -43,9 +43,18 @@ def plot_csv(dark=True):
         ax.yaxis.label.set_color('white')
         ax.tick_params(axis='x', colors='white')
         ax.tick_params(axis='y', colors='white')
+
         leg = plt.legend(["Total confirmed", "Total recovered", "Total deaths"], facecolor='0.1')
         for text in leg.get_texts():
             text.set_color("white")
+
+        ax.set_ylim(ymin=0)
+        ylabs = []
+        locs, _ = plt.yticks()
+        for iter_loc in locs:
+            ylabs.append(utils.human_format(int(iter_loc)))
+
+        plt.yticks(locs, ylabs)
         plt.savefig("stats.png", transparent=True)
     else:
         leg = plt.legend(["Total confirmed", "Total recovered", "Total deaths"])

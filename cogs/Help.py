@@ -30,7 +30,7 @@ class Help(commands.Cog):
         )
         embed.add_field(
             name="**`c!info`**",
-            value="Views every confirmed cases",
+            value="Views every confirmed, recovered, deaths cases",
             inline=False
         )
         embed.add_field(
@@ -44,13 +44,18 @@ class Help(commands.Cog):
             inline=False
         )
         embed.add_field(
+            name="**`c!<r | region> <STATE/PROVINCE | all> in <COUNTRY>`**",
+            value="Views regions infected in specific country or in all state with `all` arg.\nThe `in` (mandatory symbol) is interpreted as separator between the country and the region/province so don't forget it.\nExample 1 : `c!r new york in us`\nExample 2 : `c!region all in china`",
+            inline=False
+        )
+        embed.add_field(
             name="**`c!stats`**",
             value="Views graphical statistics",
             inline=False
         )
         embed.add_field(
-            name="**`c!track <COUNTRY | [disable]>`**",
-            value="Track multiple country (bot will DM you update). `c!track <COUNTRY>` work like `c!country <COUNTRY>` (country code / autocompletion) see `c!help`. `c!track disable` will disable the tracker.",
+            name="**`c!track <COUNTRY | disable>`**",
+            value="Track multiple country (bot will DM you update). `c!track <COUNTRY>` work like `c!country <COUNTRY>` (country code / autocompletion) see `c!help`. `c!track disable` will disable the tracker.\nExample 1 : `c!track fr it us gb`\nExample 2 : `c!track disable`",
             inline=False
         )
         embed.add_field(
@@ -92,6 +97,7 @@ class Help(commands.Cog):
             value="Views bot link vote.",
             inline=False
         )
+
         embed.set_footer(
             text=utils.last_update(utils.DATA_PATH),
             icon_url=ctx.guild.me.avatar_url
@@ -143,7 +149,7 @@ class Help(commands.Cog):
         embed.add_field(name = "Source code", value="[Click here](https://github.com/takitsu21/covid-19-tracker)")
         embed.add_field(name="Help command",value="c!help")
         embed.add_field(name="Prefix",value="c!")
-        embed.add_field(name="Donate", value="Buy me a [Ko-fi](https://ko-fi.com/takitsu)")
+        embed.add_field(name="Donate", value="[Patreon](https://www.patreon.com/takitsu)\nBuy me a [Ko-fi](https://ko-fi.com/takitsu)")
         nb_users = 0
         for s in self.bot.guilds:
             nb_users += len(s.members)
@@ -159,7 +165,7 @@ class Help(commands.Cog):
     @commands.command(name="sources", aliases=["source"])
     async def sources(self, ctx):
         embed = discord.Embed(
-            description="[CSSEGISandData](https://github.com/CSSEGISandData/COVID-19)",
+            description="[CSSEGISandData](https://github.com/CSSEGISandData/COVID-19)\n[World Health Organization (WHO)](https://www.who.int/)",
             color=utils.COLOR,
             timestamp=utils.discord_timestamp()
             )
@@ -240,7 +246,7 @@ class Help(commands.Cog):
 
     @commands.command(name="reload")
     @commands.is_owner()
-    async def r(self, ctx):
+    async def reload(self, ctx):
         self.bot._unload_extensions()
         self.bot._load_extensions()
         await ctx.send("Reloaded")
