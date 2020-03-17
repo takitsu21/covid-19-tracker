@@ -1,6 +1,6 @@
 {
     "status": "ok",
-    "totalResults": 20,
+    "totalResults": 18,
     "articles": [
         {
             "source": {
@@ -30,19 +30,6 @@
         },
         {
             "source": {
-                "id": "news-com-au",
-                "name": "News.com.au"
-            },
-            "author": "Staff writer",
-            "title": "Coronavirus: Trial of potential COVID-19 vaccine begins in the US",
-            "description": "Coronavirus: Trial of potential COVID-19 vaccine begins in the US",
-            "url": "https://www.news.com.au/world/north-america/coronavirus-trial-of-potential-covid19-vaccine-begins-in-the-us/news-story/5abbbd08551a212795f6ff293028e34b",
-            "urlToImage": "https://cdn.newsapi.com.au/image/v1/af4c29c9ea73b1563b8f4d0780bd5bd5?width=650",
-            "publishedAt": "2020-03-16T23:12:00Z",
-            "content": "The first human trial of a vaccine against the coronavirus has begun in the United States today.The vaccine is called mRNA-1273 and was developed by US National Institute of Health scientists and collaborators at biotechnology company Moderna, based in Cambri\u2026 [+812 chars]"
-        },
-        {
-            "source": {
                 "id": "talksport",
                 "name": "TalkSport"
             },
@@ -56,6 +43,19 @@
         },
         {
             "source": {
+                "id": "google-news-ca",
+                "name": "Google News (Canada)"
+            },
+            "author": "mahamabedi1",
+            "title": "Canada tightens borders over coronavirus \u2014 will it curb COVID-19\u2019s spread?",
+            "description": "The prime minister announced that Canada will be closing its borders to foreign travellers, with few exceptions.",
+            "url": "http://globalnews.ca/news/6685776/canada-coronavirus-travel-borders/",
+            "urlToImage": "https://shawglobalnews.files.wordpress.com/2020/03/2020-03-13t172515z_682639436_rc25jf9147g6_rtrmadp_3_health-coronavirus-canada-trudeau-e1584394856511.jpg?quality=70&strip=all&w=720&h=379&crop=1",
+            "publishedAt": "2020-03-16T22:17:16+00:00",
+            "content": "Prime Minister Justin Trudeaus decision to tighten Canadas borders in an effort to flatline the number of COVID-19 cases in the country was met with mixed reaction from experts on Monday.\r\nThe prime minister announced that Canada will be closing its borders t\u2026 [+5078 chars]"
+        },
+        {
+            "source": {
                 "id": "australian-financial-review",
                 "name": "Australian Financial Review"
             },
@@ -66,32 +66,6 @@
             "urlToImage": "https://static.ffx.io/images/$zoom_0.1576%2C$multiply_0.7554%2C$ratio_1.777778%2C$width_1059%2C$x_0%2C$y_0/t_crop_custom/e_sharpen:25%2Cq_85%2Cf_auto/a12d73f1d1ac427129f9152ac488e265b7fc855d",
             "publishedAt": "2020-03-16T20:20:42Z",
             "content": "Welcome to The Australian Financial Review's coronavirus blog, where we will be posting breaking news updates throughout the day to keep you informed about how this once-in-a-generation health emergency is affecting the public, business, education, the econom\u2026 [+1586 chars]"
-        },
-        {
-            "source": {
-                "id": "google-news-uk",
-                "name": "Google News (UK)"
-            },
-            "author": "Joseph Gamp",
-            "title": "Coronavirus crisis forces NHS to cancel or delay non-emergency operations in \u2018war against invisible k",
-            "description": "<ol><li>Coronavirus crisis forces NHS to cancel or delay non-emergency operations in \u2018war against invisible k\u00a0\u00a0The Sun\r\n</li><li>Coronavirus: 55 people have now died in UK after testing positive for COVID-19\u00a0\u00a0Sky News\r\n</li><li>Coronavirus: millions of over-7\u2026",
-            "url": "http://www.thesun.co.uk/news/11186499/coronavirus-crisis-forces-nhs-cancel-delay-non-emergency-operations/",
-            "urlToImage": "https://www.thesun.co.uk/wp-content/uploads/2020/03/NINTCHDBPICT000406734263.jpg?strip=all&quality=100&w=1200&h=800&crop=1",
-            "publishedAt": "2020-03-16T19:58:05+00:00",
-            "content": "THE NHS will cancel or delay all non-emergency operations to free up vital resources key to combatting the coronavirus pandemic.\r\nAs the virus sweeps through the UK, Health Secretary Matt Hancock said surgery that was not time sensitive would either be cancel\u2026 [+2196 chars]"
-        },
-        {
-            "source": {
-                "id": "google-news-au",
-                "name": "Google News (Australia)"
-            },
-            "author": "Frank Chung",
-            "title": "Coronavirus Australia live coverage: COVID-19 death toll, confirmed cases rise, six months of chaos predicted",
-            "description": "Prime Minister Scott Morrison has warned Australia is in for six months of chaos as the world faces its biggest public health crisis in a generation.",
-            "url": "https://www.news.com.au/lifestyle/health/health-problems/coronavirus-australia-live-coverage-six-months-of-chaos-coming-as-covid19-cases-rise-exponentially/live-coverage/514dd716f894646250cf9f895a4e6941",
-            "urlToImage": "https://content.api.news/v3/images/bin/2928340dc525abc5586fca60947a1f9f",
-            "publishedAt": "2020-03-16T19:48:45+00:00",
-            "content": "It's sounding like Woolworths' well intentioned shopping hour for the elderly and disabled was a bit of a shambles.\r\nThere are multiple reports of items being out of stock. 2GB radio host Alan Jones has just been roasting Paul Harker, Woolworths director of f\u2026 [+1771 chars]"
         },
         {
             "source": {

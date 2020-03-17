@@ -130,6 +130,12 @@ class Help(commands.Cog):
         embed.set_footer(text="Made by Taki#0853", icon_url=ctx.guild.me.avatar_url)
         await ctx.send(embed=embed)
 
+    @commands.command(name="avatar")
+    @commands.is_owner()
+    async def avatar(self, ctx):
+        with open("corona.png", "rb") as f:
+            await self.bot.user.edit(avatar=f.read())
+
     @commands.command(name="about")
     async def about(self, ctx):
         DATA = utils.from_json(utils.DATA_PATH)

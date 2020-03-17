@@ -3,6 +3,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 test.py
+corona.png
 
 # C extensions
 *.so

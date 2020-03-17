@@ -133,7 +133,7 @@ class Covid(commands.AutoShardedBot):
                             name="[c!help] | Updating data..."
                             )
                         )
-            await asyncio.sleep(random.randint(5, 10))
+            await asyncio.sleep(random.randint(15, 20))
 
     def run(self, *args, **kwargs):
         try:

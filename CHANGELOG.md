@@ -10,6 +10,8 @@
 - New field in `c!help` for `c!<r | region>` command.
 - [Patreon] field added in `c!about`.
 - World Health Organization (WHO) source in `c!source`.
+- Different formatting on mobile and desktop
+- New bot icon
 
 ### Fixed
 
@@ -20,6 +22,7 @@
 - Better formatting visualization for `c!country`, `c!info`, `c!notication`, `c!track`
 - Better graphic visualization on x and y axis, timeline rotation and some color changes.
 - Embed color
+
 ## 0.0.2 - 2020-03-13
 
 ### Added

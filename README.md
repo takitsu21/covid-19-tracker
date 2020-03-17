@@ -82,6 +82,7 @@ This project is licensed under the MIT License - see the [LICENSE.md] file for d
 - [Patreon] field added in `c!about`.
 - World Health Organization (WHO) source in `c!source`.
 - Different formatting on mobile and desktop
+- New bot icon
 
 ### Fixed
 

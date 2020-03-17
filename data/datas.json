@@ -1,9 +1,9 @@
 {
     "success": true,
     "total": {
-        "confirmed": 183280,
-        "recovered": 78715,
-        "deaths": 7157
+        "confirmed": 183343,
+        "recovered": 79566,
+        "deaths": 7168
     },
     "data": {
         "BD": {
@@ -1652,8 +1652,8 @@
             },
             "statistics": {
                 "confirmed": 81077,
-                "recovered": 67910,
-                "deaths": 3218
+                "recovered": 68759,
+                "deaths": 3229
             },
             "regions": [
                 {
@@ -2522,7 +2522,7 @@
                 "name": "United States"
             },
             "statistics": {
-                "confirmed": 4579,
+                "confirmed": 4642,
                 "recovered": 17,
                 "deaths": 86
             },
@@ -3013,7 +3013,7 @@
             },
             "statistics": {
                 "confirmed": 67,
-                "recovered": 20,
+                "recovered": 22,
                 "deaths": 1
             }
         },
@@ -3597,8 +3597,8 @@
             },
             "statistics": {
                 "confirmed": 81077,
-                "recovered": 67910,
-                "deaths": 3218
+                "recovered": 68759,
+                "deaths": 3229
             },
             "regions": [
                 {
@@ -3923,7 +3923,7 @@
                 "name": "United States"
             },
             "statistics": {
-                "confirmed": 4579,
+                "confirmed": 4642,
                 "recovered": 17,
                 "deaths": 86
             },
@@ -5001,7 +5001,7 @@
             },
             "statistics": {
                 "confirmed": 67,
-                "recovered": 20,
+                "recovered": 22,
                 "deaths": 1
             }
         },
