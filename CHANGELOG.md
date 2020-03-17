@@ -1,11 +1,12 @@
 # Changelog
 
-## 0.0.3 - 2020-03-15
+## 0.0.3 - 2020-03-17
 
 ### Added
 
 - New command : `c!<r | region> <STATE/PROVINCE | all> in <COUNTRY>`,
-  now you can get stats from state/province in available countries.
+  now you can get stats from state/province in supported countries
+  (**China, Canada, United States, Australia, Cruise Ship**).
 - New field in `c!help` for `c!<r | region>` command.
 - [Patreon] field added in `c!about`.
 - World Health Organization (WHO) source in `c!source`.
@@ -18,7 +19,7 @@
 
 - Better formatting visualization for `c!country`, `c!info`, `c!notication`, `c!track`
 - Better graphic visualization on x and y axis, timeline rotation and some color changes.
-
+- Embed color
 ## 0.0.2 - 2020-03-13
 
 ### Added

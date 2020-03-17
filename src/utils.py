@@ -117,16 +117,25 @@ def diff_confirmed(csv: dict, k: str, v: dict, key_getter: str) -> int:
 
 def string_formatting(data_parsed: dict, param: list=[]) -> Tuple[str, str]:
     tot = data_parsed["total"]
-    max_length = DISCORD_LIMIT - 80
+    max_length = DISCORD_LIMIT - 50
     length = 0
     old_text = ""
     text = ""
     d = {}
-    header = "Confirmed {} [+{}]\nRecovered {} ({}) [+{}]\nDeaths {} ({}) [+{}]"
+    truncated = ""
+    my_csv = from_json(CSV_DATA_PATH)
+
+    t, r, c = difference_on_update(my_csv, data_parsed)
+    header = mkheader(
+        tot['confirmed'], t,
+        tot['recovered'], percentage(tot["confirmed"], tot["recovered"]),
+        r, tot['deaths'], percentage(tot["confirmed"], tot["deaths"]), c, True
+    )
     header_length = len(header)
     param_length = len(param)
-    my_csv = from_json(CSV_DATA_PATH)
+    i = 0
     if param_length:
+        check = []
         for p in param:
             p = p.lower()
             p_length = len(p)
@@ -135,24 +144,39 @@ def string_formatting(data_parsed: dict, param: list=[]) -> Tuple[str, str]:
                     country = v["country"]["name"] if v["country"]["name"] is not None else "Null"
                     code = v['country']['code'] if v["country"]["code"] is not None else "Null"
                     stats = v['statistics']
-                    if (p_length == 2 and p == code.lower()):
-                        text += f"{country} : {stats['confirmed']} confirmed [+{diff_confirmed(my_csv, country, stats, 'confirmed')}], {stats['recovered']} recovered [+{diff_confirmed(my_csv, country, stats, 'recovered')}], {stats['deaths']} deaths [+{diff_confirmed(my_csv, country, stats, 'deaths')}]\n"
-                        length = len(text) + header_length
-                        break
-                    elif country.lower().startswith(p) and p_length != 2:
-                        text += f"{country} : {stats['confirmed']} confirmed [+{diff_confirmed(my_csv, country, stats, 'confirmed')}], {stats['recovered']} recovered [+{diff_confirmed(my_csv, country, stats, 'recovered')}], {stats['deaths']} deaths [+{diff_confirmed(my_csv, country, stats, 'deaths')}]\n"
-                        length = len(text) + header_length
+                    if len(country) >= 15:
+                        truncated = country[0:15] + "..."
+                    else:
+                        truncated = country
+                    if country not in check:
+                        if (p_length == 2 and p == code.lower()) or (country.lower().startswith(p) and p_length != 2):
+                            if i % 2 == 0:
+                                text += f"**{truncated} : {stats['confirmed']} <:confirmed:688686089548202004> [+{diff_confirmed(my_csv, country, stats, 'confirmed')}], {stats['recovered']} cured [+{diff_confirmed(my_csv, country, stats, 'recovered')}], {stats['deaths']} deaths [+{diff_confirmed(my_csv, country, stats, 'deaths')}]**\n"
+                            else:
+                                text += f"{truncated} : {stats['confirmed']} <:confirmed:688686089548202004> [+{diff_confirmed(my_csv, country, stats, 'confirmed')}], {stats['recovered']} cured [+{diff_confirmed(my_csv, country, stats, 'recovered')}], {stats['deaths']} deaths [+{diff_confirmed(my_csv, country, stats, 'deaths')}]\n"
+                            check.append(country)
+                            length = len(text) + header_length
+                            i += 1
                 except KeyError:
                     pass
             if length < max_length:
                 old_text = text
     else:
+
         for v in data_parsed["sorted"]:
             confirmed = v['statistics']['confirmed']
             country = v['country']['name'] if v["country"]["name"] is not None else "Null"
             stats = v['statistics']
+            if len(country) >= 15:
+                truncated = country[0:15] + "..."
+            else:
+                truncated = country
             if stats['confirmed']:
-                text += f"{country} {confirmed} [+{diff_confirmed(my_csv, country, v['statistics'], 'confirmed')}]\n"
+                if i % 2 == 0:
+                    text += f"**{truncated} : {confirmed} [+{diff_confirmed(my_csv, country, v['statistics'], 'confirmed')}]**\n"
+                else:
+                    text += f"{truncated} : {confirmed} [+{diff_confirmed(my_csv, country, v['statistics'], 'confirmed')}]\n"
+                i += 1
                 length = len(text) + header_length
             if length >= max_length:
                 break
@@ -161,17 +185,6 @@ def string_formatting(data_parsed: dict, param: list=[]) -> Tuple[str, str]:
 
     if length >= max_length:
         text = old_text
-    t, r, c = difference_on_update(my_csv, data_parsed)
-    header = header.format(
-        tot["confirmed"],
-        t,
-        tot["recovered"],
-        percentage(tot["confirmed"], tot["recovered"]),
-        r,
-        tot["deaths"],
-        percentage(tot["confirmed"], tot["deaths"]),
-        c
-    )
     return header, text
 
 def trigger_typing(func):
@@ -205,7 +218,7 @@ def get_states(data: dict, country: str) -> list:
         code = v['country']['code'] if v['country']['code'] is not None else "."
         if dc_name.lower() == country or code.lower() == country:
             try:
-                return data['data'][code]['regions']
+                return v['regions']
             except KeyError:
                 return []
     return []
@@ -231,8 +244,58 @@ def human_format(num: int) -> str:
         num /= 1000
     return '%d%s' % (num, ['', 'K', 'M', 'G', 'T', 'P'][magnitude])
 
+def region_mobile(*params):
+    country, state = parse_state_input(*params)
+    data = from_json(DATA_PATH)
+    states = get_states(data, country)
+    text = ""
+    old_text = ""
+    length = 0
+    max_length = DISCORD_LIMIT- 50
+    k = 0
+    embed = discord.Embed(
+        color=COLOR,
+        timestamp=discord_timestamp()
+    )
+    my_csv = from_json(CSV_DATA_PATH)
+    t, r, c = difference_on_update(my_csv, data)
+    tot = data['total']
+    header = mkheader(
+        tot['confirmed'], t,
+        tot['recovered'], percentage(tot["confirmed"], tot["recovered"]),
+        r, tot['deaths'], percentage(tot["confirmed"], tot["deaths"]), c, True
+    )
+    header_length = len(header)
+    for s in states:
+        state_name = s['name']
+        statistics = s['statistics']
+        if len(state_name) >= 15:
+            state_name_trunc = state_name[0:15] + "..."
+        else:
+            state_name_trunc = state_name
+        bold = "**" if k % 2 == 0 else ""
+
+        if state == "all":
+            text += f"{bold}{state_name_trunc} : {statistics['confirmed']} <:confirmed:688686089548202004>, {statistics['recovered']} cured, {statistics['deaths']} deaths{bold}\n"
+            k += 1
+
+        elif state_name.lower() == state:
+            text += f"{bold}{state_name_trunc} : {statistics['confirmed']} <:confirmed:688686089548202004>, {statistics['recovered']} cured, {statistics['deaths']} deaths{bold}\n"
+            k += 1
+        length = len(text) + header_length
+        if length >= max_length:
+            break
+        else:
+            old_text = text
+    if length >= max_length:
+        text = old_text
+
+    embed.description = header + "\n\n" + text
+    return embed
+
 def make_tab_embed_all(is_country=False, params=[]):
     data = from_json(DATA_PATH)
+    my_csv = from_json(CSV_DATA_PATH)
     country = ""
     confirmed = ""
     recovered = ""
@@ -243,9 +306,9 @@ def make_tab_embed_all(is_country=False, params=[]):
         timestamp=discord_timestamp()
     )
     has_param = len(params)
-    my_csv = from_json(CSV_DATA_PATH)
+    check = []
     k = 0
-    for i, s in enumerate(data['sorted']):
+    for s in data['sorted']:
         state_name = s['country']['name'] if s['country']['name'] is not None else "Null"
         code = s['country']['code'] if s['country']['code'] is not None else "Null"
         statistics = s['statistics']
@@ -289,20 +352,25 @@ def make_tab_embed_all(is_country=False, params=[]):
             confirmed += f"{bold}{human_format(statistics['confirmed'])} [+{human_format(diff_confirmed(my_csv, state_name, statistics, 'confirmed'))}] | {statistics['deaths']}{bold}\n"
             recovered += f"{bold}{statistics['recovered']}{bold}\n"
             k += 1
+
         elif is_country and has_param:
             for p in params:
                 p = p.lower()
                 p_length = len(p)
-                if p_length == 2 and p == code.lower():
-                    country += f"{bold}{state_name_trunc}{bold}\n"
-                    confirmed += f"{bold}{human_format(statistics['confirmed'])} [+{human_format(diff_confirmed(my_csv, state_name, statistics, 'confirmed'))}] | {statistics['deaths']}{bold}\n"
-                    recovered += f"{bold}{statistics['recovered']}{bold}\n"
-                    k += 1
-                elif state_name.lower().startswith(p) and p_length != 2:
-                    country += f"{bold}{state_name_trunc}{bold}\n"
-                    confirmed += f"{bold}{human_format(statistics['confirmed'])} [+{human_format(diff_confirmed(my_csv, state_name, statistics, 'confirmed'))}] | {statistics['deaths']}{bold}\n"
-                    recovered += f"{bold}{statistics['recovered']}{bold}\n"
-                    k += 1
+                if state_name not in check:
+                    if p_length == 2 and p == code.lower():
+                        country += f"{bold}{state_name_trunc}{bold}\n"
+                        confirmed += f"{bold}{human_format(statistics['confirmed'])} [+{human_format(diff_confirmed(my_csv, state_name, statistics, 'confirmed'))}] | {statistics['deaths']}{bold}\n"
+                        recovered += f"{bold}{statistics['recovered']}{bold}\n"
+                        k += 1
+                        check.append(state_name)
+
+                    elif state_name.lower().startswith(p) and p_length != 2:
+                        country += f"{bold}{state_name_trunc}{bold}\n"
+                        confirmed += f"{bold}{human_format(statistics['confirmed'])} [+{human_format(diff_confirmed(my_csv, state_name, statistics, 'confirmed'))}] | {statistics['deaths']}{bold}\n"
+                        recovered += f"{bold}{statistics['recovered']}{bold}\n"
+                        k += 1
+                        check.append(state_name)
 
     embed.add_field(name="<:region:688689082360004609>", value=country)
     embed.add_field(name="<:confirmed:688686089548202004> | <:_death:688686194917244928>", value=confirmed)
@@ -310,9 +378,27 @@ def make_tab_embed_all(is_country=False, params=[]):
 
     return embed
 
+def mkheader(confirmed, dfc, recov, dfr, pr, deaths, dfd, pd, is_on_mobile):
+    if is_on_mobile:
+        header = "Mobile version\n[+**CURRENT_UPDATE-MORNING_UPDATE**]\n<:confirmed:688686089548202004> Confirmed **{}** [+**{}**]\n<:recov:688686059567185940> Recovered **{}** (**{}**) [+**{}**]\n<:_death:688686194917244928> Deaths **{}** (**{}**) [+**{}**]"
+    else:
+        header =  "[+**CURRENT_UPDATE-MORNING_UPDATE**]\n<:confirmed:688686089548202004> Confirmed **{}** [+**{}**]\n<:recov:688686059567185940> Recovered **{}** (**{}**) [+**{}**]\n<:_death:688686194917244928> Deaths **{}** (**{}**) [+**{}**]"
+    return header.format(
+        confirmed,
+        dfc,
+        recov,
+        dfr,
+        pr,
+        deaths,
+        dfd,
+        pd
+    )
+
 def make_tab_embed_region(*params):
     country, state = parse_state_input(*params)
-    states = get_states(from_json(DATA_PATH), country)
+    data = from_json(DATA_PATH)
+    my_csv = from_json(CSV_DATA_PATH)
+    states = get_states(data, country)
     regions = ""
     confirmed = ""
     recovered = ""
@@ -323,17 +409,33 @@ def make_tab_embed_region(*params):
         color=COLOR,
         timestamp=discord_timestamp()
     )
-
-    for i, s in enumerate(states):
+    c, r, d = difference_on_update(my_csv, data)
+    tot = data['total']
+    header = mkheader(
+        tot["confirmed"],
+        c,
+        tot["recovered"],
+        percentage(tot["confirmed"], tot["recovered"]),
+        r,
+        tot["deaths"],
+        percentage(tot["confirmed"], tot["deaths"]),
+        d,
+        False
+    )
+    for s in states:
         state_name = s['name']
         statistics = s['statistics']
+        if len(state_name) >= 15:
+            state_name_trunc = state_name[0:15] + "..."
+        else:
+            state_name_trunc = state_name
         length = max(
                 len(regions),
                 len(confirmed),
                 len(recovered)
             ) + \
             max(
-                len(f"{bold}{state_name}{bold}\n"),
+                len(f"{bold}{state_name_trunc}{bold}\n"),
                 len(f"{bold}{human_format(statistics['confirmed'])} | {statistics['deaths']}{bold}\n"),
                 len(f"{bold}{statistics['recovered']}{bold}\n")
             )
@@ -347,7 +449,7 @@ def make_tab_embed_region(*params):
             break
 
         if length >= MAX_SIZE_FIELD_VALUE:
-            total_length += len(country) + len(confirmed) + len(recovered)
+            total_length += len(state_name_trunc) + len(confirmed) + len(recovered)
             embed.add_field(name="<:region:688689082360004609>", value=regions)
             embed.add_field(name="<:confirmed:688686089548202004> | <:_death:688686194917244928>", value=f"{confirmed}")
             embed.add_field(name="<:recov:688686059567185940>", value=recovered)
@@ -356,13 +458,13 @@ def make_tab_embed_region(*params):
             recovered = ""
 
         if state == "all":
-            regions += f"{bold}{state_name}{bold}\n"
+            regions += f"{bold}{state_name_trunc}{bold}\n"
             confirmed += f"{bold}{human_format(statistics['confirmed'])} | {statistics['deaths']}{bold}\n"
             recovered += f"{bold}{statistics['recovered']}{bold}\n"
             k += 1
 
         elif state_name.lower() == state:
-            regions += f"{bold}{state_name}{bold}\n"
+            regions += f"{bold}{state_name_trunc}{bold}\n"
             confirmed += f"{bold}{human_format(statistics['confirmed'])} | {statistics['deaths']}{bold}\n"
             recovered += f"{bold}{statistics['recovered']}{bold}\n"
             k += 1
@@ -370,6 +472,7 @@ def make_tab_embed_region(*params):
     embed.add_field(name="<:region:688689082360004609>", value=regions)
     embed.add_field(name="<:confirmed:688686089548202004> | <:_death:688686194917244928>", value=f"{confirmed}")
     embed.add_field(name="<:recov:688686059567185940>", value=recovered)
+    embed.description = header
 
     return embed
 

@@ -14,31 +14,40 @@ class Datacmds(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.thumb = "https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/COVID-19_Outbreak_World_Map.svg/langen-1000px-COVID-19_Outbreak_World_Map.svg.png"
-        self.author_thumb = "https://cdn2.iconfinder.com/data/icons/cornavirus-covid-19/64/_bat_night_animal_virus_disease-256.png"
+        self.author_thumb = "https://cdn2.iconfinder.com/data/icons/covid-19-1/64/20-World-128.png"
 
     @commands.command(name="info")
     async def info(self, ctx):
         DATA = utils.from_json(utils.DATA_PATH)
-        embed = utils.make_tab_embed_all()
+        if ctx.author.is_on_mobile():
+            header, text = utils.string_formatting(DATA)
+            embed = discord.Embed(
+                description=header + "\n\n" + text,
+                color=utils.COLOR,
+                timestamp=utils.discord_timestamp()
+            )
+        else:
+            my_csv = utils.from_json(utils.CSV_DATA_PATH)
+            embed = utils.make_tab_embed_all()
+            c, r, d = utils.difference_on_update(my_csv, DATA)
+            tot = DATA['total']
+            header = utils.mkheader(
+                tot["confirmed"],
+                c,
+                tot["recovered"],
+                utils.percentage(tot["confirmed"], tot["recovered"]),
+                r,
+                tot["deaths"],
+                utils.percentage(tot["confirmed"], tot["deaths"]),
+                d,
+                False
+            )
+            embed.description = header
         embed.set_author(
-                name=f"All countries affected by Coronavirus COVID-19",
-                url="https://www.who.int/home",
-                icon_url=self.author_thumb
-                )
-        c, r, d = utils.difference_on_update(utils.from_json(utils.CSV_DATA_PATH), DATA)
-        tot = DATA['total']
-        header = "NOTE: [+**(CURRENT_UPDATE-MORNING_UPDATE)**]\nConfirmed **{}** [+**{}**]\nRecovered **{}** (**{}**) [+**{}**]\nDeaths **{}** (**{}**) [+**{}**]"
-        header = header.format(
-            tot["confirmed"],
-            c,
-            tot["recovered"],
-            utils.percentage(tot["confirmed"], tot["recovered"]),
-            r,
-            tot["deaths"],
-            utils.percentage(tot["confirmed"], tot["deaths"]),
-            d
-        )
-        embed.description = header
+            name=f"All countries affected by Coronavirus COVID-19",
+            url="https://www.who.int/home",
+            icon_url=self.author_thumb
+            )
         embed.set_thumbnail(url=self.thumb)
         embed.set_footer(text=utils.last_update(utils.DATA_PATH),
                         icon_url=ctx.guild.me.avatar_url)
@@ -49,11 +58,11 @@ class Datacmds(commands.Cog):
 
     @info.error
     async def info_error(self, ctx, error):
-        return await ctx.send(str(error))
+        # return await ctx.send(str(error))
         DATA = utils.from_json(utils.DATA_PATH)
         header, text = utils.string_formatting(DATA)
         embed = discord.Embed(
-            description="NOTE: [+**(CURRENT_UPDATE-LAST_HOUR_UPDATE)**]\n" + header + "\n" + text,
+            description="[+**CURRENT_UPDATE-LAST_HOUR_UPDATE**]\n" + header + "\n" + text,
             color=utils.COLOR,
             timestamp=utils.discord_timestamp()
         )
@@ -79,29 +88,37 @@ class Datacmds(commands.Cog):
                     timestamp=utils.discord_timestamp()
                 )
         else:
-            try:
-                embed = utils.make_tab_embed_all(is_country=True, params=country)
-                DATA = utils.from_json(utils.DATA_PATH)
-                c, r, d = utils.difference_on_update(utils.from_json(utils.CSV_DATA_PATH), DATA)
-                tot = DATA['total']
-                header = "NOTE: [+**(CURRENT_UPDATE-MORNING_UPDATE)**]\nConfirmed **{}** [+**{}**]\nRecovered **{}** (**{}**) [+**{}**]\nDeaths **{}** (**{}**) [+**{}**]"
-                header = header.format(
-                    tot["confirmed"],
-                    c,
-                    tot["recovered"],
-                    utils.percentage(tot["confirmed"], tot["recovered"]),
-                    r,
-                    tot["deaths"],
-                    utils.percentage(tot["confirmed"], tot["deaths"]),
-                    d
-                )
-                embed.description = header
-            except:
+            DATA = utils.from_json(utils.DATA_PATH)
+            is_mobile = ctx.author.is_on_mobile()
+            if is_mobile:
+                header, text = utils.string_formatting(DATA, country)
                 embed = discord.Embed(
-                    description="Wrong country selected.\nViews information about multiple chosen country/region. You can either use autocompletion or country code. Valid country/region are listed in `c!info`.\nExample : `c!country fr germ it poland`",
+                    description=header + "\n\n" + text,
                     color=utils.COLOR,
                     timestamp=utils.discord_timestamp()
                 )
+            else:
+                try:
+                    embed = utils.make_tab_embed_all(is_country=True, params=country)
+                    c, r, d = utils.difference_on_update(utils.from_json(utils.CSV_DATA_PATH), DATA)
+                    tot = DATA['total']
+                    header = utils.mkheader(
+                        tot["confirmed"],
+                        c,
+                        tot["recovered"],
+                        utils.percentage(tot["confirmed"], tot["recovered"]),
+                        r,
+                        tot["deaths"],
+                        utils.percentage(tot["confirmed"], tot["deaths"]),
+                        d, is_mobile
+                    )
+                    embed.description = header
+                except:
+                    embed = discord.Embed(
+                        description="Wrong country selected.\nViews information about multiple chosen country/region. You can either use autocompletion or country code. Valid country/region are listed in `c!info`.\nExample : `c!country fr germ it poland`",
+                        color=utils.COLOR,
+                        timestamp=utils.discord_timestamp()
+                    )
         embed.set_author(name="Country affected by COVID-19",
                         url="https://www.who.int/home",
                         icon_url=self.author_thumb)
@@ -121,7 +138,7 @@ class Datacmds(commands.Cog):
         recovered = DATA['total']['recovered']
         deaths = DATA['total']['deaths']
         embed = discord.Embed(
-                            description="NOTE: `[+(CURRENT_UPDATE-MORNING_UPDATE)]`",
+                            description="[+**CURRENT_UPDATE-MORNING_UPDATE**]",
                             timestamp=utils.discord_timestamp(),
                             color=utils.COLOR,
                             )
@@ -231,32 +248,71 @@ class Datacmds(commands.Cog):
             except:
                 pass
         else:
-            header, text = utils.string_formatting(utils.from_json(utils.DATA_PATH), country)
-            if len(text):
-                try:
-                    db.insert_tracker(str(ctx.author.id), str(ctx.guild.id), ' '.join(country))
-                except IntegrityError:
-                    db.update_tracker(str(ctx.author.id), ' '.join(country))
-
+            DATA = utils.from_json(utils.DATA_PATH)
+            if ctx.author.is_on_mobile():
+                header, text = utils.string_formatting(DATA, country)
                 embed = discord.Embed(
-                        description=header + "\n" + text,
-                        color=utils.COLOR,
-                        timestamp=utils.discord_timestamp()
-                    )
-                embed.set_author(
-                    name="Tracker has been set up! You can see your tracked list. Updates will be send in DM",
-                    icon_url=self.author_thumb
-                )
-            else:
-                embed = discord.Embed(
-                    description="Wrong country selected.",
+                    description=header + "\n\n" + text,
                     color=utils.COLOR,
                     timestamp=utils.discord_timestamp()
                 )
-                embed.set_author(
-                    name="`c!track`",
-                    icon_url=self.author_thumb
+                if len(embed.description) > 0:
+                    try:
+                        db.insert_tracker(str(ctx.author.id), str(ctx.guild.id), ' '.join(country))
+                    except IntegrityError:
+                        db.update_tracker(str(ctx.author.id), ' '.join(country))
+
+                    embed.set_author(
+                        name="Tracker has been set up! You can see your tracked list. Updates will be send in DM",
+                        icon_url=self.author_thumb
+                    )
+                else:
+                    embed = discord.Embed(
+                        description="Wrong country selected.",
+                        color=utils.COLOR,
+                        timestamp=utils.discord_timestamp()
+                    )
+                    embed.set_author(
+                        name="c!track",
+                        icon_url=self.author_thumb
+                    )
+            else:
+                embed = utils.make_tab_embed_all(is_country=True, params=country)
+                my_csv = utils.from_json(utils.CSV_DATA_PATH)
+                c, r, d = utils.difference_on_update(my_csv, DATA)
+                tot = DATA['total']
+                header = utils.mkheader(
+                    tot["confirmed"],
+                    c,
+                    tot["recovered"],
+                    utils.percentage(tot["confirmed"], tot["recovered"]),
+                    r,
+                    tot["deaths"],
+                    utils.percentage(tot["confirmed"], tot["deaths"]),
+                    d,
+                    False
                 )
+                embed.description = header
+                if len(embed.fields[0].value) > 0:
+                    try:
+                        db.insert_tracker(str(ctx.author.id), str(ctx.guild.id), ' '.join(country))
+                    except IntegrityError:
+                        db.update_tracker(str(ctx.author.id), ' '.join(country))
+
+                    embed.set_author(
+                        name="Tracker has been set up! You can see your tracked list. Updates will be send in DM",
+                        icon_url=self.author_thumb
+                    )
+                else:
+                    embed = discord.Embed(
+                        description="Wrong country selected.",
+                        color=utils.COLOR,
+                        timestamp=utils.discord_timestamp()
+                    )
+                    embed.set_author(
+                        name="c!track",
+                        icon_url=self.author_thumb
+                    )
         embed.set_thumbnail(url=self.thumb)
         embed.set_footer(
             text=utils.last_update(utils.DATA_PATH),
@@ -267,18 +323,29 @@ class Datacmds(commands.Cog):
     @commands.command(name="region", aliases=["r"])
     async def region(self, ctx, *params):
         if len(params):
-            embed = utils.make_tab_embed_region(*params)
-            if len(embed.fields[0].value) > 0:
-                pass
+            if ctx.author.is_on_mobile():
+                embed = utils.region_mobile(*params)
+                if len(embed.description):
+                    pass
+                else:
+                    embed = discord.Embed(
+                        description="Wrong province/state or country, see `c!help`.",
+                        color=utils.COLOR,
+                        timestamp=utils.discord_timestamp()
+                    )
             else:
-                embed = discord.Embed(
-                    description="Wrong province/state or country, see `c!help`.",
-                    color=utils.COLOR,
-                    timestamp=utils.discord_timestamp()
-                )
+                embed = utils.make_tab_embed_region(*params)
+                if len(embed.fields[0].value) > 0:
+                    pass
+                else:
+                    embed = discord.Embed(
+                        description="Wrong province/state or country, see `c!help`.",
+                        color=utils.COLOR,
+                        timestamp=utils.discord_timestamp()
+                    )
         else:
             embed = discord.Embed(
-                description="Missing args, see `c!help`",
+                description="Missing args, see `c!help`.\nSupported countries (**China, Canada, United States, Australia, Cruise Ship**).",
                 color=utils.COLOR,
                 timestamp=utils.discord_timestamp()
             )

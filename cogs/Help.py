@@ -40,12 +40,12 @@ class Help(commands.Cog):
         )
         embed.add_field(
             name="**`c!country <COUNTRY>`**",
-            value="Views information about multiple chosen country/region. You can either use autocompletion or country code. Valid country/region are listed in `c!info`.\nExample : `c!country fr germ it poland`",
+            value="Views information about multiple chosen country/region. You can either use **autocompletion** or **country code**. Valid country/region are listed in `c!info`.\nExample : `c!country fr germ it poland`",
             inline=False
         )
         embed.add_field(
             name="**`c!<r | region> <STATE/PROVINCE | all> in <COUNTRY>`**",
-            value="Views regions infected in specific country or in all state with `all` arg.\nThe `in` (mandatory symbol) is interpreted as separator between the country and the region/province so don't forget it.\nExample 1 : `c!r new york in us`\nExample 2 : `c!region all in china`",
+            value="Supported countries (**China, Canada, United States, Australia, Cruise Ship**).\nViews regions infected in specific country or in all state with `all` arg.\nThe `in` (mandatory symbol) is interpreted as separator between the country and the region/province so don't forget it.\nExample 1 : `c!r new york in us`\nExample 2 : `c!region all in china`",
             inline=False
         )
         embed.add_field(
@@ -55,7 +55,7 @@ class Help(commands.Cog):
         )
         embed.add_field(
             name="**`c!track <COUNTRY | disable>`**",
-            value="Track multiple country (bot will DM you update). `c!track <COUNTRY>` work like `c!country <COUNTRY>` (country code / autocompletion) see `c!help`. `c!track disable` will disable the tracker.\nExample 1 : `c!track fr it us gb`\nExample 2 : `c!track disable`",
+            value="Track multiple country (bot will DM you update). `c!track <COUNTRY>` work like `c!country <COUNTRY>` (**country code** / **autocompletion**) see `c!help`. `c!track disable` will disable the tracker.\nExample 1 : `c!track fr it us gb`\nExample 2 : `c!track disable`",
             inline=False
         )
         embed.add_field(
@@ -220,6 +220,10 @@ class Help(commands.Cog):
         embed.set_footer(text="Made by Taki#0853 (WIP)",
                         icon_url=ctx.guild.me.avatar_url)
         return await ctx.send(embed=embed)
+
+    @commands.command()
+    async def test(self, ctx):
+        await ctx.send(f"{ctx.author.status} mobile : {ctx.author.mobile_status}  desktop : {ctx.author.desktop_status} is on mobile : {ctx.author.is_on_mobile()}")
 
     @commands.command(name="bug")
     async def bug(self, ctx, *message):

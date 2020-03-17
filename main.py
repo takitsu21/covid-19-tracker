@@ -36,8 +36,7 @@ class Covid(commands.AutoShardedBot):
         super().__init__(
             command_prefix=when_mentioned_or("c!"),
             activity=discord.Game(name="Starting..."),
-            status=discord.Status.dnd,
-            shard_count=6
+            status=discord.Status.dnd
             )
         self.remove_command("help")
         self._load_extensions()
@@ -138,7 +137,7 @@ class Covid(commands.AutoShardedBot):
 
     def run(self, *args, **kwargs):
         try:
-            self.loop.run_until_complete(self.start(decouple.config("token")))
+            self.loop.run_until_complete(self.start(decouple.config("debug")))
         except KeyboardInterrupt:
             self.loop.run_until_complete(self.logout())
             for task in asyncio.all_tasks(self.loop):
