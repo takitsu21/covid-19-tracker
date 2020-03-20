@@ -67,7 +67,7 @@ class Covid(commands.AutoShardedBot):
             data = utils.from_json(utils.DATA_PATH)
             embed = discord.Embed(
                     title="Coronavirus COVID-19 Tracker",
-                    description="[Wold Health Organization advices](https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public)",
+                    description="[World Health Organization advices](https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public)",
                     timestamp=datetime.datetime.utcfromtimestamp(time.time()),
                     color=utils.COLOR
                 )
