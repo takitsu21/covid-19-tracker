@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.0.4 - 2020-03-27
+
+### Added
+
+- New emote.
+- More informations in `c!source`.
+
+### Fixed
+
+- Fix Notification and tracker.
+- Improve data stability.
+
+### Changed
+
+- `c!stats` changed to -> `c!stats [country | log]` and can now show specific graphic for each countries, you can also get the logarithmic graphic.
+- change `c!help` for `c!stats`.
+
+
 ## 0.0.3 - 2020-03-17
 
 ### Added
