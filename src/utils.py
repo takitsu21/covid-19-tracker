@@ -17,103 +17,59 @@ URI_DATA      = config("uri_data")
 DATA_PATH     = "data/datas.json"
 CSV_DATA_PATH = "data/parsed_csv.json"
 NEWS_PATH     = "data/news.json"
+BACKUP_PATH   = "backup/datas.json"
 
 COLOR                    = 0xd6b360
 DISCORD_LIMIT            = 2 ** 11 # 2048
 MAX_SIZE_FIELD_VALUE     = 2 ** 10 # 1024
-MAX_MAX_SIZE_FIELD_VALUE = 6000 - 100 # max embed size
+MAX_MAX_SIZE_FIELD_VALUE = 5000 # max embed size
 
 USER_AGENT      = {'User-Agent': 'Mozilla/5.0 (X11; Linux i586; rv:31.0) Gecko/20100101 Firefox/73.0'}
-_CONFIRMED_URI  = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv"
-_DEATH_URI      = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Deaths.csv"
-_RECOVERED_URI  = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Recovered.csv"
-_CONFIRMED_PATH = "data/time_series_19-covid-Confirmed.csv"
-_DEATH_PATH     = "data/time_series_19-covid-Deaths.csv"
-_RECOVERED_PATH = "data/time_series_19-covid-Recovered.csv"
+STATS_PATH      = "stats.png"
+STATS_LOG_PATH  = "log_stats.png"
 
 
-def csv_parse():
-    dic = {}
-    t, r, d = 0, 0, 0
-    confirmed_data = data_reader(_CONFIRMED_PATH)
-    recovered_data = data_reader(_RECOVERED_PATH)
-    deaths_data = data_reader(_DEATH_PATH)
-    lk = last_key(confirmed_data)
-    for data in confirmed_data:
-        i = 0
-        current_country = data["Country/Region"]
-        if current_country == "Korea, South":
-            current_country = "South Korea"
-        elif current_country == "US":
-            current_country = "United States"
-        if current_country not in dic:
-            try:
-                dic[current_country] = {
-                    "confirmed": int(data[lk]),
-                    "recovered": 0,
-                    "deaths": 0
-                }
-            except ValueError:
-                continue
-        else:
-            dic[current_country]["confirmed"] += int(data[lk])
-        t += int(data[lk])
+class CountryNotFound(Exception):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
-    for data in recovered_data:
-        i = 0
-        current_country = data["Country/Region"]
-        if current_country == "Korea, South":
-            current_country = "South Korea"
-        elif current_country == "US":
-            current_country = "United States"
 
-        dic[current_country]["recovered"] += int(data[lk])
-        r += int(data[lk])
+def get_region(country, region):
+    data = from_json(DATA_PATH)
+    is_code = True if len(country) == 2 else False
+    for d in data["sorted"]:
+        country_data = d["country"]["name"]
+        code = d["country"]["code"]
+        if country_data.lower() == country or code.lower() == country:
+            for c in data["data"][code]["regions"]:
+                if c['name'].lower() == region:
+                    return c
 
-    for data in deaths_data:
-        i = 0
-        current_country = data["Country/Region"]
-        if current_country == "Korea, South":
-            current_country = "South Korea"
-        elif current_country == "US":
-            current_country = "United States"
-        dic[current_country]["deaths"] += int(data[lk])
-        d += int(data[lk])
+    raise CountryNotFound(f"{region} not found for {country}")
 
-    dic["total"] = {
-        "confirmed": t,
-        "recovered": r,
-        "deaths": d
-    }
+def _get_country(data, country):
+    for d in data["sorted"]:
+        try:
+            country_data = d["country"]["name"]
+            code = d["country"]["code"]
+            iso3 = d["country"]["iso3"]
+        except:
+            continue
 
-    with open(CSV_DATA_PATH, "w") as f:
-        f.write(json.dumps(dic, indent=4))
+        if country_data.lower() == country or code.lower() == country or iso3.lower() == country:
+            return d
+    raise CountryNotFound(f"{country} not found")
 
 def matching_path(fpath: str):
-    fpath = fpath.split("-")
-    return fpath[2].lower()[:-4]
+    try:
+        return fpath.split("-")[2].lower()[:-4]
+    except:
+        return fpath.split("_")[3].lower()
 
-def from_json(fpath: str) -> dict:
-    with open(fpath, "r") as f:
-        jso = json.load(f)
-    return jso
-
-def difference_on_update(old_data: dict, new_data: dict):
-    old_c = old_data["total"]["confirmed"]
-    old_r = old_data["total"]["recovered"]
-    old_d = old_data["total"]["deaths"]
-    new_c = new_data["total"]["confirmed"]
-    new_r = new_data["total"]["recovered"]
-    new_d = new_data["total"]["deaths"]
-    return new_c - old_c, new_r - old_r, new_d - old_d
-
-def diff_confirmed(csv: dict, k: str, v: dict, key_getter: str) -> int:
-    if type(csv) == list:
-        return v[key_getter]
-    for c, val in csv.items():
-        if c == k:
-            return int(v[key_getter]) - int(val[key_getter])
-    return v[key_getter]
+async def from_json(file: IO):
+    async with aiofiles.open(file) as f:
+        data = await f.read()
+        return json.loads(data)
 
 def string_formatting(data_parsed: dict, param: list=[]) -> Tuple[str, str]:
     tot = data_parsed["total"]
@@ -123,13 +79,10 @@ def string_formatting(data_parsed: dict, param: list=[]) -> Tuple[str, str]:
     text = ""
     d = {}
     truncated = ""
-    my_csv = from_json(CSV_DATA_PATH)
-
-    t, r, c = difference_on_update(my_csv, data_parsed)
     header = mkheader(
-        tot['confirmed'], t,
+        tot['confirmed'], tot["today"]["confirmed"],
         tot['recovered'], percentage(tot["confirmed"], tot["recovered"]),
-        r, tot['deaths'], percentage(tot["confirmed"], tot["deaths"]), c, True
+        tot["today"]["recovered"], tot['deaths'], percentage(tot["confirmed"], tot["deaths"]), tot["today"]["deaths"], True
     )
     header_length = len(header)
     param_length = len(param)
@@ -144,16 +97,17 @@ def string_formatting(data_parsed: dict, param: list=[]) -> Tuple[str, str]:
                     country = v["country"]["name"] if v["country"]["name"] is not None else "Null"
                     code = v['country']['code'] if v["country"]["code"] is not None else "Null"
                     stats = v['statistics']
+                    iso3 = v["country"]["iso3"]
                     if len(country) >= 15:
                         truncated = country[0:15] + "..."
                     else:
                         truncated = country
                     if country not in check:
-                        if (p_length == 2 and p == code.lower()) or (country.lower().startswith(p) and p_length != 2):
+                        if (p_length in range(2,4) and (p == code.lower()) or p == iso3.lower()) or (country.lower().startswith(p) and p_length not in range(2,4)):
                             if i % 2 == 0:
-                                text += f"**{truncated} : {stats['confirmed']} <:confirmed:688686089548202004> [+{diff_confirmed(my_csv, country, stats, 'confirmed')}], {stats['recovered']} cured [+{diff_confirmed(my_csv, country, stats, 'recovered')}], {stats['deaths']} deaths [+{diff_confirmed(my_csv, country, stats, 'deaths')}]**\n"
+                                text += f"**{truncated} : {stats['confirmed']} <:confirmed:688686089548202004> [+{v['today']['confirmed']}], {stats['recovered']} cured [+{v['today']['recovered']}], {stats['deaths']} deaths [+{v['today']['deaths']}]**\n"
                             else:
-                                text += f"{truncated} : {stats['confirmed']} <:confirmed:688686089548202004> [+{diff_confirmed(my_csv, country, stats, 'confirmed')}], {stats['recovered']} cured [+{diff_confirmed(my_csv, country, stats, 'recovered')}], {stats['deaths']} deaths [+{diff_confirmed(my_csv, country, stats, 'deaths')}]\n"
+                                text += f"{truncated} : {stats['confirmed']} <:confirmed:688686089548202004> [+{v['today']['confirmed']}], {stats['recovered']} cured [+{v['today']['recovered']}], {stats['deaths']} deaths [+{v['today']['deaths']}]\n"
                             check.append(country)
                             length = len(text) + header_length
                             i += 1
@@ -164,18 +118,22 @@ def string_formatting(data_parsed: dict, param: list=[]) -> Tuple[str, str]:
     else:
 
         for v in data_parsed["sorted"]:
-            confirmed = v['statistics']['confirmed']
-            country = v['country']['name'] if v["country"]["name"] is not None else "Null"
-            stats = v['statistics']
+            try:
+                confirmed = v['statistics']['confirmed']
+                country = v['country']['name'] if v["country"]["name"] is not None else "Null"
+                stats = v['statistics']
+            except KeyError:
+                continue
+
             if len(country) >= 15:
                 truncated = country[0:15] + "..."
             else:
                 truncated = country
             if stats['confirmed']:
                 if i % 2 == 0:
-                    text += f"**{truncated} : {confirmed} [+{diff_confirmed(my_csv, country, v['statistics'], 'confirmed')}]**\n"
+                    text += f"**{truncated} : {confirmed} [+{v['today']['confirmed']}]**\n"
                 else:
-                    text += f"{truncated} : {confirmed} [+{diff_confirmed(my_csv, country, v['statistics'], 'confirmed')}]\n"
+                    text += f"{truncated} : {confirmed} [+{v['today']['confirmed']}]\n"
                 i += 1
                 length = len(text) + header_length
             if length >= max_length:
@@ -187,17 +145,29 @@ def string_formatting(data_parsed: dict, param: list=[]) -> Tuple[str, str]:
         text = old_text
     return header, text
 
+def get_country(data, country, type, value=True):
+    country = country.lower()
+    for d in data['sorted']:
+        try:
+            country_n = d['country']['name']
+            country_code = d['country']['code']
+            stats = d['statistics']
+            if value:
+                if country_n.lower() == country or country == country_code.lower():
+                    return stats[type]
+            else:
+                if not isinstance(country_code, int) and country == country_code.lower():
+                    return country_n
+        except:
+            pass
+    return None
+
 def trigger_typing(func):
     @functools.wraps(func)
     async def wrapper(self, ctx: commands.Context, *args, **kwargs):
         await ctx.trigger_typing()
         return await func(self, ctx, *args, **kwargs)
     return wrapper
-
-def data_reader(fpath: str) -> List[dict]:
-    with open(fpath, "r") as f:
-        cr = csv.DictReader(f.read().splitlines(), delimiter=',')
-    return list(cr)
 
 def discord_timestamp():
     return dt.datetime.utcfromtimestamp(time.time())
@@ -214,9 +184,13 @@ def percentage(total, x):
 
 def get_states(data: dict, country: str) -> list:
     for v in data["sorted"]:
-        dc_name = v['country']['name'] if v['country']['name'] is not None else "."
-        code = v['country']['code'] if v['country']['code'] is not None else "."
-        if dc_name.lower() == country or code.lower() == country:
+        try:
+            dc_name = v['country']['name'] if v['country']['name'] is not None else "."
+            code = v['country']['code'] if v['country']['code'] is not None else "."
+            iso3 = v['country']['iso3'] if v['country']['iso3'] is not None else "."
+        except Exception as e:
+            continue
+        if dc_name.lower() == country or code.lower() == country or iso3.lower() == country:
             try:
                 return v['regions']
             except KeyError:
@@ -226,12 +200,12 @@ def get_states(data: dict, country: str) -> list:
 def parse_state_input(*params: list) -> Tuple[str, str]:
     country = ""
     state = ""
-    separator_find = False
+    sep_found = False
     for c in params:
         if "in" == c:
-            separator_find = True
+            sep_found = True
             continue
-        if separator_find:
+        if sep_found:
             country += c + " "
         else:
             state += c + " "
@@ -242,28 +216,33 @@ def human_format(num: int) -> str:
     while abs(num) >= 1000:
         magnitude += 1
         num /= 1000
-    return '%d%s' % (num, ['', 'K', 'M', 'G', 'T', 'P'][magnitude])
+    try:
+        if f"{num:.1f}".split(".")[1] != "0":
+            return '{:.1f}{}'.format(num, ['', 'K', 'M', 'G', 'T', 'P'][magnitude])
+    except:
+        pass
+    return '{}{}'.format(int(num), ['', 'K', 'M', 'G', 'T', 'P'][magnitude])
 
-def region_mobile(*params):
-    country, state = parse_state_input(*params)
-    data = from_json(DATA_PATH)
+async def is_valid_json():
+    try:
+        j = await from_json(DATA_PATH)
+        return True
+    except:
+        return False
+
+def region_format(data, country, state):
     states = get_states(data, country)
     text = ""
     old_text = ""
     length = 0
     max_length = DISCORD_LIMIT- 50
     k = 0
-    embed = discord.Embed(
-        color=COLOR,
-        timestamp=discord_timestamp()
-    )
-    my_csv = from_json(CSV_DATA_PATH)
-    t, r, c = difference_on_update(my_csv, data)
+
     tot = data['total']
     header = mkheader(
-        tot['confirmed'], t,
+        tot['confirmed'], tot["today"]["confirmed"],
         tot['recovered'], percentage(tot["confirmed"], tot["recovered"]),
-        r, tot['deaths'], percentage(tot["confirmed"], tot["deaths"]), c, True
+        tot["today"]["recovered"], tot['deaths'], percentage(tot["confirmed"], tot["deaths"]), tot["today"]["deaths"], True
     )
     header_length = len(header)
     for s in states:
@@ -276,11 +255,11 @@ def region_mobile(*params):
         bold = "**" if k % 2 == 0 else ""
 
         if state == "all":
-            text += f"{bold}{state_name_trunc} : {statistics['confirmed']} <:confirmed:688686089548202004>, {statistics['recovered']} cured, {statistics['deaths']} deaths{bold}\n"
+            text += f"{bold}{state_name_trunc} : {statistics['confirmed']} [+{s['today']['confirmed']}] confirmed - {statistics['recovered']} cured - {statistics['deaths']} deaths{bold}\n"
             k += 1
 
         elif state_name.lower() == state:
-            text += f"{bold}{state_name_trunc} : {statistics['confirmed']} <:confirmed:688686089548202004>, {statistics['recovered']} cured, {statistics['deaths']} deaths{bold}\n"
+            text += f"{bold}{state_name_trunc} : {statistics['confirmed']} [+{s['today']['confirmed']}] confirmed - {statistics['recovered']} cured - {statistics['deaths']} deaths{bold}\n"
             k += 1
         length = len(text) + header_length
         if length >= max_length:
@@ -290,99 +269,11 @@ def region_mobile(*params):
     if length >= max_length:
         text = old_text
 
-    embed.description = header + "\n\n" + text
-    return embed
+    return header + "\n\n", text
 
-def make_tab_embed_all(is_country=False, params=[]):
-    data = from_json(DATA_PATH)
-    my_csv = from_json(CSV_DATA_PATH)
-    country = ""
-    confirmed = ""
-    recovered = ""
-    bold = ""
-    total_length = 0
-    embed = discord.Embed(
-        color=COLOR,
-        timestamp=discord_timestamp()
-    )
-    has_param = len(params)
-    check = []
-    k = 0
-    for s in data['sorted']:
-        state_name = s['country']['name'] if s['country']['name'] is not None else "Null"
-        code = s['country']['code'] if s['country']['code'] is not None else "Null"
-        statistics = s['statistics']
-        if len(state_name) >= 15:
-            state_name_trunc = state_name[0:15] + "..."
-        else:
-            state_name_trunc = state_name
-        if statistics['confirmed'] == 0:
-            break
-
-        if k % 2 == 0:
-            bold = "**"
-        else:
-            bold = ""
-
-        length = max(
-                len(country),
-                len(confirmed),
-                len(recovered)
-            ) + \
-            max(
-                len(state_name_trunc),
-                len(f"{bold}{human_format(statistics['confirmed'])} [+{human_format(int(diff_confirmed(my_csv, country, statistics, 'confirmed')))}] | {statistics['deaths']}{bold}\n"),
-                len(f"{bold}{statistics['recovered']}{bold}\n")
-            )
-
-        if total_length >= MAX_MAX_SIZE_FIELD_VALUE:
-            break
-
-        if length >= MAX_SIZE_FIELD_VALUE:
-            total_length += len(country) + len(confirmed) + len(recovered)
-            embed.add_field(name="<:region:688689082360004609>", value=country)
-            embed.add_field(name="<:confirmed:688686089548202004> | <:_death:688686194917244928>", value=confirmed)
-            embed.add_field(name="<:recov:688686059567185940>", value=recovered)
-            country = ""
-            confirmed = ""
-            recovered = ""
-
-        if not is_country:
-            country += f"{bold}{state_name_trunc}{bold}\n"
-            confirmed += f"{bold}{human_format(statistics['confirmed'])} [+{human_format(diff_confirmed(my_csv, state_name, statistics, 'confirmed'))}] | {statistics['deaths']}{bold}\n"
-            recovered += f"{bold}{statistics['recovered']}{bold}\n"
-            k += 1
-
-        elif is_country and has_param:
-            for p in params:
-                p = p.lower()
-                p_length = len(p)
-                if state_name not in check:
-                    if p_length == 2 and p == code.lower():
-                        country += f"{bold}{state_name_trunc}{bold}\n"
-                        confirmed += f"{bold}{human_format(statistics['confirmed'])} [+{human_format(diff_confirmed(my_csv, state_name, statistics, 'confirmed'))}] | {statistics['deaths']}{bold}\n"
-                        recovered += f"{bold}{statistics['recovered']}{bold}\n"
-                        k += 1
-                        check.append(state_name)
-
-                    elif state_name.lower().startswith(p) and p_length != 2:
-                        country += f"{bold}{state_name_trunc}{bold}\n"
-                        confirmed += f"{bold}{human_format(statistics['confirmed'])} [+{human_format(diff_confirmed(my_csv, state_name, statistics, 'confirmed'))}] | {statistics['deaths']}{bold}\n"
-                        recovered += f"{bold}{statistics['recovered']}{bold}\n"
-                        k += 1
-                        check.append(state_name)
-
-    embed.add_field(name="<:region:688689082360004609>", value=country)
-    embed.add_field(name="<:confirmed:688686089548202004> | <:_death:688686194917244928>", value=confirmed)
-    embed.add_field(name="<:recov:688686059567185940>", value=recovered)
-
-    return embed
 
 def mkheader(confirmed, dfc, recov, dfr, pr, deaths, dfd, pd, is_on_mobile):
-    if is_on_mobile:
-        header = "Mobile version\n[+**CURRENT_UPDATE-MORNING_UPDATE**]\n<:confirmed:688686089548202004> Confirmed **{}** [+**{}**]\n<:recov:688686059567185940> Recovered **{}** (**{}**) [+**{}**]\n<:_death:688686194917244928> Deaths **{}** (**{}**) [+**{}**]"
-    else:
-        header =  "[+**CURRENT_UPDATE-MORNING_UPDATE**]\n<:confirmed:688686089548202004> Confirmed **{}** [+**{}**]\n<:recov:688686059567185940> Recovered **{}** (**{}**) [+**{}**]\n<:_death:688686194917244928> Deaths **{}** (**{}**) [+**{}**]"
+    header = "You can support me on <:kofi:693473314433138718>[Kofi](https://ko-fi.com/takitsu) and vote on [top.gg](https://top.gg/bot/682946560417333283/vote) for the bot. <:github:693519776022003742> [Source code](https://github.com/takitsu21/covid-19-tracker)\n<:confirmed:688686089548202004> Confirmed **{}** [+**{}**]\n<:recov:688686059567185940> Recovered **{}** (**{}**) [+**{}**]\n<:_death:688686194917244928> Deaths **{}** (**{}**) [+**{}**]"
     return header.format(
         confirmed,
         dfc,
@@ -394,88 +285,15 @@ def mkheader(confirmed, dfc, recov, dfr, pr, deaths, dfd, pd, is_on_mobile):
         pd
     )
 
-def make_tab_embed_region(*params):
-    country, state = parse_state_input(*params)
-    data = from_json(DATA_PATH)
-    my_csv = from_json(CSV_DATA_PATH)
-    states = get_states(data, country)
-    regions = ""
-    confirmed = ""
-    recovered = ""
-    bold = ""
-    total_length = 0
-    k = 0
-    embed = discord.Embed(
-        color=COLOR,
-        timestamp=discord_timestamp()
-    )
-    c, r, d = difference_on_update(my_csv, data)
-    tot = data['total']
-    header = mkheader(
-        tot["confirmed"],
-        c,
-        tot["recovered"],
-        percentage(tot["confirmed"], tot["recovered"]),
-        r,
-        tot["deaths"],
-        percentage(tot["confirmed"], tot["deaths"]),
-        d,
-        False
-    )
-    for s in states:
-        state_name = s['name']
-        statistics = s['statistics']
-        if len(state_name) >= 15:
-            state_name_trunc = state_name[0:15] + "..."
-        else:
-            state_name_trunc = state_name
-        length = max(
-                len(regions),
-                len(confirmed),
-                len(recovered)
-            ) + \
-            max(
-                len(f"{bold}{state_name_trunc}{bold}\n"),
-                len(f"{bold}{human_format(statistics['confirmed'])} | {statistics['deaths']}{bold}\n"),
-                len(f"{bold}{statistics['recovered']}{bold}\n")
-            )
+def png_clean():
+    for file in os.listdir("."):
+        if file.endswith("png"):
+            os.remove(file)
 
-        if k % 2 == 0:
-            bold = "**"
-        else:
-            bold = ""
-
-        if total_length >= MAX_MAX_SIZE_FIELD_VALUE:
-            break
-
-        if length >= MAX_SIZE_FIELD_VALUE:
-            total_length += len(state_name_trunc) + len(confirmed) + len(recovered)
-            embed.add_field(name="<:region:688689082360004609>", value=regions)
-            embed.add_field(name="<:confirmed:688686089548202004> | <:_death:688686194917244928>", value=f"{confirmed}")
-            embed.add_field(name="<:recov:688686059567185940>", value=recovered)
-            regions = ""
-            confirmed = ""
-            recovered = ""
-
-        if state == "all":
-            regions += f"{bold}{state_name_trunc}{bold}\n"
-            confirmed += f"{bold}{human_format(statistics['confirmed'])} | {statistics['deaths']}{bold}\n"
-            recovered += f"{bold}{statistics['recovered']}{bold}\n"
-            k += 1
-
-        elif state_name.lower() == state:
-            regions += f"{bold}{state_name_trunc}{bold}\n"
-            confirmed += f"{bold}{human_format(statistics['confirmed'])} | {statistics['deaths']}{bold}\n"
-            recovered += f"{bold}{statistics['recovered']}{bold}\n"
-            k += 1
-
-    embed.add_field(name="<:region:688689082360004609>", value=regions)
-    embed.add_field(name="<:confirmed:688686089548202004> | <:_death:688686194917244928>", value=f"{confirmed}")
-    embed.add_field(name="<:recov:688686059567185940>", value=recovered)
-    embed.description = header
-
-    return embed
-
+async def _from_json(fpath):
+    async with aiofiles.open(fpath, "r") as f:
+        jso = json.load(f)
+    return jso
 
 class UpdateHandler:
     def __init__(self, lang="en"):
@@ -484,16 +302,10 @@ class UpdateHandler:
         self.lang = lang
         self.update_list = self.update_list()
 
-    def is_csv(self, path: str):
-        return path[-4:] == ".csv"
-
     def update_list(self):
         return {
             f"http://newsapi.org/v2/top-headlines?apiKey={self.news_api_key}&language={self.lang}&q={self.q}": NEWS_PATH,
-            config("uri_data"): DATA_PATH,
-            _CONFIRMED_URI: _CONFIRMED_PATH,
-            _RECOVERED_URI: _RECOVERED_PATH,
-            _DEATH_URI: _DEATH_PATH
+            config("uri_data"): DATA_PATH
         }
 
     async def fetch(self, url: str, session: ClientSession, **kwargs):
@@ -503,32 +315,39 @@ class UpdateHandler:
             **kwargs
         )
         try:
-            data = await resp.json()
+            if resp.status >= 200 and resp.status <= 299:
+                data = await resp.json()
+            else:
+                return None
         except Exception as e:
-            data = await resp.text()
+            return None
         return data
 
     async def parse(self, url: str, session: ClientSession, **kwargs):
-        resp = await self.fetch(url=url, session=session, **kwargs)
-        if self.is_csv(url):
-            return resp
-        return json.dumps(resp, indent=4)
+        try:
+            resp = await self.fetch(url=url, session=session, **kwargs)
+            return json.dumps(resp)
+        except Exception as e:
+            return None
+
+    async def store_as_backup(self, file: IO, old_data):
+        async with aiofiles.open(file, "w+") as f:
+            await f.write(old_data)
 
     async def _write(self, url:str, file: IO, session: ClientSession, **kwargs):
         try:
             to_write = await self.parse(url=url, session=session, **kwargs)
         except:
             return
-        if not to_write:
-            return None
+        if to_write is None:
+            return
         async with aiofiles.open(file, "w+") as f:
             await f.write(to_write)
 
-    async def update(self, **kwargs):
-        async with ClientSession() as session:
-            tasks = []
-            for url, fpath in self.update_list.items():
-                tasks.append(
-                    self._write(url=url, file=fpath, session=session, **kwargs)
-                )
-            await asyncio.gather(*tasks)
+    async def update(self, session: ClientSession, **kwargs):
+        tasks = []
+        for url, fpath in self.update_list.items():
+            tasks.append(
+                self._write(url=url, file=fpath, session=session, **kwargs)
+            )
+        await asyncio.gather(*tasks)

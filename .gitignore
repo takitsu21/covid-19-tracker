@@ -3,7 +3,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 test.py
-corona.png
+*.png
+*.json
+scheme_science.json
 
 # C extensions
 *.so

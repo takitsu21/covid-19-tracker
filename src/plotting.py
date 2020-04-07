@@ -1,6 +1,7 @@
 from typing import List, Dict, Tuple
 import matplotlib.pyplot as plt
 import numpy as np
+import datetime
 import matplotlib.dates as mdates
 from matplotlib.ticker import (MultipleLocator, FormatStrFormatter,
                                AutoMinorLocator)
@@ -16,27 +17,46 @@ class LengthError(Exception):
         super().__init__(*args, **kwargs)
 
 
-def plot_csv(dark=True):
-    x_c, y_c = make_courbe(utils._CONFIRMED_PATH)
-    x_r, y_r = make_courbe(utils._RECOVERED_PATH)
-    x_d, y_d = make_courbe(utils._DEATH_PATH)
+class PlotEmpty(Exception):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+
+def rearrange(timeline, confirmed, recovered, deaths, active):
+    i = 0
+    while confirmed[i] == 0:
+        i += 1
+    return timeline[i:], confirmed[i:], logarify(recovered[i:]), logarify(deaths[i:]), logarify(active[i:])
+
+def logarify(y):
+    for i in range(len(y)):
+        if y[i] == 0:
+            y[i] = 1
+    return y
+
+async def plot_csv(path, dark=True, logarithmic=False, country=None, region=None):
+    timeline, confirmed, recovered, deaths, active = await make_courbe(utils.DATA_PATH, country, region)
     fig, ax = plt.subplots()
     ax.spines['bottom'].set_visible(False)
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(False)
     ax.spines['left'].set_visible(False)
 
+    if logarithmic:
+        plt.yscale('log')
+
     ax.xaxis.set_major_locator(MultipleLocator(7))
+    ax.plot(timeline, active, ".-", color="orange", alpha=0.5)
+    ax.plot(timeline, recovered, ".-", color="lightgreen")
+    ax.plot(timeline, deaths, ".-", color="#e62712")
+    ax.plot(timeline, confirmed, ".-", color="lightblue")
+    plt.fill_between(timeline, confirmed, active, color="silver", alpha=0.5)
 
-    ax.plot(x_c, y_c, ".-", color="cornflowerblue")
-    ax.plot(x_r, y_r, ".-", color="lightgreen")
-    ax.plot(x_d, y_d, ".-", color="#e62712")
-
-    ticks = [i for i in range(len(y_c)) if i % 7 == 0]
+    ticks = [i for i in range(len(timeline)) if i % 7 == 0]
     plt.xticks(ticks, rotation=30, ha="center")
     plt.grid(True)
     plt.ylabel("Total cases")
-    plt.xlabel("Timeline (MM/DD/YY)")
+    plt.xlabel("Timeline (DD/MM/YY)")
 
     if dark:
         ax.xaxis.label.set_color('white')
@@ -44,48 +64,65 @@ def plot_csv(dark=True):
         ax.tick_params(axis='x', colors='white')
         ax.tick_params(axis='y', colors='white')
 
-        leg = plt.legend(["Total confirmed", "Total recovered", "Total deaths"], facecolor='0.1')
+        leg = plt.legend(["Total active", "Total recovered", "Total deaths", "Total confirmed", "Confirmed - active"], facecolor='0.1', loc="upper left")
         for text in leg.get_texts():
             text.set_color("white")
 
-        ax.set_ylim(ymin=0)
+        if not logarithmic:
+            ax.set_ylim(ymin=1)
         ylabs = []
         locs, _ = plt.yticks()
         for iter_loc in locs:
             ylabs.append(utils.human_format(int(iter_loc)))
 
         plt.yticks(locs, ylabs)
-        plt.savefig("stats.png", transparent=True)
-    else:
-        leg = plt.legend(["Total confirmed", "Total recovered", "Total deaths"])
-        plt.savefig("stats.png")
+        plt.savefig(path, transparent=True)
+
     plt.close(fig)
 
-def make_courbe(fpath: str) -> Tuple[List, List]:
-    datas = utils.data_reader(fpath)
-    updated_data = utils.from_json(utils.DATA_PATH)
-    matcher = utils.matching_path(fpath)
-    d = {}
-    x = []
-    y = []
-    for data in datas:
-        i = 0
-        for k, v in data.items():
-            if i > 3: # we are only interested by numbers
-                if k not in d:
-                    d[k] = int(v)
-                else:
-                    d[k] += int(v)
-            i += 1
-    for parse_k, parse_v in d.items():
-        x.append(parse_k)
-        y.append(parse_v)
-    y.pop()
-    y.append(updated_data["total"][matcher])
-    if len(x) == len(y):
-        return x, y
-    raise LengthError(f"x, y have a different length, x = {len(x)}, y = {len(y)}")
+async def make_courbe(fpath: str, country=None, region=None) -> Tuple[List, List]:
+    data = await utils.from_json(fpath)
+    timeline = []
+    confirmed = []
+    recovered = []
+    deaths = []
+    active = []
+    code_found = ""
+    if country is None:
+        for d in data["total"]["history"]:
+            timeline.append(d)
+            confirmed.append(data["total"]["history"][d]["confirmed"])
+            recovered.append(data["total"]["history"][d]["recovered"])
+            deaths.append(data["total"]["history"][d]["deaths"])
+            active.append(data["total"]["history"][d]["active"])
 
+    elif isinstance(region, dict):
+        for h in region:
+            timeline.append(h)
+            confirmed.append(region[h]["confirmed"])
+            recovered.append(region[h]["recovered"])
+            deaths.append(region[h]["deaths"])
+            active.append(region[h]["active"])
+    else:
 
-if __name__ == "__main__":
-    plot_csv()
+        for d in data["sorted"]:
+            try:
+                country_name = d["country"]["name"]
+                code = d["country"]["code"]
+                iso3 = d["country"]["iso3"]
+            except:
+                continue
+
+            if country == country_name.lower() or code.lower() == country or iso3.lower() == country:
+                for c in d["history"]:
+                    timeline.append(c)
+                    confirmed.append(d["history"][c]["confirmed"])
+                    recovered.append(d["history"][c]["recovered"])
+                    deaths.append(d["history"][c]["deaths"])
+                    active.append(d["history"][c]["active"])
+                break
+
+    if not len(timeline):
+        raise PlotEmpty(f"Plot empty, length : {len(timeline)}")
+
+    return rearrange(timeline, confirmed, recovered, deaths, active)

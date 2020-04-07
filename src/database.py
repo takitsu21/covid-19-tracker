@@ -2,10 +2,31 @@ import asyncio
 import pymysql
 from decouple import config
 import logging
+# import aiomysql
 
 
 logger = logging.getLogger("covid-19")
 
+# class Poll(object):
+#     def __init__(self):
+#         self._pool = None
+#         self._loop_pool = asyncio.get_event_loop()
+
+#     async def create_pool(self):
+#         if not self._pool:
+#             self._pool = await aiomysql.connect(
+#                 host=config("db_host"),
+#                 port=3306,
+#                 user=config("db_user"),
+#                 password=config("db_token"),
+#                 db=config("db"),
+#                 loop=self._loop_pool
+#             )
+#         cur = await conn.cursor()
+#         await cur.execute("SELECT * FROM notification")
+#         r = await cur.fetchall()
+#         print(r)
+#         await cur.close()
 
 class Database:
     def __init__(self, conn=None):
@@ -19,13 +40,14 @@ class Database:
         cur.close()
         return r
 
-    def insert_notif(self, guild_id, channel_id):
+    def insert_notif(self, guild_id, channel_id, country, next_update):
         self._ping()
         cur = conn.cursor()
-        sql = """INSERT INTO notification(guild_id, channel_id) VALUES(%s, %s)"""
-        cur.execute(sql, (guild_id, channel_id, ))
+        sql = """INSERT INTO notification(guild_id, channel_id, country, next_update) VALUES(%s, %s, %s, %s)"""
+        cur.execute(sql, (guild_id, channel_id, country.lower(), next_update, ))
         conn.commit()
         cur.close()
+
 
     def delete_notif(self, guild_id):
         self._ping()
@@ -35,13 +57,15 @@ class Database:
         conn.commit()
         cur.close()
 
-    def update_notif(self, guild_id, channel_id):
+    def update_notif(self, guild_id, channel_id, country, next_update):
         self._ping()
         cur = conn.cursor()
         sql = """UPDATE notification SET
-                channel_id=%s
+                channel_id=%s,
+                country=%s,
+                next_update=%s
                 WHERE guild_id=%s"""
-        cur.execute(sql, (channel_id, guild_id, ))
+        cur.execute(sql, (channel_id, country.lower(), next_update, guild_id, ))
         conn.commit()
         cur.close()
 

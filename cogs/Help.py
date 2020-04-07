@@ -24,43 +24,48 @@ class Help(commands.Cog):
             **`<something>`** something is required
             **`[something]`** something is optional
             **`arg1 | arg2`** mean arg1 or arg2
-            **NOTE: DATA MAY NOT BE FULLY ACCURATE**""",
+            **NOTE: DATA MAY NOT BE FULLY ACCURATE**\n__Stats are updated every 1 hour.__""",
             color=utils.COLOR,
             timestamp=utils.discord_timestamp()
         )
         embed.add_field(
             name="**`c!info`**",
-            value="Views every confirmed, recovered, deaths cases",
+            value="Views every confirmed cases",
             inline=False
+        )
+        embed.add_field(
+            name="**`c!list`**",
+            value="Views every country available to be chosen with other commands.",
+            inline=False
+        )
+        embed.add_field(
+            name="**`c!<s | stats> [log | country | log [country]]`**",
+            value="Views graphical statistics. If no args provided return linear graph for total cases.You can find countries with **full name** or **[ISO-3166-1](https://fr.wikipedia.org/wiki/ISO_3166-1)**.\n __Examples__ : `c!stats us`, `c!s log usa`, `c!stats log`",
+            inline=False
+        )
+        embed.add_field(
+            name="**`c!country <country>`**",
+            value="Views information about multiple chosen country/region. You can either use **autocompletion** or **[ISO-3166-1](https://fr.wikipedia.org/wiki/ISO_3166-1)**.\n __Examples__ : `c!country fr usa it gb`",
+            inline=False
+        )
+        embed.add_field(
+            name="**`c!<r | region> <state/province | all> in <country>`**",
+            value="Certains region are not supported yet.\nThe `in` (mandatory symbol) is interpreted as separator between the country and the region/province so don't forget it.\n __Examples__ : `c!r new york in us`, `c!region all in china`",
+            inline=False
+        )
+        embed.add_field(
+            name="**`c!track <country | disable>`**",
+            value="Track country (bot will DM you update) the command needs to be typed in a server channel not DM.\n__Examples__ : `c!track us`, `c!track disable`",
+            inline=False
+        )
+        embed.add_field(
+            name="**`c!nofitication <country | disable> <every NUMBER> <hours | days | weeks>`**",
+            value="(Only administrator) When new datas are found, the bot will send you a notification where you typed the command, server only.\n __Examples__ : `c!notification usa every 3 hours`, `c!notification disable`"
         )
         embed.add_field(
             name="**`c!news`**",
-            value="Views recent news about COVID-19 (update every 1 hour).",
+            value="Views recent news about COVID-19.",
             inline=False
-        )
-        embed.add_field(
-            name="**`c!country <COUNTRY>`**",
-            value="Views information about multiple chosen country/region. You can either use **autocompletion** or **country code**. Valid country/region are listed in `c!info`.\nExample : `c!country fr germ it poland`",
-            inline=False
-        )
-        embed.add_field(
-            name="**`c!<r | region> <STATE/PROVINCE | all> in <COUNTRY>`**",
-            value="Supported countries (**China, Canada, United States, Australia, Cruise Ship**).\nViews regions infected in specific country or in all state with `all` arg.\nThe `in` (mandatory symbol) is interpreted as separator between the country and the region/province so don't forget it.\nExample 1 : `c!r new york in us`\nExample 2 : `c!region all in china`",
-            inline=False
-        )
-        embed.add_field(
-            name="**`c!stats`**",
-            value="Views graphical statistics",
-            inline=False
-        )
-        embed.add_field(
-            name="**`c!track <COUNTRY | disable>`**",
-            value="Track multiple country (bot will DM you update). `c!track <COUNTRY>` work like `c!country <COUNTRY>` (**country code** / **autocompletion**) see `c!help`. `c!track disable` will disable the tracker.\nExample 1 : `c!track fr it us gb`\nExample 2 : `c!track disable`",
-            inline=False
-        )
-        embed.add_field(
-            name="**`c!notification <enable | disable>`**",
-            value="(Only administrator) When new datas are downloaded the bot will send you a notification where you typed the command."
         )
         embed.add_field(
             name="**`c!source`**",
@@ -89,7 +94,7 @@ class Help(commands.Cog):
         )
         embed.add_field(
             name="**`c!about`**",
-            value="Views informations about the bot",
+            value="Views informations about the bot.",
             inline=False
         )
         embed.add_field(
@@ -97,7 +102,6 @@ class Help(commands.Cog):
             value="Views bot link vote.",
             inline=False
         )
-
         embed.set_footer(
             text=utils.last_update(utils.DATA_PATH),
             icon_url=ctx.guild.me.avatar_url
@@ -137,10 +141,11 @@ class Help(commands.Cog):
             await self.bot.user.edit(avatar=f.read())
 
     @commands.command(name="about")
+    @commands.cooldown(5, 30, commands.BucketType.user)
     async def about(self, ctx):
-        DATA = utils.from_json(utils.DATA_PATH)
+        DATA = self.bot._data
         embed = discord.Embed(
-                description="[Wold Health Organization advices](https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public)",
+                description="You can support me on <:kofi:693473314433138718>[Kofi](https://ko-fi.com/takitsu) and vote on [top.gg](https://top.gg/bot/682946560417333283/vote) for the bot. <:github:693519776022003742> [Source code](https://github.com/takitsu21/covid-19-tracker)\n[Wold Health Organization advices](https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public)",
                 timestamp=utils.discord_timestamp(),
                 color=utils.COLOR
             )
@@ -153,17 +158,21 @@ class Help(commands.Cog):
         embed.add_field(name="Discord Support",
                         value="[Click here](https://discordapp.com/invite/wTxbQYb)")
         embed.add_field(name = "Source code", value="[Click here](https://github.com/takitsu21/covid-19-tracker)")
-        embed.add_field(name="Help command",value="c!help")
-        embed.add_field(name="Prefix",value="c!")
-        embed.add_field(name="Donate", value="[Patreon](https://www.patreon.com/takitsu)\nBuy me a [Ko-fi](https://ko-fi.com/takitsu)")
+        embed.add_field(name="Help command",value="`c!help` or `@mention help`")
+        embed.add_field(name="Prefix",value="`c!` or `@mention`")
+
         nb_users = 0
+        channels = 0
         for s in self.bot.guilds:
             nb_users += len(s.members)
-        embed.add_field(name="Confirmed", value=DATA["total"]["confirmed"])
-        embed.add_field(name="Recovered", value=DATA["total"]["recovered"])
-        embed.add_field(name="Deaths", value=DATA["total"]["deaths"])
-        embed.add_field(name="Servers", value=len(self.bot.guilds))
-        embed.add_field(name="Members", value=nb_users)
+            channels += len(s.channels)
+        embed.add_field(name="<:confirmed:688686089548202004> Confirmed", value=DATA["total"]["confirmed"])
+        embed.add_field(name="<:recov:688686059567185940> Recovered", value=DATA["total"]["recovered"])
+        embed.add_field(name="<:_death:688686194917244928> Deaths", value=DATA["total"]["deaths"])
+        embed.add_field(name="<:servers:693053697453850655> Servers", value=len(self.bot.guilds))
+        embed.add_field(name="<:users:693053423494365214> Members", value=nb_users)
+        embed.add_field(name="<:hashtag:693056105076621342> Channels", value=channels)
+        embed.add_field(name="<:stack:693054261512110091> Shards", value=f"{ctx.guild.shard_id + 1}/{self.bot.shard_count}")
         embed.set_footer(text="Made by Taki#0853 (WIP) " + utils.last_update(utils.DATA_PATH),
                         icon_url=ctx.guild.me.avatar_url)
         await ctx.send(embed=embed)
@@ -171,7 +180,7 @@ class Help(commands.Cog):
     @commands.command(name="sources", aliases=["source"])
     async def sources(self, ctx):
         embed = discord.Embed(
-            description="[CSSEGISandData](https://github.com/CSSEGISandData/COVID-19)\n[World Health Organization (WHO)](https://www.who.int/)",
+            description="[CSSEGISandData](https://github.com/CSSEGISandData/COVID-19)\n[World Health Organization (WHO)](https://www.who.int/)\nThis bot does not use Worldometer's data as it is not accurate and only statistics on the potential cases, recoveries and deaths. The data used by the bot comes directly from the World Health Organisation and Johns Hopkins University as there are more trustworthy. The data is updated once every hour.",
             color=utils.COLOR,
             timestamp=utils.discord_timestamp()
             )
@@ -187,6 +196,7 @@ class Help(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command(name="ping")
+    @commands.cooldown(3, 30, commands.BucketType.user)
     async def ping(self, ctx):
         """Ping's Bot"""
         before = time.monotonic()
@@ -205,6 +215,7 @@ class Help(commands.Cog):
         await message.edit(content="", embed=embed)
 
     @commands.command(name="suggestion")
+    @commands.cooldown(2, 60, commands.BucketType.user)
     async def suggestion(self, ctx, *message):
         if len(message) < 3:
             embed = discord.Embed(title="Suggestion",
@@ -227,11 +238,8 @@ class Help(commands.Cog):
                         icon_url=ctx.guild.me.avatar_url)
         return await ctx.send(embed=embed)
 
-    @commands.command()
-    async def test(self, ctx):
-        await ctx.send(f"{ctx.author.status} mobile : {ctx.author.mobile_status}  desktop : {ctx.author.desktop_status} is on mobile : {ctx.author.is_on_mobile()}")
-
     @commands.command(name="bug")
+    @commands.cooldown(2, 60, commands.BucketType.user)
     async def bug(self, ctx, *message):
         if len(message) < 3:
             embed = discord.Embed(title="Bug report",

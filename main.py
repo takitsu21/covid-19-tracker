@@ -14,6 +14,7 @@ import json
 import src.utils as utils
 from src.database import db
 from src import up
+import src.database as _db
 
 
 logger = logging.getLogger('covid-19')
@@ -31,16 +32,28 @@ logger.addHandler(handler)
 
 
 
+def _get_prefix(bot, message):
+    if message.content[0:2] == "c!":
+        return when_mentioned_or("c!")(bot, message)
+    elif message.content[0:2] == "C!":
+        return when_mentioned_or("C!")(bot, message)
+    return when_mentioned_or("c!")(bot, message)
+
+
 class Covid(commands.AutoShardedBot):
     def __init__(self, *args, loop=None, **kwargs):
         super().__init__(
-            command_prefix=when_mentioned_or("c!"),
-            activity=discord.Game(name="Starting..."),
+            command_prefix=_get_prefix,
+            activity=discord.Game(name="Loading shards..."),
             status=discord.Status.dnd
             )
         self.remove_command("help")
         self._load_extensions()
-        data = utils.from_json(utils.DATA_PATH)
+        self._data = None
+        self._backup = None
+        self.http_session = None
+        self.thumb = "https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/COVID-19_Outbreak_World_Map.svg/langfr-280px-COVID-19_Outbreak_World_Map.svg.png?t="
+        self.author_thumb = "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/International_Flag_of_Planet_Earth.svg/1200px-International_Flag_of_Planet_Earth.svg.png"
 
     def _load_extensions(self):
         for file in os.listdir("cogs/"):
@@ -60,65 +73,106 @@ class Covid(commands.AutoShardedBot):
             except Exception:
                 logger.exception(f"Fail to unload {file}")
 
+    async def on_command_error(self, ctx, error):
+        if isinstance(error, commands.CommandOnCooldown):
+            await ctx.send('{} This command is ratelimited, please try again in {:.2f}s'.format(ctx.author.mention, error.retry_after))
+        else:
+            # raise error
+            embed = discord.Embed(
+                title="Error",
+                description=f"{error} Invalid command see `c!help`.\nIf you think that is a bot error, report this issue on my discord [here](https://discordapp.com/invite/wTxbQYb) thank you.",
+                timestamp=datetime.datetime.utcnow(),
+                color=utils.COLOR
+            )
+            logger.error(error)
+            await ctx.send(embed=embed)
 
     async def on_guild_join(self, guild: discord.Guild):
-        general = find(lambda x: x.name == "general", guild.text_channels)
-        if general and general.permissions_for(guild.me).send_messages:
-            data = utils.from_json(utils.DATA_PATH)
-            embed = discord.Embed(
-                    title="Coronavirus COVID-19 Tracker",
-                    description="[Wold Health Organization advices](https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public)",
-                    timestamp=datetime.datetime.utcfromtimestamp(time.time()),
-                    color=utils.COLOR
-                )
-            embed.set_thumbnail(url="https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/COVID-19_Outbreak_World_Map.svg/langfr-280px-COVID-19_Outbreak_World_Map.svg.png")
-            embed.add_field(name="Vote",
-                            value="[Click here](https://top.gg/bot/682946560417333283/vote)")
-            embed.add_field(name="Invite Coronavirus COVID-19",
-                            value="[Click here](https://discordapp.com/oauth2/authorize?client_id=682946560417333283&scope=bot&permissions=313408)")
-            embed.add_field(name="Discord Support",
-                            value="[Click here](https://discordapp.com/invite/wTxbQYb)")
-            embed.add_field(name = "Source code and commands", value="[Click here](https://github.com/takitsu21/covid-19-tracker)")
-            embed.add_field(name="Help command",value="c!help")
-            embed.add_field(name="Prefix",value="c!")
-            nb_users = 0
-            for s in self.guilds:
-                nb_users += len(s.members)
-            embed.add_field(name="Total confirmed", value=data["total"]["confirmed"], inline=False)
-            embed.add_field(name="Total recovered", value=data["total"]["recovered"], inline=False)
-            embed.add_field(name="Total deaths", value=data["total"]["deaths"], inline=False)
-            embed.add_field(name="Servers", value=len(self.guilds))
-            embed.add_field(name="Members", value=nb_users)
-            embed.set_footer(text="Made by Taki#0853 (WIP)",
-                            icon_url=guild.me.avatar_url)
-            await general.send(embed=embed)
+        await self.wait_until_ready()
+        chan_logger = self.get_channel(692815717078270052)
+        try:
+            general = find(lambda x: x.name == "general", guild.text_channels)
+            if general and general.permissions_for(guild.me).send_messages:
+                embed = discord.Embed(
+                        description="You can support me on <:kofi:693473314433138718>[Kofi](https://ko-fi.com/takitsu) and vote on [top.gg](https://top.gg/bot/682946560417333283/vote) for the bot. <:github:693519776022003742> [Source code](https://github.com/takitsu21/covid-19-tracker)",
+                        timestamp=utils.discord_timestamp(),
+                        color=utils.COLOR
+                    )
+                embed.set_author(name="Coronavirus COVID-19 Tracker", icon_url=guild.me.avatar_url)
+                embed.set_thumbnail(url=self.thumb)
+                embed.add_field(name="Vote",
+                                value="[Click here](https://top.gg/bot/682946560417333283/vote)")
+                embed.add_field(name="Invite Coronavirus COVID-19",
+                                value="[Click here](https://discordapp.com/oauth2/authorize?client_id=682946560417333283&scope=bot&permissions=313408)")
+                embed.add_field(name="Discord Support",
+                                value="[Click here](https://discordapp.com/invite/wTxbQYb)")
+                embed.add_field(name = "Source code", value="[Click here](https://github.com/takitsu21/covid-19-tracker)")
+                embed.add_field(name="Help command",value="c!help")
+                embed.add_field(name="Prefix",value="c!")
+                nb_users = 0
+                channels = 0
+                for s in self.guilds:
+                    nb_users += len(s.members)
+                    channels += len(s.channels)
+                embed.add_field(name="<:confirmed:688686089548202004> Confirmed", value=self._data["total"]["confirmed"])
+                embed.add_field(name="<:recov:688686059567185940> Recovered", value=self._data["total"]["recovered"])
+                embed.add_field(name="<:_death:688686194917244928> Deaths", value=self._data["total"]["deaths"])
+                embed.add_field(name="<:servers:693053697453850655> Servers", value=len(self.guilds))
+                embed.add_field(name="<:users:693053423494365214> Members", value=nb_users)
+                embed.add_field(name="<:hashtag:693056105076621342> Channels", value=channels)
+                embed.add_field(name="<:stack:693054261512110091> Shards", value=f"{ctx.guild.shard_id + 1}/{self.bot.shard_count}")
+                embed.set_footer(text="Made by Taki#0853 (WIP) " + utils.last_update(utils.DATA_PATH),
+                                icon_url=guild.me.avatar_url)
+                await general.send(embed=embed)
+        except:
+            pass
+
+        embed = discord.Embed(
+            title="Bot added to " + guild.name,
+            timestamp=datetime.datetime.utcnow(),
+            color=utils.COLOR
+        )
+        embed.add_field(
+            name="<:users:693053423494365214> Members",
+            value=len(guild.members)
+        )
+        embed.add_field(
+            name="<:hashtag:693056105076621342> Channels",
+            value=len(guild.channels)
+        )
+        embed.set_thumbnail(url=guild.icon_url)
+        embed.set_footer(icon_url=guild.me.avatar_url)
+        await chan_logger.send(embed=embed)
 
     async def on_guild_remove(self, guild: discord.Guild):
-        db.delete_notif(guild.id)
+        try:
+            db.delete_notif(guild.id)
+        except:
+            pass
 
     async def on_ready(self):
-        # waiting internal cache to be ready
         await self.wait_until_ready()
+        self._data = await utils.from_json(utils.DATA_PATH)
         i = 0
         while True:
             try:
-                data = utils.from_json(utils.DATA_PATH)
+                rand = random.randint(15, 20)
                 if i == 0:
-                    confirmed = data["total"]["confirmed"]
+                    confirmed = self._data["total"]["confirmed"]
                     await self.change_presence(
                         activity=discord.Game(
                             name="[c!help] | {} Confirmed".format(confirmed)
                             )
                         )
                 elif i == 1:
-                    deaths = data["total"]["deaths"]
+                    deaths = self._data["total"]["deaths"]
                     await self.change_presence(
                         activity=discord.Game(
                             name="[c!help] | {} Deaths".format(deaths)
                             )
                         )
                 else:
-                    recovered = data["total"]["recovered"]
+                    recovered = self._data["total"]["recovered"]
                     await self.change_presence(
                         activity=discord.Game(
                             name="[c!help] | {} Recovered".format(recovered)
@@ -133,25 +187,22 @@ class Covid(commands.AutoShardedBot):
                             name="[c!help] | Updating data..."
                             )
                         )
-            await asyncio.sleep(random.randint(15, 20))
+            await asyncio.sleep(rand)
 
-    def run(self, *args, **kwargs):
+    def run(self, token, *args, **kwargs):
         try:
-            self.loop.run_until_complete(self.start(decouple.config("debug")))
+            super().run(token, *args, **kwargs)
         except KeyboardInterrupt:
-            self.loop.run_until_complete(self.logout())
-            for task in asyncio.all_tasks(self.loop):
-                task.cancel()
             try:
-                self.loop.run_until_complete(
-                    asyncio.gather(*asyncio.all_tasks(self.loop))
-                )
-            except asyncio.CancelledError:
-                logger.debug("Pending tasks has been cancelled.")
-            finally:
+                self.http_session.close()
                 db._close()
                 logger.info("Shutting down")
+                exit(0)
+            except Exception as e:
+                logger.exception(e, exc_info=True)
+                exit(1)
+
 
 if __name__ == "__main__":
     bot = Covid()
-    bot.run()
+    bot.run(decouple.config("debug"), reconnect=True)

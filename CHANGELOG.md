@@ -1,11 +1,45 @@
 # Changelog
 
+## 0.0.6 - 2020-04-07
+
+### Added
+
+- `clist` -> list every country that can be call by bot commands.
+- **[ISO-3166-1](https://fr.wikipedia.org/wiki/ISO_3166-1)** for all countries
+
+### Fixed
+
+- Improve bot stability.
+- Fix minor issues.
+- Fix typos.
+
+### Changed
+
+- `c!notification <enable | disable>` -> `c!nofitication <country | disable> <every NUMBER> <hours | days | weeks>` you can have notification about country in a specific channel for your server.
+- `c!stats [log]` -> `c!<s | stats> [log | country | log [country]]` you can now have log graph for countries.
+- Graph display Total confirmed - active.
+
+## 0.0.5 - 2020-03-29
+
+### Added
+
+- Now with `c!stats <country>` you got a minimap in the right top corner about the selected country.
+
+### Fixed
+
+- Prefix can be interpreted as `C!` and `c!` (useful when you are on mobile).
+
+### Changed
+
+- Back to old format according to your suggestion.
+
 ## 0.0.4 - 2020-03-27
 
 ### Added
 
 - New emote.
 - More informations in `c!source`.
+- Add Total active cases in `c!stats`
 
 ### Fixed
 

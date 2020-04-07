@@ -11,7 +11,7 @@
 
 # Coronavirus COVID-19
 
-This bot gives formatted data about the new Coronavirus COVID-19.
+Get the latest update with notification alerts and graphics stats about COVID-19! For every countries and regions! World news available too!
 
 ## Commands
 
@@ -22,35 +22,47 @@ Prefix : **`c! or @mention`**
 **`arg1 / arg2`** mean arg1 or arg2
 
 | Command | Description |
-| ------- | ----------- |
+|-------|:-----------:|
 | **`c!help`** | Views help command. |
 | **`c!info`** | Views every confirmed cases. |
+| **`c!stats [country / log]`** | Views graphical statistics. If no args provided return linear graph for total cases. Logarithmic graph with `log` arg. __Examples__ : `c!stats us`, `c!s log`, `c!stats` |
+| **`c!<r / region> <state/province / all> in <country>`** | Supported countries (**China, Canada, United States, Australia, Cruise Ship**). Views regions infected in specific country or in all state with all arg. The `in` (mandatory symbol) is interpreted as separator between the country and the region/province so don't forget it. Example 1 : `c!r new york in us`. Example 2 : `c!region all in china`. |
+| **`c!country <country>`** | Views information about multiple chosen country/region. You can either use **autocompletion** or **country code**.\n__Example__ : `c!country fr us it gb`, `c!c china` |
+| **`c!track <country / [disable]>`** | Track country (bot will DM you update).\n__Examples__ : `c!track us`, `c!track disable`. |
 | **`c!news`** | Views recent news about COVID-19 (update every 1 hour). |
-| **`c!stats`** | Views graphical statistics. |
-| **`c!country <COUNTRY>`** | Views information about multiple chosen country/region. You can either use autocompletion or country code. Valid country/region are listed in `c!info`. Example : `c!country fr germ it poland`. |
-| **`c!track <COUNTRY / [disable]>`** | Track multiple country (bot will DM you update). `c!track <COUNTRY>` work like `c!country <COUNTRY>` (country code / autocompletion) see `c!help`. `c!track disable` will disable the tracker. |
-| **`c!<r / region> <STATE/PROVINCE / all> in <COUNTRY>`** | Supported countries (**China, Canada, United States, Australia, Cruise Ship**). Views regions infected in specific country or in all state with all arg. The `in` (mandatory symbol) is interpreted as separator between the country and the region/province so don't forget it. Example 1 : `c!r new york in us`. Example 2 : `c!region all in china`. |
 | **`c!notification <enable / disable>`** | (Only administrator) When new datas are downloaded the bot will send you a notification where you typed the command. |
 | **`c!source`** | Views source data which the bot is based on. |
-| **`c!suggestion <MESSAGE>`** | Send suggestion feedback. |
-| **`c!bug <MESSAGE>`** | Send bug feedback. |
+| **`c!suggestion <message>`** | Send suggestion feedback. |
+| **`c!bug <message>`** | Send bug feedback. |
 | **`c!about`** | Views informations about the bot. |
 | **`c!invite`** | Views bot link invite. |
 | **`c!vote`** | Views bot vote link. |
 
 ## Few examples
 
-![Example info](https://i.imgur.com/oaTJlg9.png)
+- `c!info`
 
-![Example Stats](https://i.imgur.com/RSKSKJ1.png)
+![Example info](https://i.imgur.com/owyFn2E.png)
 
-![Example country filter](https://i.imgur.com/tdfpEsY.png)
+- `c!s china`
 
-![State/Province](https://i.imgur.com/09VezcV.png)
+![Example Stats](https://i.imgur.com/Kbg1ma7.png)
 
-![Personal tracker](https://i.imgur.com/BubPHLL.png)
+- `c!s log`
 
-![Example notification](https://i.imgur.com/AhU5yKJ.png)
+![Stats log](https://i.imgur.com/DKtlTsV.png)
+
+- `c!country fr it us es gb china`
+
+![Example country filter](https://i.imgur.com/CVlfKyS.png)
+
+- `c!r new york in us`
+
+![State/Province](https://i.imgur.com/7eFI9UO.png)
+
+- `c!notification enable`
+
+![Example notification](https://i.imgur.com/sTksLVy.png)
 
 
 ## Built With
@@ -70,6 +82,24 @@ This project is licensed under the MIT License - see the [LICENSE.md] file for d
 * Scaleway
 
 # Changelog
+
+## 0.0.4 - 2020-03-27
+
+### Added
+
+- New emote.
+- More informations in `c!source`.
+- Add Total active cases in `c!stats`
+
+### Fixed
+
+- Fix Notification and tracker.
+- Improve data stability.
+
+### Changed
+
+- `c!stats` changed to -> `c!stats [country | log]` and can now show specific graphic for each countries, you can also get the logarithmic graphic.
+- change `c!help` for `c!stats`.
 
 ## 0.0.3 - 2020-03-17
 
