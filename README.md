@@ -22,15 +22,15 @@ Prefix : **`c! or @mention`**
 **`arg1 / arg2`** mean arg1 or arg2
 
 | Command | Description |
-|-------|:-----------:|
+|-------|-----------|
 | **`c!help`** | Views help command. |
 | **`c!info`** | Views every confirmed cases. |
-| **`c!stats [country / log]`** | Views graphical statistics. If no args provided return linear graph for total cases. Logarithmic graph with `log` arg. __Examples__ : `c!stats us`, `c!s log`, `c!stats` |
+| **`c!<s / stats> [log / country / log [country]]`** | Views graphical statistics. If no args provided return linear graph for total cases.You can find countries with **full name** or **[ISO-3166-1](https://fr.wikipedia.org/wiki/ISO_3166-1)**.__Examples__ : `c!stats us`, `c!s log usa`, `c!stats log` |
 | **`c!<r / region> <state/province / all> in <country>`** | Supported countries (**China, Canada, United States, Australia, Cruise Ship**). Views regions infected in specific country or in all state with all arg. The `in` (mandatory symbol) is interpreted as separator between the country and the region/province so don't forget it. Example 1 : `c!r new york in us`. Example 2 : `c!region all in china`. |
-| **`c!country <country>`** | Views information about multiple chosen country/region. You can either use **autocompletion** or **country code**.\n__Example__ : `c!country fr us it gb`, `c!c china` |
-| **`c!track <country / [disable]>`** | Track country (bot will DM you update).\n__Examples__ : `c!track us`, `c!track disable`. |
+| **`c!country <country>`** | Views information about multiple chosen country/region. You can either use **autocompletion** or **[ISO-3166-1](https://fr.wikipedia.org/wiki/ISO_3166-1)**. __Examples__ : `c!country fr usa it gb` |
+| **`c!track <country / [disable]>`** | Track country (bot will DM you update). __Examples__ : `c!track us`, `c!track disable`. |
 | **`c!news`** | Views recent news about COVID-19 (update every 1 hour). |
-| **`c!notification <enable / disable>`** | (Only administrator) When new datas are downloaded the bot will send you a notification where you typed the command. |
+| **`c!nofitication <country / disable> <every NUMBER> <hours / days / weeks>`** | (Only administrator) When new datas are found, the bot will send you a notification where you typed the command, server only. __Examples__ : `c!notification usa every 3 hours`, `c!notification disable` |
 | **`c!source`** | Views source data which the bot is based on. |
 | **`c!suggestion <message>`** | Send suggestion feedback. |
 | **`c!bug <message>`** | Send bug feedback. |
@@ -40,19 +40,19 @@ Prefix : **`c! or @mention`**
 
 ## Few examples
 
-- `c!info`
-
-![Example info](https://i.imgur.com/owyFn2E.png)
-
 - `c!s china`
 
-![Example Stats](https://i.imgur.com/Kbg1ma7.png)
+![Example Stats](https://i.imgur.com/feRNoBE.png)
 
-- `c!s log`
+- `c!s log cn`
 
-![Stats log](https://i.imgur.com/DKtlTsV.png)
+![Stats log](https://i.imgur.com/NWkshG1.png)
 
-- `c!country fr it us es gb china`
+- `c!notif usa every 2 hours`
+
+![Example notification](https://i.imgur.com/UlyTIwz.png)
+
+- `c!country fr it usa es gb china`
 
 ![Example country filter](https://i.imgur.com/CVlfKyS.png)
 
@@ -60,10 +60,9 @@ Prefix : **`c! or @mention`**
 
 ![State/Province](https://i.imgur.com/7eFI9UO.png)
 
-- `c!notification enable`
+- `c!info`
 
-![Example notification](https://i.imgur.com/sTksLVy.png)
-
+![Example info](https://i.imgur.com/guUSOLw.png)
 
 ## Built With
 
@@ -82,6 +81,39 @@ This project is licensed under the MIT License - see the [LICENSE.md] file for d
 * Scaleway
 
 # Changelog
+
+## 0.0.6 - 2020-04-07
+
+### Added
+
+- `clist` -> list every country that can be call by bot commands.
+- **[ISO-3166-1](https://fr.wikipedia.org/wiki/ISO_3166-1)** for all countries
+
+### Fixed
+
+- Improve bot stability.
+- Fix minor issues.
+- Fix typos.
+
+### Changed
+
+- `c!notification <enable | disable>` -> `c!nofitication <country | disable> <every NUMBER> <hours | days | weeks>` you can have notification about country in a specific channel for your server.
+- `c!stats [log]` -> `c!<s | stats> [log | country | log [country]]` you can now have log graph for countries.
+- Graph display Total confirmed - active.
+
+## 0.0.5 - 2020-03-29
+
+### Added
+
+- Now with `c!stats <country>` you got a minimap in the right top corner about the selected country.
+
+### Fixed
+
+- Prefix can be interpreted as `C!` and `c!` (useful when you are on mobile).
+
+### Changed
+
+- Back to old format according to your suggestion.
 
 ## 0.0.4 - 2020-03-27
 
