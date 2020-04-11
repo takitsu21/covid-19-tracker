@@ -314,6 +314,7 @@ class UpdateHandler:
             url=url,
             **kwargs
         )
+
         try:
             if resp.status >= 200 and resp.status <= 299:
                 data = await resp.json()
@@ -326,7 +327,9 @@ class UpdateHandler:
     async def parse(self, url: str, session: ClientSession, **kwargs):
         try:
             resp = await self.fetch(url=url, session=session, **kwargs)
-            return json.dumps(resp)
+            jso = json.dumps(resp)
+            return jso
+
         except Exception as e:
             return None
 
@@ -347,7 +350,12 @@ class UpdateHandler:
     async def update(self, session: ClientSession, **kwargs):
         tasks = []
         for url, fpath in self.update_list.items():
-            tasks.append(
-                self._write(url=url, file=fpath, session=session, **kwargs)
-            )
+            if fpath == DATA_PATH:
+                tasks.append(
+                    self._write(url=url, file=fpath, session=session, headers={"Super-Secret": config("uri_key")}, **kwargs)
+                )
+            else:
+                tasks.append(
+                    self._write(url=url, file=fpath, session=session)
+                )
         await asyncio.gather(*tasks)

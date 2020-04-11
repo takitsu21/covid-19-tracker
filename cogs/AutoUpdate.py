@@ -10,6 +10,7 @@ import time
 import uuid
 import sys
 from aiohttp import ClientSession
+from decouple import config
 
 import src.utils as utils
 from src.plotting import plot_csv
@@ -118,8 +119,6 @@ class AutoUpdater(commands.Cog):
                 except:
                     embed.set_thumbnail(url=self.bot.thumb + str(uuid.uuid4()))
                 channel = self.bot.get_channel(int(guild["channel_id"]))
-                if channel is not None:
-                    print(channel, version)
                 try:
                     guild = self.bot.get_guild(int(guild["guild_id"]))
                     embed.set_footer(
@@ -132,6 +131,25 @@ class AutoUpdater(commands.Cog):
             except Exception as e:
                 pass
         logger.info("Notifications sended")
+
+    @commands.command()
+    async def manual(self, ctx):
+        if ctx.author.id in (90184563405361152, 162200556234866688):
+            await up._write(
+                config("uri_data") + "?revalidate=true",
+                utils.DATA_PATH,
+                self.bot.http_session,
+                headers={"Super-Secret": config("uri_key")}
+            )
+            try:
+                tmp = await utils.from_json(utils.DATA_PATH)
+                if tmp["success"]:
+                    self.bot._data = tmp
+                await ctx.send("Manual update is a success!")
+            except Exception as e:
+                await ctx.send(f"{type(e).__name__} : {e}")
+        else:
+            await ctx.send("If you know this command that mean you saw it on github haha :p But still, you're not allowed to do this.")
 
     async def send_tracker(self):
         DATA = await utils.from_json(utils.DATA_PATH)
@@ -213,30 +231,40 @@ class AutoUpdater(commands.Cog):
         self.bot.http_session = ClientSession()
         utils.png_clean()
         await self.parse_and_update()
-        self.bot._data = await utils.from_json(utils.DATA_PATH) # considering no error
-        self.bot._backup = self.bot._data # backup in case API crash
-
+        self.bot._data = await utils.from_json(utils.DATA_PATH)
+        self.bot._backup = self.bot._data
         await self.bot.wait_until_ready()
+
         starting = True
         while True:
-            before = time.time()
-            if not starting:
-                self.interval_update += 1
-                try:
-                    utils.png_clean()
-                    await self.parse_and_update()
-                    self.bot._data = await utils.from_json(utils.DATA_PATH)
-                    if self.bot._data["success"]:
-                        self.bot._backup = self.bot._data
-                except:
-                    if self.bot._backup["success"]:
-                        self.bot._data = self.bot._backup
+            try:
+                before = time.time()
+                if not starting:
+                    self.interval_update += 1
+                    try:
+                        # if self.bot._data["success"]:
+                        #     self.bot._backup = self.bot._data
+                        utils.png_clean()
+                        await self.parse_and_update()
+                        tmp = await utils.from_json(utils.DATA_PATH)
+                        if tmp["success"]:
+                            self.bot._backup = tmp
+                            self.bot._data = tmp
+                    except:
+                        try:
+                            if self.bot._backup["success"]:
+                                self.bot._data = self.bot._backup
+                        except:
+                            pass
+                    finally:
+                        await self.send_notifications()
+                        await self.send_tracker()
+                else:
+                    starting = False
 
-                await self.send_notifications()
-                await self.send_tracker()
-            else:
-                starting = False
-            after = time.time()
+                after = time.time()
+            except:
+                pass
             await asyncio.sleep(3600 - int(after - before))
 
 

@@ -156,38 +156,43 @@ class Covid(commands.AutoShardedBot):
         i = 0
         while True:
             try:
-                rand = random.randint(15, 20)
-                if i == 0:
-                    confirmed = self._data["total"]["confirmed"]
-                    await self.change_presence(
+                await self.change_presence(
                         activity=discord.Game(
-                            name="[c!help] | {} Confirmed".format(confirmed)
+                            name=f"[c!help] | {len(self.guilds)} servers"
                             )
                         )
-                elif i == 1:
-                    deaths = self._data["total"]["deaths"]
-                    await self.change_presence(
-                        activity=discord.Game(
-                            name="[c!help] | {} Deaths".format(deaths)
-                            )
-                        )
-                else:
-                    recovered = self._data["total"]["recovered"]
-                    await self.change_presence(
-                        activity=discord.Game(
-                            name="[c!help] | {} Recovered".format(recovered)
-                            )
-                        )
-                i = (i + 1) % 3
+                # if i == 0:
+                #     confirmed = self._data["total"]["confirmed"]
+                #     await self.change_presence(
+                #         activity=discord.Game(
+                #             name="[c!help] | {} Confirmed".format(confirmed)
+                #             )
+                #         )
+                # elif i == 1:
+                #     deaths = self._data["total"]["deaths"]
+                #     await self.change_presence(
+                #         activity=discord.Game(
+                #             name="[c!help] | {} Deaths".format(deaths)
+                #             )
+                #         )
+                # else:
+                #     recovered = self._data["total"]["recovered"]
+                #     await self.change_presence(
+                #         activity=discord.Game(
+                #             name="[c!help] | {} Recovered".format(recovered)
+                #             )
+                #         )
+                # i = (i + 1) % 3
 
             except Exception as e:
                 logger.exception(e, exc_info=True)
                 await self.change_presence(
                         activity=discord.Game(
-                            name="[c!help] | Updating data..."
-                            )
+                            name="[c!help] | Updating or API down..."
+                            ),
+                        status=discord.Status.dnd
                         )
-            await asyncio.sleep(rand)
+            await asyncio.sleep(120)
 
     def run(self, token, *args, **kwargs):
         try:
