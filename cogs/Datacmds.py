@@ -352,7 +352,7 @@ class Datacmds(commands.Cog):
             except Exception as e:
                 embed = discord.Embed(
                     title="c!notification",
-                    description="Make sure that you didn't have made any mistake, please retry\n`c!nofitication <country | disable> [every NUMBER] [hours | days | weeks]`\n__Examples__ : `c!notification usa every 3 hours` (send a message to the current channel every 3 hours about United States), `c!notification united states every 1 day`, `c!notification disable`"
+                    description="Make sure that you didn't have made any mistake, please retry\n`c!notification <country | disable> [every NUMBER] [hours | days | weeks]`\n__Examples__ : `c!notification usa every 3 hours` (send a message to the current channel every 3 hours about United States), `c!notification united states every 1 day`, `c!notification disable`"
                 )
 
             if country == "disable":
@@ -364,7 +364,7 @@ class Datacmds(commands.Cog):
         else:
             embed = discord.Embed(
                 title="c!notification",
-                description="Make sure that you didn't have made any mistake, please retry\n`c!nofitication <country | disable> [every NUMBER] [hours | days | weeks]`\n__Examples__ : `c!notification usa every 3 hours` (send a message to the current channel every 3 hours about United States), `c!notification united states every 1 day`, `c!notification disable`"
+                description="Make sure that you didn't have made any mistake, please retry\n`c!notification <country | disable> [every NUMBER] [hours | days | weeks]`\n__Examples__ : `c!notification usa every 3 hours` (send a message to the current channel every 3 hours about United States), `c!notification united states every 1 day`, `c!notification disable`"
             )
 
         embed.color = utils.COLOR
