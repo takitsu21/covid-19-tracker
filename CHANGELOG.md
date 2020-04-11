@@ -38,7 +38,7 @@
 ### Added
 
 - New emote.
-- More informations in `c!source`.
+- More information in `c!source`.
 - Add Total active cases in `c!stats`
 
 ### Fixed
