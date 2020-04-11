@@ -30,7 +30,7 @@ Prefix : **`c! or @mention`**
 | **`c!country <country>`** | Views information about multiple chosen country/region. You can either use **autocompletion** or **[ISO-3166-1](https://fr.wikipedia.org/wiki/ISO_3166-1)**. __Examples__ : `c!country fr usa it gb` |
 | **`c!track <country / [disable]>`** | Track country (bot will DM you update). __Examples__ : `c!track us`, `c!track disable`. |
 | **`c!news`** | Views recent news about COVID-19 (update every 1 hour). |
-| **`c!nofitication <country / disable> <every NUMBER> <hours / days / weeks>`** | (Only administrator) When new datas are found, the bot will send you a notification where you typed the command, server only. __Examples__ : `c!notification usa every 3 hours`, `c!notification disable` |
+| **`c!notification <country / disable> <every NUMBER> <hours / days / weeks>`** | (Only administrator) When new datas are found, the bot will send you a notification where you typed the command, server only. __Examples__ : `c!notification usa every 3 hours`, `c!notification disable` |
 | **`c!source`** | Views source data which the bot is based on. |
 | **`c!suggestion <message>`** | Send suggestion feedback. |
 | **`c!bug <message>`** | Send bug feedback. |
