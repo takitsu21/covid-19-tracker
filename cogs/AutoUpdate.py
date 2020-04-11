@@ -181,7 +181,7 @@ class AutoUpdater(commands.Cog):
             try:
                 dm = self.bot.get_user(int(t["user_id"]))
                 header, text = utils.string_formatting(DATA, t["country"].split(" "))
-                embed.description = "You can support me on [Kofi](https://ko-fi.com/takitsu) and vote on [top.gg](https://top.gg/bot/682946560417333283/vote) for the bot.\n[Wold Health Organization advices](https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public)\n\n" + text
+                embed.description = "You can support me on [Kofi](https://ko-fi.com/takitsu) and vote on [top.gg](https://top.gg/bot/682946560417333283/vote) for the bot.\n[World Health Organization advices](https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public)\n\n" + text
 
                 with open("stats.png", "rb") as p:
                     img = discord.File(p, filename="stats.png")
