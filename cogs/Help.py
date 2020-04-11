@@ -59,7 +59,7 @@ class Help(commands.Cog):
             inline=False
         )
         embed.add_field(
-            name="**`c!nofitication <country | disable> <every NUMBER> <hours | days | weeks>`**",
+            name="**`c!notification <country | disable> <every NUMBER> <hours | days | weeks>`**",
             value="(Only administrator) When new datas are found, the bot will send you a notification where you typed the command, server only.\n __Examples__ : `c!notification usa every 3 hours`, `c!notification disable`"
         )
         embed.add_field(
