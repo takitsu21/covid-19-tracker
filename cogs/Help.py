@@ -20,7 +20,7 @@ class Help(commands.Cog):
     async def help(self, ctx):
         embed = discord.Embed(
             title=":newspaper: Coronavirus COVID-19 Commands",
-            description="""[Wold Health Organization advices](https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public)
+            description="""[World Health Organization advices](https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public)
             **`<something>`** something is required
             **`[something]`** something is optional
             **`arg1 | arg2`** mean arg1 or arg2
@@ -30,7 +30,7 @@ class Help(commands.Cog):
         )
         embed.add_field(
             name="**`c!info`**",
-            value="Views every confirmed cases",
+            value="Views every confirmed case",
             inline=False
         )
         embed.add_field(
@@ -40,7 +40,7 @@ class Help(commands.Cog):
         )
         embed.add_field(
             name="**`c!<s | stats> [log | country | log [country]]`**",
-            value="Views graphical statistics. If no args provided return linear graph for total cases.You can find countries with **full name** or **[ISO-3166-1](https://fr.wikipedia.org/wiki/ISO_3166-1)**.\n __Examples__ : `c!stats us`, `c!s log usa`, `c!stats log`",
+            value="Views graphical statistics. If no args provided return linear graph for total cases. You can find countries with **full name** or **[ISO-3166-1](https://fr.wikipedia.org/wiki/ISO_3166-1)**.\n __Examples__ : `c!stats us`, `c!s log usa`, `c!stats log`",
             inline=False
         )
         embed.add_field(
@@ -50,7 +50,7 @@ class Help(commands.Cog):
         )
         embed.add_field(
             name="**`c!<r | region> <state/province | all> in <country>`**",
-            value="Certains region are not supported yet.\nThe `in` (mandatory symbol) is interpreted as separator between the country and the region/province so don't forget it.\n __Examples__ : `c!r new york in us`, `c!region all in china`",
+            value="Certain regions are not supported yet.\nThe `in` (mandatory symbol) is interpreted as separator between the country and the region/province so don't forget it.\n __Examples__ : `c!r new york in us`, `c!region all in china`",
             inline=False
         )
         embed.add_field(
@@ -59,8 +59,8 @@ class Help(commands.Cog):
             inline=False
         )
         embed.add_field(
-            name="**`c!nofitication <country | disable> <every NUMBER> <hours | days | weeks>`**",
-            value="(Only administrator) When new datas are found, the bot will send you a notification where you typed the command, server only.\n __Examples__ : `c!notification usa every 3 hours`, `c!notification disable`"
+            name="**`c!notification <country | disable> <every NUMBER> <hours | days | weeks>`**",
+            value="(Only administrator) When new data is found, the bot will send you a notification where you typed the command, server only.\n __Examples__ : `c!notification usa every 3 hours`, `c!notification disable`"
         )
         embed.add_field(
             name="**`c!news`**",
@@ -94,7 +94,7 @@ class Help(commands.Cog):
         )
         embed.add_field(
             name="**`c!about`**",
-            value="Views informations about the bot.",
+            value="Views information about the bot.",
             inline=False
         )
         embed.add_field(
@@ -145,7 +145,7 @@ class Help(commands.Cog):
     async def about(self, ctx):
         DATA = self.bot._data
         embed = discord.Embed(
-                description="You can support me on <:kofi:693473314433138718>[Kofi](https://ko-fi.com/takitsu) and vote on [top.gg](https://top.gg/bot/682946560417333283/vote) for the bot. <:github:693519776022003742> [Source code](https://github.com/takitsu21/covid-19-tracker)\n[Wold Health Organization advices](https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public)",
+                description="You can support me on <:kofi:693473314433138718>[Kofi](https://ko-fi.com/takitsu) and vote on [top.gg](https://top.gg/bot/682946560417333283/vote) for the bot. <:github:693519776022003742> [Source code](https://github.com/takitsu21/covid-19-tracker)\n[World Health Organization advices](https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public)",
                 timestamp=utils.discord_timestamp(),
                 color=utils.COLOR
             )
