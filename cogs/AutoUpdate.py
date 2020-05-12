@@ -1,21 +1,22 @@
-import datetime as dt
-import requests
-from discord.ext import commands
-from typing import List
 import asyncio
+import datetime as dt
 import logging
 import os
-import discord
+import sys
 import time
 import uuid
-import sys
+from typing import List
+
+import discord
+import requests
 from aiohttp import ClientSession
 from decouple import config
+from discord.ext import commands
 
 import src.utils as utils
-from src.plotting import plot_csv
-from src.database import db
 from src import up
+from src.database import db
+from src.plotting import plot_csv
 
 logger = logging.getLogger("covid-19")
 
@@ -28,11 +29,9 @@ class AutoUpdater(commands.Cog):
 
     async def send_notifications(self):
         data = self.bot._data
-
-
         channels_id = db.to_send()
 
-        for i, guild in enumerate(channels_id):
+        for guild in channels_id:
             # go next, didn't match interval for this guild
             if self.interval_update % guild["next_update"] != 0:
                 continue
@@ -51,7 +50,7 @@ class AutoUpdater(commands.Cog):
                     version = stats["country"]["code"].lower() + utils.STATS_PATH
 
                     if not os.path.exists(version):
-                        await plot_csv(version, country=guild["country"])
+                        await plot_csv(version, self.bot._data, country=guild["country"])
 
                 elif guild["country"] == "all":
                     stats = data["total"]
@@ -64,13 +63,13 @@ class AutoUpdater(commands.Cog):
                     country_name = "All"
 
                     if not os.path.exists(version):
-                        await plot_csv(version)
+                        await plot_csv(version, self.bot._data)
 
                 else:
                     continue
 
                 embed = discord.Embed(
-                    description="You can support me on [Kofi](https://ko-fi.com/takitsu) and vote on [top.gg](https://top.gg/bot/682946560417333283/vote) for the bot.",
+                    description="You can support me on <:kofi:693473314433138718>[Kofi](https://ko-fi.com/takitsu) and vote on [top.gg](https://top.gg/bot/682946560417333283/vote) for the bot. <:github:693519776022003742> [Source code](https://github.com/takitsu21/covid-19-tracker)",
                     timestamp=dt.datetime.utcnow(),
                     color=utils.COLOR
                 )
@@ -145,7 +144,9 @@ class AutoUpdater(commands.Cog):
                 tmp = await utils.from_json(utils.DATA_PATH)
                 if tmp["success"]:
                     self.bot._data = tmp
-                await ctx.send("Manual update is a success!")
+                    await plot_csv(utils.STATS_PATH, self.bot._data)
+                    await plot_csv(utils.STATS_LOG_PATH, self.bot._data, logarithmic=True)
+                    await ctx.send("Manual update is a success!")
             except Exception as e:
                 await ctx.send(f"{type(e).__name__} : {e}")
         else:
@@ -199,7 +200,7 @@ class AutoUpdater(commands.Cog):
             try:
                 dm = self.bot.get_user(int(t["user_id"]))
                 header, text = utils.string_formatting(DATA, t["country"].split(" "))
-                embed.description = "You can support me on [Kofi](https://ko-fi.com/takitsu) and vote on [top.gg](https://top.gg/bot/682946560417333283/vote) for the bot.\n[World Health Organization advices](https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public)\n\n" + text
+                embed.description = "You can support me on <:kofi:693473314433138718>[Kofi](https://ko-fi.com/takitsu) and vote on [top.gg](https://top.gg/bot/682946560417333283/vote) for the bot. <:github:693519776022003742> [Source code](https://github.com/takitsu21/covid-19-tracker)\n\n" + text
 
                 with open("stats.png", "rb") as p:
                     img = discord.File(p, filename="stats.png")
@@ -220,8 +221,8 @@ class AutoUpdater(commands.Cog):
         await up.update(self.bot.http_session)
         logger.info("New data downloaded")
         try:
-            await plot_csv(utils.STATS_PATH)
-            await plot_csv(utils.STATS_LOG_PATH, logarithmic=True)
+            await plot_csv(utils.STATS_PATH, self.bot._data)
+            await plot_csv(utils.STATS_LOG_PATH, self.bot._data, logarithmic=True)
         except Exception as e:
             logger.exception(e, exc_info=True)
 
@@ -229,7 +230,6 @@ class AutoUpdater(commands.Cog):
 
     async def main(self):
         self.bot.http_session = ClientSession()
-        utils.png_clean()
         await self.parse_and_update()
         self.bot._data = await utils.from_json(utils.DATA_PATH)
         self.bot._backup = self.bot._data
@@ -244,7 +244,6 @@ class AutoUpdater(commands.Cog):
                     try:
                         # if self.bot._data["success"]:
                         #     self.bot._backup = self.bot._data
-                        utils.png_clean()
                         await self.parse_and_update()
                         tmp = await utils.from_json(utils.DATA_PATH)
                         if tmp["success"]:

@@ -1,7 +1,9 @@
 import asyncio
+import logging
+
 import pymysql
 from decouple import config
-import logging
+
 # import aiomysql
 
 
@@ -31,6 +33,40 @@ logger = logging.getLogger("covid-19")
 class Database:
     def __init__(self, conn=None):
         self.conn = conn
+
+    def get_prefix(self, guild_id):
+        self._ping()
+        cur = self.conn.cursor()
+        cur.execute("SELECT prefix FROM guild_setting WHERE guild_id=%s", (guild_id, ))
+        r = cur.fetchall()
+        cur.close()
+        return r
+
+    def set_prefix(self, guild_id, prefix):
+        self._ping()
+        cur = conn.cursor()
+        sql = """INSERT INTO guild_setting(guild_id, prefix) VALUES(%s, %s)"""
+        cur.execute(sql, (guild_id, prefix, ))
+        conn.commit()
+        cur.close()
+
+    def update_prefix(self, guild_id, prefix):
+        self._ping()
+        cur = conn.cursor()
+        sql = """UPDATE guild_setting SET
+                prefix=%s
+                WHERE guild_id=%s"""
+        cur.execute(sql, (prefix, guild_id, ))
+        conn.commit()
+        cur.close()
+
+    def delete_prefix(self, guild_id):
+        self._ping()
+        cur = conn.cursor()
+        sql = """DELETE FROM guild_setting WHERE guild_id=%s"""
+        cur.execute(sql, (guild_id, ))
+        conn.commit()
+        cur.close()
 
     def to_send(self):
         self._ping()

@@ -25,6 +25,7 @@ Prefix : **`c! or @mention`**
 |-------|-----------|
 | **`c!help`** | Views help command. |
 | **`c!info`** | Views every confirmed case. |
+| **`c!list`** | List every country affected by COVID-19 |
 | **`c!<s / stats> [log / country / log [country]]`** | Views graphical statistics. If no args provided return linear graph for total cases. You can find countries with **full name** or **[ISO-3166-1](https://fr.wikipedia.org/wiki/ISO_3166-1)**.__Examples__ : `c!stats us`, `c!s log usa`, `c!stats log` |
 | **`c!<r / region> <state/province / all> in <country>`** | Supported countries (**China, Canada, United States, Australia, Cruise Ship**). Views regions infected in specific country or in all state with all arg. The `in` (mandatory symbol) is interpreted as separator between the country and the region/province so don't forget it. Example 1 : `c!r new york in us`. Example 2 : `c!region all in china`. |
 | **`c!country <country>`** | Views information about multiple chosen country/region. You can either use **autocompletion** or **[ISO-3166-1](https://fr.wikipedia.org/wiki/ISO_3166-1)**. __Examples__ : `c!country fr usa it gb` |

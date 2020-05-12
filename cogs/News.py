@@ -1,8 +1,9 @@
 import asyncio
+import datetime as dt
+import os
+
 import discord
 from discord.ext import commands
-import os
-import datetime as dt
 
 import src.utils as utils
 

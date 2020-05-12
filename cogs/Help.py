@@ -5,8 +5,10 @@ import os
 import datetime as dt
 import time
 import random
+from pymysql.err import IntegrityError
 
 import src.utils as utils
+from src.database import db
 
 
 class Help(commands.Cog):
@@ -29,83 +31,101 @@ class Help(commands.Cog):
             timestamp=utils.discord_timestamp()
         )
         embed.add_field(
-            name="**`c!info`**",
+            name=f"📈 **`{ctx.prefix}info`**",
             value="Views every confirmed case",
             inline=False
         )
         embed.add_field(
-            name="**`c!list`**",
+            name=f"📈 **`{ctx.prefix}list`**",
             value="Views every country available to be chosen with other commands.",
             inline=False
         )
         embed.add_field(
-            name="**`c!<s | stats> [log | country | log [country]]`**",
-            value="Views graphical statistics. If no args provided return linear graph for total cases. You can find countries with **full name** or **[ISO-3166-1](https://fr.wikipedia.org/wiki/ISO_3166-1)**.\n __Examples__ : `c!stats us`, `c!s log usa`, `c!stats log`",
+            name=f"📈 **`{ctx.prefix}<s | stats> [log | country | log [country]]`**",
+            value=f"Views graphical statistics. If no args provided return linear graph for total cases. You can find countries with **full name** or **[ISO-3166-1](https://fr.wikipedia.org/wiki/ISO_3166-1)**.\n __Examples__ : `{ctx.prefix}stats us`, `{ctx.prefix}s log usa`, `{ctx.prefix}stats log`",
             inline=False
         )
         embed.add_field(
-            name="**`c!country <country>`**",
-            value="Views information about multiple chosen country/region. You can either use **autocompletion** or **[ISO-3166-1](https://fr.wikipedia.org/wiki/ISO_3166-1)**.\n __Examples__ : `c!country fr usa it gb`",
+            name=f"📈 **`{ctx.prefix}country <country>`**",
+            value=f"Views information about multiple chosen country/region. You can either use **autocompletion** or **[ISO-3166-1](https://fr.wikipedia.org/wiki/ISO_3166-1)**.\n __Examples__ : `{ctx.prefix}country fr usa it gb`",
             inline=False
         )
         embed.add_field(
-            name="**`c!<r | region> <state/province | all> in <country>`**",
-            value="Certain regions are not supported yet.\nThe `in` (mandatory symbol) is interpreted as separator between the country and the region/province so don't forget it.\n __Examples__ : `c!r new york in us`, `c!region all in china`",
+            name=f"📈 **`{ctx.prefix}<r | region> <state/province | all> in <country>`**",
+            value=f"Certain regions are not supported yet.\nThe `in` (mandatory symbol) is interpreted as separator between the country and the region/province so don't forget it.\n __Examples__ : `{ctx.prefix}r new york in us`, `{ctx.prefix}region all in china`",
             inline=False
         )
         embed.add_field(
-            name="**`c!track <country | disable>`**",
-            value="Track country (bot will DM you update) the command needs to be typed in a server channel not DM.\n__Examples__ : `c!track us`, `c!track disable`",
+            name=f"📈 **`{ctx.prefix}continent <continent>`**",
+            value="Views graph start according to the given continent, available (**AF, AS, EU, NA, SA, OC**)",
             inline=False
         )
         embed.add_field(
-            name="**`c!notification <country | disable> <every NUMBER> <hours | days | weeks>`**",
-            value="(Only administrator) When new data is found, the bot will send you a notification where you typed the command, server only.\n __Examples__ : `c!notification usa every 3 hours`, `c!notification disable`"
+            name=f"📈 **`{ctx.prefix}track <country | disable>`**",
+            value=f"Track country (bot will DM you update) the command needs to be typed in a server channel not DM.\n__Examples__ : `{ctx.prefix}track us`, `{ctx.prefix}track disable`",
+            inline=False
         )
         embed.add_field(
-            name="**`c!news`**",
+            name=f"📈 **`{ctx.prefix}notification <country | disable> <every NUMBER> <hours | days | weeks>`**",
+            value=f"(Only administrator) When new data is found, the bot will send you a notification where you typed the command, server only.\n __Examples__ : `{ctx.prefix}notification usa every 3 hours`, `{ctx.prefix}notification disable`"
+        )
+        embed.add_field(
+            name=f"📰 **`{ctx.prefix}news`**",
             value="Views recent news about COVID-19.",
             inline=False
         )
+        # embed.add_field(
+        #     name=f"⚙️ **`{ctx.prefix}setprefix <new_prefix>`**",
+        #     value="(Only admins) Change your guild prefix.",
+        #     inline=False
+        # )
+        # embed.add_field(
+        #     name=f"⚙️ **`<@Coronavirus COVID-19 | {ctx.prefix}>getprefix`**",
+        #     value="View current guild prefix.",
+        #     inline=False
+        # )
         embed.add_field(
-            name="**`c!source`**",
+            name=f"📰 **`{ctx.prefix}source`**",
             value="Views source data which the bot is based on.",
             inline=False
         )
         embed.add_field(
-            name="**`c!ping`**",
+            name=f"⚙️ **`{ctx.prefix}ping`**",
             value="Views bot ping.",
             inline=False
         )
         embed.add_field(
-            name="**`c!invite`**",
+            name=f"⚙️ **`{ctx.prefix}invite`**",
             value="Views bot link invite.",
             inline=False
         )
         embed.add_field(
-            name="**`c!suggestion <MESSAGE>`**",
+            name=f"⚙️ **`{ctx.prefix}suggestion <MESSAGE>`**",
             value="Send suggestion feedback.",
             inline=False
         )
         embed.add_field(
-            name="**`c!bug <MESSAGE>`**",
+            name=f"⚙️ **`{ctx.prefix}bug <MESSAGE>`**",
             value="Send bug feedback.",
             inline=False
         )
         embed.add_field(
-            name="**`c!about`**",
+            name=f"⚙️ **`{ctx.prefix}about`**",
             value="Views information about the bot.",
             inline=False
         )
         embed.add_field(
-            name="**`c!vote`**",
+            name=f"⚙️ **`{ctx.prefix}vote`**",
             value="Views bot link vote.",
             inline=False
         )
-        embed.set_footer(
-            text=utils.last_update(utils.DATA_PATH),
-            icon_url=ctx.guild.me.avatar_url
-        )
+        try:
+            embed.set_footer(
+                text=utils.last_update(utils.DATA_PATH),
+                icon_url=ctx.me.avatar_url
+            )
+        except:
+            pass
         embed.set_thumbnail(url=self.thumb)
 
         await ctx.send(embed=embed)
@@ -117,9 +137,9 @@ class Help(commands.Cog):
                 timestamp=utils.discord_timestamp(),
                 color=utils.COLOR
             )
-        embed.set_author(name="Coronavirus COVID-19 Vote link", icon_url=ctx.guild.me.avatar_url)
+        embed.set_author(name="Coronavirus COVID-19 Vote link", icon_url=ctx.me.avatar_url)
         embed.set_thumbnail(url=self.thumb)
-        embed.set_footer(text="Made by Taki#0853", icon_url=ctx.guild.me.avatar_url)
+        embed.set_footer(text="Made by Taki#0853", icon_url=ctx.me.avatar_url)
         await ctx.send(embed=embed)
 
     @commands.command(name="invite")
@@ -129,9 +149,9 @@ class Help(commands.Cog):
                 timestamp=utils.discord_timestamp(),
                 color=utils.COLOR
             )
-        embed.set_author(name="Coronavirus COVID-19 Invite link", icon_url=ctx.guild.me.avatar_url)
+        embed.set_author(name="Coronavirus COVID-19 Invite link", icon_url=ctx.me.avatar_url)
         embed.set_thumbnail(url=self.thumb)
-        embed.set_footer(text="Made by Taki#0853", icon_url=ctx.guild.me.avatar_url)
+        embed.set_footer(text="Made by Taki#0853", icon_url=ctx.me.avatar_url)
         await ctx.send(embed=embed)
 
     @commands.command(name="avatar")
@@ -149,7 +169,7 @@ class Help(commands.Cog):
                 timestamp=utils.discord_timestamp(),
                 color=utils.COLOR
             )
-        embed.set_author(name="Coronavirus COVID-19 Tracker", icon_url=ctx.guild.me.avatar_url)
+        embed.set_author(name="Coronavirus COVID-19 Tracker", icon_url=ctx.me.avatar_url)
         embed.set_thumbnail(url=self.thumb)
         embed.add_field(name="Vote",
                         value="[Click here](https://top.gg/bot/682946560417333283/vote)")
@@ -158,8 +178,8 @@ class Help(commands.Cog):
         embed.add_field(name="Discord Support",
                         value="[Click here](https://discordapp.com/invite/wTxbQYb)")
         embed.add_field(name = "Source code", value="[Click here](https://github.com/takitsu21/covid-19-tracker)")
-        embed.add_field(name="Help command",value="`c!help` or `@mention help`")
-        embed.add_field(name="Prefix",value="`c!` or `@mention`")
+        embed.add_field(name="Help command",value=f"`{ctx.prefix}help` or `@mention help`")
+        embed.add_field(name="Prefix",value=f"`{ctx.prefix}` or `@mention`")
 
         nb_users = 0
         channels = 0
@@ -174,7 +194,7 @@ class Help(commands.Cog):
         embed.add_field(name="<:hashtag:693056105076621342> Channels", value=channels)
         embed.add_field(name="<:stack:693054261512110091> Shards", value=f"{ctx.guild.shard_id + 1}/{self.bot.shard_count}")
         embed.set_footer(text="Made by Taki#0853 (WIP) " + utils.last_update(utils.DATA_PATH),
-                        icon_url=ctx.guild.me.avatar_url)
+                        icon_url=ctx.me.avatar_url)
         await ctx.send(embed=embed)
 
     @commands.command(name="sources", aliases=["source"])
@@ -191,7 +211,7 @@ class Help(commands.Cog):
         embed.set_thumbnail(url=self.thumb)
         embed.set_footer(
             text="Made by Taki#0853 (WIP)",
-            icon_url=ctx.guild.me.avatar_url
+            icon_url=ctx.me.avatar_url
         )
         await ctx.send(embed=embed)
 
@@ -210,7 +230,7 @@ class Help(commands.Cog):
         embed.set_thumbnail(url=self.thumb)
         embed.set_footer(
             text="Made by Taki#0853 (WIP)",
-            icon_url=ctx.guild.me.avatar_url
+            icon_url=ctx.me.avatar_url
         )
         await message.edit(content="", embed=embed)
 
@@ -221,10 +241,10 @@ class Help(commands.Cog):
             embed = discord.Embed(title="Suggestion",
                                 color=utils.COLOR,
                                 description="Message too short at least 3 words required.".format(ctx.author.mention),
-                                icon_url=ctx.guild.me.avatar_url)
-            embed.set_thumbnail(url=ctx.guild.me.avatar_url)
+                                icon_url=ctx.me.avatar_url)
+            embed.set_thumbnail(url=ctx.me.avatar_url)
             embed.set_footer(text="Made by Taki#0853 (WIP)",
-                            icon_url=ctx.guild.me.avatar_url)
+                            icon_url=ctx.me.avatar_url)
             return await ctx.send(embed=embed)
         dm = self.bot.get_user(self._id)
         message = ' '.join(message)
@@ -232,10 +252,10 @@ class Help(commands.Cog):
         embed = discord.Embed(title="Suggestion",
                             color=utils.COLOR,
                             description="{} Your suggestion has been sent @Taki#0853.\nThank you for the feedback!".format(ctx.author.mention),
-                            icon_url=ctx.guild.me.avatar_url)
-        embed.set_thumbnail(url=ctx.guild.me.avatar_url)
+                            icon_url=ctx.me.avatar_url)
+        embed.set_thumbnail(url=ctx.me.avatar_url)
         embed.set_footer(text="Made by Taki#0853 (WIP)",
-                        icon_url=ctx.guild.me.avatar_url)
+                        icon_url=ctx.me.avatar_url)
         return await ctx.send(embed=embed)
 
     @commands.command(name="bug")
@@ -245,10 +265,10 @@ class Help(commands.Cog):
             embed = discord.Embed(title="Bug report",
                     color=utils.COLOR,
                     description="{} Message too short at least 3 words required.".format(ctx.author.mention),
-                    icon_url=ctx.guild.me.avatar_url)
-            embed.set_thumbnail(url=ctx.guild.me.avatar_url)
+                    icon_url=ctx.me.avatar_url)
+            embed.set_thumbnail(url=ctx.me.avatar_url)
             embed.set_footer(text="Made by Taki#0853 (WIP)",
-                            icon_url=ctx.guild.me.avatar_url)
+                            icon_url=ctx.me.avatar_url)
             return await ctx.send(embed=embed)
         dm = self.bot.get_user(self._id)
         message = ' '.join(message)
@@ -256,11 +276,44 @@ class Help(commands.Cog):
         embed = discord.Embed(title="Bug report",
                             color=utils.COLOR,
                             description="Your bug report has been sent @Taki#0853.\nThank you for the feedback!".format(ctx.author.mention),
-                            icon_url=ctx.guild.me.avatar_url)
-        embed.set_thumbnail(url=ctx.guild.me.avatar_url)
+                            icon_url=ctx.me.avatar_url)
+        embed.set_thumbnail(url=ctx.me.avatar_url)
         embed.set_footer(text="Made by Taki#0853 (WIP)",
-                        icon_url=ctx.guild.me.avatar_url)
+                        icon_url=ctx.me.avatar_url)
         return await ctx.send(embed=embed)
+
+    # @commands.command(name="setprefix")
+    # @commands.cooldown(3, 30, commands.BucketType.user)
+    # @commands.has_permissions(administrator=True)
+    # async def setprefix(self, ctx, prefix=""):
+    #     if len(prefix):
+    #         try:
+    #             db.set_prefix(str(ctx.guild.id), prefix)
+    #         except IntegrityError:
+    #             db.update_prefix(str(ctx.guild.id), prefix)
+    #         finally:
+    #             await ctx.send(f"New prefix : `{prefix}`")
+    #     else:
+    #         await ctx.send(f"Missing prefix arg.\n`{ctx.prefix}setprefix <new_prefix>`")
+
+    # @commands.command(name="getprefix")
+    # @commands.cooldown(3, 30, commands.BucketType.user)
+    # async def getprefix(self, ctx):
+    #     embed = discord.Embed(
+    #         title=f"Guild prefix",
+    #         timestamp=dt.datetime.utcnow(),
+    #         color=utils.COLOR
+    #     )
+    #     try:
+    #         prefix = db.get_prefix(ctx.guild.id)[0]["prefix"]
+    #     except:
+    #         prefix = "c!"
+    #     embed.add_field(
+    #         name=f"**{ctx.guild.name}**",
+    #         value=f"`{prefix}`"
+    #     )
+    #     embed.set_thumbnail(url=ctx.guild.icon_url)
+    #     await ctx.send(embed=embed)
 
     @commands.command(name="reload")
     @commands.is_owner()

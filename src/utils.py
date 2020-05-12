@@ -1,17 +1,20 @@
-import csv
-from typing import List, Dict, Tuple, IO
-import functools
-from discord.ext import commands
-import datetime as dt
-import time
-import json
-import os
 import asyncio
-from decouple import config
-from aiohttp import ClientSession
+import csv
+import datetime as dt
+import functools
+import json
+import logging
+import os
+import time
+from typing import IO, Dict, List, Tuple
+
 import aiofiles
 import discord
+from aiohttp import ClientSession
+from decouple import config
+from discord.ext import commands
 
+logger = logging.getLogger("covid-19")
 
 URI_DATA      = config("uri_data")
 DATA_PATH     = "data/datas.json"
@@ -105,9 +108,9 @@ def string_formatting(data_parsed: dict, param: list=[]) -> Tuple[str, str]:
                     if country not in check:
                         if (p_length in range(2,4) and (p == code.lower()) or p == iso3.lower()) or (country.lower().startswith(p) and p_length not in range(2,4)):
                             if i % 2 == 0:
-                                text += f"**{truncated} : {stats['confirmed']} <:confirmed:688686089548202004> [+{v['today']['confirmed']}], {stats['recovered']} cured [+{v['today']['recovered']}], {stats['deaths']} deaths [+{v['today']['deaths']}]**\n"
+                                text += f"**{truncated} : {stats['confirmed']} <:confirmed:688686089548202004> [+{v['today']['confirmed']}], {stats['recovered']} recovered [+{v['today']['recovered']}], {stats['deaths']} deaths [+{v['today']['deaths']}]**\n"
                             else:
-                                text += f"{truncated} : {stats['confirmed']} <:confirmed:688686089548202004> [+{v['today']['confirmed']}], {stats['recovered']} cured [+{v['today']['recovered']}], {stats['deaths']} deaths [+{v['today']['deaths']}]\n"
+                                text += f"{truncated} : {stats['confirmed']} <:confirmed:688686089548202004> [+{v['today']['confirmed']}], {stats['recovered']} recovered [+{v['today']['recovered']}], {stats['deaths']} deaths [+{v['today']['deaths']}]\n"
                             check.append(country)
                             length = len(text) + header_length
                             i += 1
@@ -255,11 +258,11 @@ def region_format(data, country, state):
         bold = "**" if k % 2 == 0 else ""
 
         if state == "all":
-            text += f"{bold}{state_name_trunc} : {statistics['confirmed']} [+{s['today']['confirmed']}] confirmed - {statistics['recovered']} cured - {statistics['deaths']} deaths{bold}\n"
+            text += f"{bold}{state_name_trunc} : {statistics['confirmed']} [+{s['today']['confirmed']}] confirmed - {statistics['recovered']} recovered - {statistics['deaths']} deaths{bold}\n"
             k += 1
 
         elif state_name.lower() == state:
-            text += f"{bold}{state_name_trunc} : {statistics['confirmed']} [+{s['today']['confirmed']}] confirmed - {statistics['recovered']} cured - {statistics['deaths']} deaths{bold}\n"
+            text += f"{bold}{state_name_trunc} : {statistics['confirmed']} [+{s['today']['confirmed']}] confirmed - {statistics['recovered']} recovered - {statistics['deaths']} deaths{bold}\n"
             k += 1
         length = len(text) + header_length
         if length >= max_length:
@@ -295,15 +298,62 @@ async def _from_json(fpath):
         jso = json.load(f)
     return jso
 
+def filter_continent(data, continent):
+    continents = {"data":{}}
+    confirmed = 0
+    recovered = 0
+    deaths = 0
+    active = 0
+    today_confirmed = 0
+    today_recovered = 0
+    today_deaths = 0
+    for d in data["sorted"]:
+        try:
+            if d["country"]["continent"].lower() == continent:
+                today_confirmed += d["today"]["confirmed"]
+                today_recovered += d["today"]["recovered"]
+                today_deaths += d["today"]["deaths"]
+
+                active += d["statistics"]["active"]
+                confirmed += d["statistics"]["confirmed"]
+                recovered += d["statistics"]["recovered"]
+                deaths += d["statistics"]["deaths"]
+                for h in d["history"]:
+                    if h not in continents["data"]:
+                        continents["data"][h] = {
+                            "confirmed": 0,
+                            "recovered": 0,
+                            "deaths": 0,
+                            "active": 0
+                        }
+                    continents["data"][h]["confirmed"] += d["history"][h]["confirmed"]
+                    continents["data"][h]["recovered"] += d["history"][h]["recovered"]
+                    continents["data"][h]["deaths"] += d["history"][h]["deaths"]
+                    continents["data"][h]["active"] += d["history"][h]["active"]
+        except:
+            pass
+
+    continents["total"] = {
+        "confirmed": confirmed,
+        "recovered": recovered,
+        "deaths": deaths,
+        "active": active
+    }
+    continents["today"] = {
+        "confirmed": today_confirmed,
+        "recovered": today_recovered,
+        "deaths": today_deaths
+    }
+
+    return continents
+
+
 class UpdateHandler:
     def __init__(self, lang="en"):
         self.news_api_key = config("news_api")
         self.q = "coronavirus covid 19"
         self.lang = lang
-        self.update_list = self.update_list()
-
-    def update_list(self):
-        return {
+        self.update_list = {
             f"http://newsapi.org/v2/top-headlines?apiKey={self.news_api_key}&language={self.lang}&q={self.q}": NEWS_PATH,
             config("uri_data"): DATA_PATH
         }
@@ -314,24 +364,23 @@ class UpdateHandler:
             url=url,
             **kwargs
         )
-
-        try:
-            if resp.status >= 200 and resp.status <= 299:
-                data = await resp.json()
-            else:
-                return None
-        except Exception as e:
-            return None
+        while resp.status not in range(200, 300):
+            try:
+                resp = await session.request(
+                    method="GET",
+                    url=url,
+                    **kwargs
+                )
+                logger.info(resp.status)
+            except Exception as e:
+                logger.exception(e, exc_info=True)
+        data = await resp.json()
         return data
 
     async def parse(self, url: str, session: ClientSession, **kwargs):
-        try:
-            resp = await self.fetch(url=url, session=session, **kwargs)
-            jso = json.dumps(resp)
-            return jso
-
-        except Exception as e:
-            return None
+        resp = await self.fetch(url=url, session=session, **kwargs)
+        jso = json.dumps(resp)
+        return jso
 
     async def store_as_backup(self, file: IO, old_data):
         async with aiofiles.open(file, "w+") as f:
@@ -344,7 +393,9 @@ class UpdateHandler:
             return
         if to_write is None:
             return
+
         async with aiofiles.open(file, "w+") as f:
+            png_clean()
             await f.write(to_write)
 
     async def update(self, session: ClientSession, **kwargs):

@@ -1,21 +1,20 @@
-import discord
-import os
 import asyncio
-import logging
-import decouple
 import datetime
-import time
+import json
+import logging
+import os
 import random
-from discord.utils import find
+import time
+
+import decouple
+import discord
 from discord.ext import commands
 from discord.ext.commands import when_mentioned_or
-import json
+from discord.utils import find
 
 import src.utils as utils
-from src.database import db
 from src import up
-import src.database as _db
-
+from src.database import db
 
 logger = logging.getLogger('covid-19')
 logger.setLevel(logging.DEBUG)
@@ -31,13 +30,19 @@ handler.setFormatter(logging.Formatter(
 logger.addHandler(handler)
 
 
-
 def _get_prefix(bot, message):
-    if message.content[0:2] == "c!":
-        return when_mentioned_or("c!")(bot, message)
-    elif message.content[0:2] == "C!":
+    if message.content[0:2] == "C!":
         return when_mentioned_or("C!")(bot, message)
     return when_mentioned_or("c!")(bot, message)
+
+# def _get_prefix(bot, message):
+#     if message.content[0:2] in ("C!", "c!"):
+#         return when_mentioned_or("c!")(bot, message)
+#     try:
+#         prefix = db.get_prefix(str(message.guild.id))[0]["prefix"]
+#     except:
+#         prefix = "c!"
+#     return when_mentioned_or(prefix)(bot, message)
 
 
 class Covid(commands.AutoShardedBot):
@@ -45,14 +50,15 @@ class Covid(commands.AutoShardedBot):
         super().__init__(
             command_prefix=_get_prefix,
             activity=discord.Game(name="Loading shards..."),
-            status=discord.Status.dnd
+            status=discord.Status.dnd,
+            case_insensitive=True
             )
         self.remove_command("help")
         self._load_extensions()
         self._data = None
         self._backup = None
         self.http_session = None
-        self.thumb = "https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/COVID-19_Outbreak_World_Map.svg/langfr-280px-COVID-19_Outbreak_World_Map.svg.png?t="
+        self.thumb = "https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/COVID-19_Outbreak_World_Map.svg/langfr-1000px-COVID-19_Outbreak_World_Map.svg.png?t="
         self.author_thumb = "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/International_Flag_of_Planet_Earth.svg/1200px-International_Flag_of_Planet_Earth.svg.png"
 
     def _load_extensions(self):
@@ -84,7 +90,6 @@ class Covid(commands.AutoShardedBot):
                 timestamp=datetime.datetime.utcnow(),
                 color=utils.COLOR
             )
-            logger.error(error)
             await ctx.send(embed=embed)
 
     async def on_guild_join(self, guild: discord.Guild):
@@ -149,6 +154,10 @@ class Covid(commands.AutoShardedBot):
             db.delete_notif(guild.id)
         except:
             pass
+        # try:
+        #     db.delete_prefix(guild.id)
+        # except:
+        #     pass
 
     async def on_ready(self):
         await self.wait_until_ready()
@@ -158,41 +167,18 @@ class Covid(commands.AutoShardedBot):
             try:
                 await self.change_presence(
                         activity=discord.Game(
-                            name=f"[c!help] | {len(self.guilds)} servers"
+                            name=f"[c!help] | {len(self.guilds)} servers | [@Coronavirus COVID-19 help]"
                             )
                         )
-                # if i == 0:
-                #     confirmed = self._data["total"]["confirmed"]
-                #     await self.change_presence(
-                #         activity=discord.Game(
-                #             name="[c!help] | {} Confirmed".format(confirmed)
-                #             )
-                #         )
-                # elif i == 1:
-                #     deaths = self._data["total"]["deaths"]
-                #     await self.change_presence(
-                #         activity=discord.Game(
-                #             name="[c!help] | {} Deaths".format(deaths)
-                #             )
-                #         )
-                # else:
-                #     recovered = self._data["total"]["recovered"]
-                #     await self.change_presence(
-                #         activity=discord.Game(
-                #             name="[c!help] | {} Recovered".format(recovered)
-                #             )
-                #         )
-                # i = (i + 1) % 3
-
             except Exception as e:
                 logger.exception(e, exc_info=True)
                 await self.change_presence(
                         activity=discord.Game(
-                            name="[c!help] | Updating or API down..."
+                            name="[c!help] | Updating data or API down..."
                             ),
                         status=discord.Status.dnd
                         )
-            await asyncio.sleep(120)
+            await asyncio.sleep(360)
 
     def run(self, token, *args, **kwargs):
         try:

@@ -1,21 +1,30 @@
 import asyncio
+import datetime as dt
+import os
+import time
+import uuid
+
 import discord
 from discord.ext import commands
-import os
-import datetime as dt
 from pymysql.err import IntegrityError
-import uuid
+
 import src.utils as utils
 from src.database import db
-from src.plotting import plot_csv, PlotEmpty
+from src.plotting import PlotEmpty, plot_csv
 
 
 class Datacmds(commands.Cog):
     """Help commands"""
     def __init__(self, bot):
         self.bot = bot
-        self.thumb = "https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/COVID-19_Outbreak_World_Map.svg/langen-1000px-COVID-19_Outbreak_World_Map.svg.png?t="
-
+        self.continent_code = [
+            "af",
+            "as",
+            "eu",
+            "na",
+            "oc",
+            "sa"
+        ]
 
     @commands.command(name="list")
     @commands.cooldown(3, 30, commands.BucketType.user)
@@ -39,8 +48,8 @@ class Datacmds(commands.Cog):
                     i += 1
                     text = ""
                     embed.set_footer(text=utils.last_update(utils.DATA_PATH),
-                            icon_url=ctx.guild.me.avatar_url)
-                    embed.set_thumbnail(url=self.thumb + str(uuid.uuid4()))
+                            icon_url=ctx.me.avatar_url)
+                    embed.set_thumbnail(url=self.bot.thumb + str(time.time()))
                     await ctx.send(embed=embed)
 
                 try:
@@ -59,8 +68,8 @@ class Datacmds(commands.Cog):
                 icon_url=self.bot.author_thumb
             )
             embed.set_footer(text=utils.last_update(utils.DATA_PATH),
-                            icon_url=ctx.guild.me.avatar_url)
-            embed.set_thumbnail(url=self.thumb + str(uuid.uuid4()))
+                            icon_url=ctx.me.avatar_url)
+            embed.set_thumbnail(url=self.bot.thumb + str(time.time()))
             await ctx.send(embed=embed)
 
     @commands.command(name="info")
@@ -80,9 +89,11 @@ class Datacmds(commands.Cog):
             url="https://www.who.int/home",
             icon_url=self.bot.author_thumb
             )
-        embed.set_thumbnail(url=self.thumb + str(uuid.uuid4()))
+        embed.set_thumbnail(url=self.bot.thumb + str(time.time()))
+        if not os.path.exists(utils.STATS_PATH):
+            await plot_csv(utils.STATS_PATH, self.bot._data)
         embed.set_footer(text=utils.last_update(utils.DATA_PATH),
-                        icon_url=ctx.guild.me.avatar_url)
+                        icon_url=ctx.me.avatar_url)
 
         with open(utils.STATS_PATH, "rb") as p:
             img = discord.File(p, filename=utils.STATS_PATH)
@@ -116,17 +127,17 @@ class Datacmds(commands.Cog):
         embed.set_author(name="Country affected by COVID-19",
                         url="https://www.who.int/home",
                         icon_url=self.bot.author_thumb)
-        embed.set_thumbnail(url=self.thumb + str(uuid.uuid4()))
+        embed.set_thumbnail(url=self.bot.thumb + str(time.time()))
         embed.set_footer(
             text=utils.last_update(utils.DATA_PATH),
-            icon_url=ctx.guild.me.avatar_url
+            icon_url=ctx.me.avatar_url
         )
         await ctx.send(embed=embed)
 
     @commands.command(name="stats", aliases=["stat", "statistic", "s"])
     @commands.cooldown(3, 30, commands.BucketType.user)
     async def stats(self, ctx, *country):
-
+        is_log = False
         data = self.bot._data["total"]
         embed = discord.Embed(
                 description="You can support me on <:kofi:693473314433138718>[Kofi](https://ko-fi.com/takitsu) and vote on [top.gg](https://top.gg/bot/682946560417333283/vote) for the bot. <:github:693519776022003742> [Source code](https://github.com/takitsu21/covid-19-tracker)",
@@ -138,7 +149,7 @@ class Datacmds(commands.Cog):
             icon_url=self.bot.author_thumb
             )
         embed.set_thumbnail(
-            url=self.thumb + str(uuid.uuid4())
+            url=self.bot.thumb + str(time.time())
             )
         embed.add_field(
             name="<:confirmed:688686089548202004> Confirmed",
@@ -176,12 +187,13 @@ class Datacmds(commands.Cog):
                 name="Coronavirus COVID-19 logarithmic stats",
                 icon_url=self.bot.author_thumb
             )
+            is_log = True
             version = utils.STATS_LOG_PATH
         elif not len(country):
             version = utils.STATS_PATH
         else:
             try:
-                is_log = False
+
 
                 if splited[0].lower() == "log":
                     is_log = True
@@ -195,9 +207,8 @@ class Datacmds(commands.Cog):
                     joined = ' '.join(country).lower()
                     stats = utils._get_country(self.bot._data, joined)
                     version = stats["country"]["code"].lower() + utils.STATS_PATH
-
                 if not os.path.exists(version):
-                    await plot_csv(version, country=joined, logarithmic=is_log)
+                    await plot_csv(version, self.bot._data, country=joined, logarithmic=is_log)
 
 
                 today = stats["today"]
@@ -247,9 +258,11 @@ class Datacmds(commands.Cog):
             except Exception as e:
                 version = utils.STATS_PATH
 
+        if not os.path.exists(version):
+            await plot_csv(version, self.bot._data, logarithmic=is_log)
         embed.set_footer(
             text=utils.last_update(version),
-            icon_url=ctx.guild.me.avatar_url
+            icon_url=ctx.me.avatar_url
             )
 
         with open(version, "rb") as p:
@@ -258,9 +271,9 @@ class Datacmds(commands.Cog):
         try:
             embed.set_thumbnail(url=stats["country"]["map"])
         except:
-            embed.set_thumbnail(url=self.thumb + str(uuid.uuid4()))
-        if not os.path.exists(version):
-            plot_csv(version, logarithmic=is_log)
+            embed.set_thumbnail(url=self.bot.thumb + str(time.time()))
+
+
         embed.set_image(url=f'attachment://{version}')
         await ctx.send(file=img, embed=embed)
 
@@ -319,7 +332,7 @@ class Datacmds(commands.Cog):
                 finally:
                     if country != "all":
                         embed = discord.Embed(
-                            description=f"You will receive a notification in this channel on data update. `c!notififcation disable` to disable the notifications"
+                            description=f"You will receive a notification in this channel on data update. `{ctx.prefix}notififcation disable` to disable the notifications"
                         )
                         embed.set_author(
                             name="Notifications successfully enabled",
@@ -335,7 +348,7 @@ class Datacmds(commands.Cog):
                         )
                     elif country == "all":
                         embed = discord.Embed(
-                            description=f"You will receive a notification in this channel on data update. `c!notififcation disable` to disable the notifications"
+                            description=f"You will receive a notification in this channel on data update. `{ctx.prefix}notififcation disable` to disable the notifications"
                         )
                         embed.set_author(
                             name="Notifications successfully enabled",
@@ -351,8 +364,8 @@ class Datacmds(commands.Cog):
                         )
             except Exception as e:
                 embed = discord.Embed(
-                    title="c!notification",
-                    description="Make sure that you didn't have made any mistake, please retry\n`c!notification <country | disable> [every NUMBER] [hours | days | weeks]`\n__Examples__ : `c!notification usa every 3 hours` (send a message to the current channel every 3 hours about United States), `c!notification united states every 1 day`, `c!notification disable`"
+                    title=f"{ctx.prefix}notification",
+                    description=f"Make sure that you didn't have made any mistake, please retry\n`{ctx.prefix}notification <country | disable> [every NUMBER] [hours | days | weeks]`\n__Examples__ : `{ctx.prefix}notification usa every 3 hours` (send a message to the current channel every 3 hours about United States), `{ctx.prefix}notification united states every 1 day`, `{ctx.prefix}notification disable`"
                 )
 
             if country == "disable":
@@ -363,51 +376,35 @@ class Datacmds(commands.Cog):
                 )
         else:
             embed = discord.Embed(
-                title="c!notification",
-                description="Make sure that you didn't have made any mistake, please retry\n`c!notification <country | disable> [every NUMBER] [hours | days | weeks]`\n__Examples__ : `c!notification usa every 3 hours` (send a message to the current channel every 3 hours about United States), `c!notification united states every 1 day`, `c!notification disable`"
+                title=f"{ctx.prefix}notification",
+                description=f"Make sure that you didn't have made any mistake, please retry\n`{ctx.prefix}notification <country | disable> [every NUMBER] [hours | days | weeks]`\n__Examples__ : `{ctx.prefix}notification usa every 3 hours` (send a message to the current channel every 3 hours about United States), `{ctx.prefix}notification united states every 1 day`, `{ctx.prefix}notification disable`"
             )
 
         embed.color = utils.COLOR
         embed.timestamp = utils.discord_timestamp()
-        embed.set_thumbnail(url=self.thumb + str(uuid.uuid4()))
+        embed.set_thumbnail(url=self.bot.thumb + str(time.time()))
         embed.set_footer(
             text=utils.last_update(utils.DATA_PATH),
-            icon_url=ctx.guild.me.avatar_url
+            icon_url=ctx.me.avatar_url
         )
         await ctx.send(embed=embed)
-
-    @notification.error
-    async def notif_perm_err(self, ctx, error):
-        if isinstance(error, commands.CommandError):
-            embed = discord.Embed(
-                    title="c!notification",
-                    description=f"Something went wrong! :/ {error}"
-                )
-            embed.color = utils.COLOR
-            embed.timestamp = utils.discord_timestamp()
-            embed.set_thumbnail(url=self.thumb + str(uuid.uuid4()))
-            embed.set_footer(
-                text=utils.last_update(utils.DATA_PATH),
-                icon_url=ctx.guild.me.avatar_url
-            )
-            await ctx.send(embed=embed)
 
     @commands.command(name="track", aliases=["tracker"])
     @commands.cooldown(3, 30, commands.BucketType.user)
     async def track(self, ctx, *country):
         if not len(country):
             embed = discord.Embed(
-                description="No country provided. **`c!track <COUNTRY>`** work like **`c!country <COUNTRY>`** see `c!help`",
+                description=f"No country provided. **`{ctx.prefix}track <COUNTRY>`** work like **`{ctx.prefix}country <COUNTRY>`** see `{ctx.prefix}help`",
                 color=utils.COLOR,
                 timestamp=utils.discord_timestamp()
             )
             embed.set_author(
-                name="c!track",
+                name=f"{ctx.prefix}track",
                 icon_url=self.bot.author_thumb
             )
         elif ''.join(country) == "disable":
             embed = discord.Embed(
-                description="If you want to reactivate the tracker : **`c!track <COUNTRY>`**",
+                description=f"If you want to reactivate the tracker : **`{ctx.prefix}track <COUNTRY>`**",
                 color=utils.COLOR,
                 timestamp=utils.discord_timestamp()
             )
@@ -443,13 +440,13 @@ class Datacmds(commands.Cog):
                     timestamp=utils.discord_timestamp()
                 )
                 embed.set_author(
-                    name="c!track",
+                    name=f"{ctx.prefix}track",
                     icon_url=self.bot.author_thumb
                 )
-        embed.set_thumbnail(url=self.thumb + str(uuid.uuid4()))
+        embed.set_thumbnail(url=self.bot.thumb + str(time.time()))
         embed.set_footer(
             text=utils.last_update(utils.DATA_PATH),
-            icon_url=ctx.guild.me.avatar_url
+            icon_url=ctx.me.avatar_url
         )
         await ctx.send(embed=embed)
 
@@ -467,7 +464,6 @@ class Datacmds(commands.Cog):
                 embed.description = header + text
             else:
                 try:
-
                     available_states = ""
                     for c in utils.get_states(self.bot._data, country):
                         available_states += c["name"] + "\n"
@@ -479,19 +475,19 @@ class Datacmds(commands.Cog):
                         )
                     else:
                         embed = discord.Embed(
-                            description="Wrong province/state or country, see `c!help`.",
+                            description=f"Wrong province/state or country, see `{ctx.prefix}help`.",
                             color=utils.COLOR,
                             timestamp=utils.discord_timestamp()
                         )
                 except Exception as e:
                     embed = discord.Embed(
-                        description="Wrong province/state or country, see `c!help`.",
+                        description=f"Wrong province/state or country, see `{ctx.prefix}help`.",
                         color=utils.COLOR,
                         timestamp=utils.discord_timestamp()
                     )
         else:
             embed = discord.Embed(
-                description="Missing args, see `c!help`.\nSupported countries (**try your region if it doesn't work that mean this region is not yet supported**).",
+                description=f"Missing args, see `{ctx.prefix}help`.\nSupported countries (**try your region if it doesn't work that mean this region is not yet supported**).",
                 color=utils.COLOR,
                 timestamp=utils.discord_timestamp()
             )
@@ -502,15 +498,98 @@ class Datacmds(commands.Cog):
 
         embed.set_footer(
             text=utils.last_update(utils.DATA_PATH),
-            icon_url=ctx.guild.me.avatar_url
+            icon_url=ctx.me.avatar_url
         )
         try:
             embed.set_thumbnail(url=stats["country"]["map"])
         except:
-            embed.set_thumbnail(url=self.thumb + str(uuid.uuid4()))
+            embed.set_thumbnail(url=self.bot.thumb + str(time.time()))
         try:
             await ctx.send(file=img, embed=embed)
         except:
+            await ctx.send(embed=embed)
+
+    @commands.command(name="continent")
+    @commands.cooldown(3, 30, commands.BucketType.user)
+    async def continent(self, ctx, continent="", graph_type=""):
+        embed = discord.Embed(
+            description="You can support me on <:kofi:693473314433138718>[Kofi](https://ko-fi.com/takitsu) and vote on [top.gg](https://top.gg/bot/682946560417333283/vote) for the bot. <:github:693519776022003742> [Source code](https://github.com/takitsu21/covid-19-tracker)",
+            timestamp=dt.datetime.utcnow(),
+            color=utils.COLOR
+        )
+        if len(continent) and continent in self.continent_code:
+            continent = continent.lower()
+            data = utils.filter_continent(self.bot._data, continent)
+
+            if graph_type == "log":
+                graph_type = "logarihmic"
+                is_log = True
+                version = continent + utils.STATS_LOG_PATH
+            else:
+                graph_type = "linear"
+                version = continent + utils.STATS_PATH
+                is_log = False
+            if not os.path.exists(version):
+                await plot_csv(version, self.bot._data, continent=data, logarithmic=is_log)
+
+
+            embed.set_author(
+                name=f"Coronavirus COVID-19 {graph_type} stats | {continent.upper()}",
+                icon_url=self.bot.author_thumb
+            )
+            embed.set_thumbnail(
+                url=self.bot.thumb + str(time.time())
+                )
+            embed.add_field(
+                name="<:confirmed:688686089548202004> Confirmed",
+                value=f"{data['total']['confirmed']}",
+                )
+            embed.add_field(
+                    name="<:recov:688686059567185940> Recovered",
+                    value=f"{data['total']['recovered']} (**{utils.percentage(data['total']['confirmed'], data['total']['recovered'])}**)",
+                )
+            embed.add_field(
+                name="<:_death:688686194917244928> Deaths",
+                value=f"{data['total']['deaths']} (**{utils.percentage(data['total']['confirmed'], data['total']['deaths'])}**)",
+            )
+
+            embed.add_field(
+                name="<:_calendar:692860616930623698> Today confirmed",
+                value=f"+{data['today']['confirmed']} (**{utils.percentage(data['total']['confirmed'], data['today']['confirmed'])}**)"
+            )
+            embed.add_field(
+                name="<:_calendar:692860616930623698> Today recovered",
+                value=f"+{data['today']['recovered']} (**{utils.percentage(data['total']['confirmed'], data['today']['recovered'])}**)"
+            )
+            embed.add_field(
+                name="<:_calendar:692860616930623698> Today deaths",
+                value=f"+{data['today']['deaths']} (**{utils.percentage(data['total']['confirmed'], data['today']['deaths'])}**)"
+            )
+            embed.add_field(
+                    name="<:bed_hospital:692857285499682878> Active",
+                    value=f"{data['total']['active']} (**{utils.percentage(data['total']['confirmed'], data['total']['active'])}**)"
+                )
+            with open(version, "rb") as p:
+                img = discord.File(p, filename=version)
+
+
+        else:
+            embed.set_author(
+                name=f"Coronavirus COVID-19 available continent",
+                icon_url=self.bot.author_thumb
+            )
+            text = '**' + ', '.join(self.continent_code).upper() + '**'
+            embed.description = "\n\n" + text
+
+        embed.set_footer(
+            text=utils.last_update(utils.DATA_PATH),
+            icon_url=ctx.me.avatar_url
+        )
+        try:
+            embed.set_image(url=f'attachment://{version}')
+            await ctx.send(embed=embed, file=img)
+        except:
+            embed.set_image(url=self.bot.thumb + str(time.time()))
             await ctx.send(embed=embed)
 
 

@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.0.7 - 2020-04-11
+
+### Added
+
+- `c!setprefix <new_prefix>` You can now set your own guild prefix.
+- `@Coronavirus COVID-19 getprefix` Views current guild prefix.
+
+### Fixed
+
+- Fix spelling errors, thanks to [benhovinga](https://github.com/benhovinga) for contributing.
+
+### Changed
+
+- cured to recovered in `c!country` [Issue #8](https://github.com/takitsu21/covid-19-tracker/issues/8)
+
 ## 0.0.6 - 2020-04-07
 
 ### Added

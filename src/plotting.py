@@ -34,9 +34,10 @@ def logarify(y):
             y[i] = 1
     return y
 
-async def plot_csv(path, dark=True, logarithmic=False, country=None, region=None):
-    timeline, confirmed, recovered, deaths, active = await make_courbe(utils.DATA_PATH, country, region)
+async def plot_csv(path, data, dark=True, logarithmic=False, country=None, region=None, continent=None):
+    timeline, confirmed, recovered, deaths, active = await make_courbe(data, country, region, continent)
     fig, ax = plt.subplots()
+    alpha = .2
     ax.spines['bottom'].set_visible(False)
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(False)
@@ -51,16 +52,16 @@ async def plot_csv(path, dark=True, logarithmic=False, country=None, region=None
     ax.plot(timeline, deaths, ".-", color="#e62712")
     ax.plot(timeline, confirmed, ".-", color="orange")
 
-    plt.fill_between(timeline, confirmed, recovered, color="orange", alpha=0.5)
-    plt.fill_between(timeline, recovered, deaths, color="lightgreen", alpha=0.5)
-    if not logarithmic:
-        plt.fill_between(timeline, deaths, color="#e62712", alpha=0.5)
+    # plt.fill_between(timeline, confirmed, recovered, color="orange", alpha=alpha)
+    # plt.fill_between(timeline, recovered, deaths, color="lightgreen", alpha=alpha)
+    # if not logarithmic:
+    #     plt.fill_between(timeline, deaths, color="#e62712", alpha=alpha)
 
-    ticks = [i for i in range(len(timeline)) if i % 7 == 0]
-    plt.xticks(ticks, rotation=30, ha="center")
-    plt.grid(True)
+    ticks = [i for i in range(len(timeline)) if i % 15 == 0]
+    plt.xticks(ticks, ha="center")
+    ax.yaxis.grid(True)
     plt.ylabel("Total cases")
-    plt.xlabel("Timeline (DD/MM/YY)")
+    plt.xlabel("Timeline (DD/MM)")
 
     if dark:
         ax.xaxis.label.set_color('white')
@@ -68,7 +69,7 @@ async def plot_csv(path, dark=True, logarithmic=False, country=None, region=None
         ax.tick_params(axis='x', colors='white')
         ax.tick_params(axis='y', colors='white')
 
-        leg = plt.legend(["Total active", "Total recovered", "Total deaths", "Total confirmed"], facecolor='0.1', loc="upper left")
+        leg = plt.legend(["Actives", "Recovered", "Deaths", "Confirmed"], facecolor='0.1', loc="upper left")
         for text in leg.get_texts():
             text.set_color("white")
 
@@ -76,6 +77,9 @@ async def plot_csv(path, dark=True, logarithmic=False, country=None, region=None
             ax.set_ylim(ymin=1)
         ylabs = []
         locs, _ = plt.yticks()
+
+        if logarithmic:
+            locs = list(map(lambda x: x * 100, locs[:-1]))
         for iter_loc in locs:
             ylabs.append(utils.human_format(int(iter_loc)))
 
@@ -84,17 +88,24 @@ async def plot_csv(path, dark=True, logarithmic=False, country=None, region=None
 
     plt.close(fig)
 
-async def make_courbe(fpath: str, country=None, region=None) -> Tuple[List, List]:
-    data = await utils.from_json(fpath)
+async def make_courbe(data, country=None, region=None, continent=None) -> Tuple[List, List]:
     timeline = []
     confirmed = []
     recovered = []
     deaths = []
     active = []
     code_found = ""
-    if country is None:
+    if continent is not None:
+        for c in continent["data"]:
+            timeline.append(c[:-3])
+            confirmed.append(continent["data"][c]["confirmed"])
+            recovered.append(continent["data"][c]["recovered"])
+            deaths.append(continent["data"][c]["deaths"])
+            active.append(continent["data"][c]["active"])
+
+    elif country is None:
         for d in data["total"]["history"]:
-            timeline.append(d)
+            timeline.append(d[:-3])
             confirmed.append(data["total"]["history"][d]["confirmed"])
             recovered.append(data["total"]["history"][d]["recovered"])
             deaths.append(data["total"]["history"][d]["deaths"])
@@ -102,7 +113,7 @@ async def make_courbe(fpath: str, country=None, region=None) -> Tuple[List, List
 
     elif isinstance(region, dict):
         for h in region:
-            timeline.append(h)
+            timeline.append(h[:-3])
             confirmed.append(region[h]["confirmed"])
             recovered.append(region[h]["recovered"])
             deaths.append(region[h]["deaths"])
@@ -119,7 +130,7 @@ async def make_courbe(fpath: str, country=None, region=None) -> Tuple[List, List
 
             if country == country_name.lower() or code.lower() == country or iso3.lower() == country:
                 for c in d["history"]:
-                    timeline.append(c)
+                    timeline.append(c[:-3])
                     confirmed.append(d["history"][c]["confirmed"])
                     recovered.append(d["history"][c]["recovered"])
                     deaths.append(d["history"][c]["deaths"])
