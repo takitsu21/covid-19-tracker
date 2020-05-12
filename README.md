@@ -29,6 +29,7 @@ Prefix : **`c! or @mention`**
 | **`c!<s / stats> [log / country / log [country]]`** | Views graphical statistics. If no args provided return linear graph for total cases. You can find countries with **full name** or **[ISO-3166-1](https://fr.wikipedia.org/wiki/ISO_3166-1)**.__Examples__ : `c!stats us`, `c!s log usa`, `c!stats log` |
 | **`c!<r / region> <state/province / all> in <country>`** | Supported countries (**China, Canada, United States, Australia, Cruise Ship**). Views regions infected in specific country or in all state with all arg. The `in` (mandatory symbol) is interpreted as separator between the country and the region/province so don't forget it. Example 1 : `c!r new york in us`. Example 2 : `c!region all in china`. |
 | **`c!country <country>`** | Views information about multiple chosen country/region. You can either use **autocompletion** or **[ISO-3166-1](https://fr.wikipedia.org/wiki/ISO_3166-1)**. __Examples__ : `c!country fr usa it gb` |
+| **`c!continent <continent> [log]`** | Views stats according to the continent given, __Examples__ : `c!continent eu`, `c!continent na log` |
 | **`c!track <country / [disable]>`** | Track country (bot will DM you update). __Examples__ : `c!track us`, `c!track disable`. |
 | **`c!news`** | Views recent news about COVID-19 (update every 1 hour). |
 | **`c!notification <country / disable> <every NUMBER> <hours / days / weeks>`** | (Only administrator) When new data is found, the bot will send you a notification where you typed the command, server only. __Examples__ : `c!notification usa every 3 hours`, `c!notification disable` |
@@ -41,13 +42,13 @@ Prefix : **`c! or @mention`**
 
 ## Few examples
 
-- `c!s china`
+- `c!s fra`
 
-![Example Stats](https://i.imgur.com/feRNoBE.png)
+![Example Stats](https://i.imgur.com/BtP05MM.png)
 
-- `c!s log cn`
+- `c!s log`
 
-![Stats log](https://i.imgur.com/NWkshG1.png)
+![Stats log](https://i.imgur.com/mrrE4WB.png)
 
 - `c!notif usa every 2 hours`
 
@@ -87,7 +88,7 @@ This project is licensed under the MIT License - see the [LICENSE.md] file for d
 
 ### Added
 
-- `clist` -> list every country that can be call by bot commands.
+- `c!list` -> list every country that can be call by bot commands.
 - **[ISO-3166-1](https://fr.wikipedia.org/wiki/ISO_3166-1)** for all countries
 
 ### Fixed
@@ -121,7 +122,7 @@ This project is licensed under the MIT License - see the [LICENSE.md] file for d
 ### Added
 
 - New emote.
-- More information in `c!source`.
+- More informations in `c!source`.
 - Add Total active cases in `c!stats`
 
 ### Fixed
