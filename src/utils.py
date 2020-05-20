@@ -58,9 +58,11 @@ def _get_country(data, country):
             iso3 = d["country"]["iso3"]
         except:
             continue
-
-        if country_data.lower() == country or code.lower() == country or iso3.lower() == country:
-            return d
+        try:
+            if country_data.lower() == country or code.lower() == country or iso3.lower() == country:
+                return d
+        except:
+            continue
     raise CountryNotFound(f"{country} not found")
 
 def matching_path(fpath: str):
@@ -95,6 +97,7 @@ def string_formatting(data_parsed: dict, param: list=[]) -> Tuple[str, str]:
         for p in param:
             p = p.lower()
             p_length = len(p)
+
             for k, v in data_parsed["data"].items():
                 try:
                     country = v["country"]["name"] if v["country"]["name"] is not None else "Null"
@@ -105,15 +108,18 @@ def string_formatting(data_parsed: dict, param: list=[]) -> Tuple[str, str]:
                         truncated = country[0:15] + "..."
                     else:
                         truncated = country
-                    if country not in check:
-                        if (p_length in range(2,4) and (p == code.lower()) or p == iso3.lower()) or (country.lower().startswith(p) and p_length not in range(2,4)):
-                            if i % 2 == 0:
-                                text += f"**{truncated} : {stats['confirmed']} <:confirmed:688686089548202004> [+{v['today']['confirmed']}], {stats['recovered']} recovered [+{v['today']['recovered']}], {stats['deaths']} deaths [+{v['today']['deaths']}]**\n"
-                            else:
-                                text += f"{truncated} : {stats['confirmed']} <:confirmed:688686089548202004> [+{v['today']['confirmed']}], {stats['recovered']} recovered [+{v['today']['recovered']}], {stats['deaths']} deaths [+{v['today']['deaths']}]\n"
-                            check.append(country)
-                            length = len(text) + header_length
-                            i += 1
+                    try:
+                        if country not in check:
+                            if (p_length in range(2,4) and (p == code.lower()) or p == iso3.lower()) or (country.lower().startswith(p) and p_length not in range(2,4)):
+                                if i % 2 == 0:
+                                    text += f"**{truncated} : {stats['confirmed']} <:confirmed:688686089548202004> [+{v['today']['confirmed']}], {stats['recovered']} recovered [+{v['today']['recovered']}], {stats['deaths']} deaths [+{v['today']['deaths']}]**\n"
+                                else:
+                                    text += f"{truncated} : {stats['confirmed']} <:confirmed:688686089548202004> [+{v['today']['confirmed']}], {stats['recovered']} recovered [+{v['today']['recovered']}], {stats['deaths']} deaths [+{v['today']['deaths']}]\n"
+                                check.append(country)
+                                length = len(text) + header_length
+                                i += 1
+                    except:
+                        continue
                 except KeyError:
                     pass
             if length < max_length:
