@@ -5,6 +5,7 @@ import functools
 import json
 import logging
 import os
+import pickle
 import time
 from typing import IO, Dict, List, Tuple
 
@@ -14,12 +15,13 @@ from aiohttp import ClientSession
 from decouple import config
 from discord.ext import commands
 
+
 logger = logging.getLogger("covid-19")
 
 URI_DATA      = config("uri_data")
-DATA_PATH     = "data/datas.json"
+DATA_PATH     = "data/datas.pickle"
 CSV_DATA_PATH = "data/parsed_csv.json"
-NEWS_PATH     = "data/news.json"
+NEWS_PATH     = "data/news.pickle"
 BACKUP_PATH   = "backup/datas.json"
 
 COLOR                    = 0xd6b360
@@ -36,19 +38,6 @@ class CountryNotFound(Exception):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-
-def get_region(country, region):
-    data = from_json(DATA_PATH)
-    is_code = True if len(country) == 2 else False
-    for d in data["sorted"]:
-        country_data = d["country"]["name"]
-        code = d["country"]["code"]
-        if country_data.lower() == country or code.lower() == country:
-            for c in data["data"][code]["regions"]:
-                if c['name'].lower() == region:
-                    return c
-
-    raise CountryNotFound(f"{region} not found for {country}")
 
 def _get_country(data, country):
     for d in data["sorted"]:
@@ -71,13 +60,19 @@ def matching_path(fpath: str):
     except:
         return fpath.split("_")[3].lower()
 
-async def from_json(file: IO):
-    async with aiofiles.open(file) as f:
-        data = await f.read()
-        return json.loads(data)
+def iteritems(d):
+    for k in d.keys():
+        yield k, d[k]
+
+def load_news():
+    with open(NEWS_PATH, 'rb') as f:
+        return pickle.load(f)
+
+def load_pickle():
+    with open(DATA_PATH, 'rb') as f:
+        return pickle.load(f)
 
 def string_formatting(data_parsed: dict, param: list=[]) -> Tuple[str, str]:
-    tot = data_parsed["total"]
     max_length = DISCORD_LIMIT - 50
     length = 0
     old_text = ""
@@ -85,9 +80,9 @@ def string_formatting(data_parsed: dict, param: list=[]) -> Tuple[str, str]:
     d = {}
     truncated = ""
     header = mkheader(
-        tot['confirmed'], tot["today"]["confirmed"],
-        tot['recovered'], percentage(tot["confirmed"], tot["recovered"]),
-        tot["today"]["recovered"], tot['deaths'], percentage(tot["confirmed"], tot["deaths"]), tot["today"]["deaths"], True
+        data_parsed["total"]['confirmed'], data_parsed["total"]["today"]["confirmed"],
+        data_parsed["total"]['recovered'], percentage(data_parsed["total"]["confirmed"], data_parsed["total"]["recovered"]),
+        data_parsed["total"]["today"]["recovered"], data_parsed["total"]['deaths'], percentage(data_parsed["total"]["confirmed"], data_parsed["total"]["deaths"]), data_parsed["total"]["today"]["deaths"], True
     )
     header_length = len(header)
     param_length = len(param)
@@ -232,13 +227,6 @@ def human_format(num: int) -> str:
         pass
     return '{}{}'.format(int(num), ['', 'K', 'M', 'G', 'T', 'P'][magnitude])
 
-async def is_valid_json():
-    try:
-        j = await from_json(DATA_PATH)
-        return True
-    except:
-        return False
-
 def region_format(data, country, state):
     states = get_states(data, country)
     text = ""
@@ -294,15 +282,11 @@ def mkheader(confirmed, dfc, recov, dfr, pr, deaths, dfd, pd, is_on_mobile):
         pd
     )
 
+
 def png_clean():
     for file in os.listdir("."):
         if file.endswith("png"):
             os.remove(file)
-
-async def _from_json(fpath):
-    async with aiofiles.open(fpath, "r") as f:
-        jso = json.load(f)
-    return jso
 
 def filter_continent(data, continent):
     continents = {"data":{}}
@@ -383,26 +367,15 @@ class UpdateHandler:
         data = await resp.json()
         return data
 
-    async def parse(self, url: str, session: ClientSession, **kwargs):
-        resp = await self.fetch(url=url, session=session, **kwargs)
-        jso = json.dumps(resp)
-        return jso
-
-    async def store_as_backup(self, file: IO, old_data):
-        async with aiofiles.open(file, "w+") as f:
-            await f.write(old_data)
-
     async def _write(self, url:str, file: IO, session: ClientSession, **kwargs):
         try:
-            to_write = await self.parse(url=url, session=session, **kwargs)
-        except:
-            return
-        if to_write is None:
-            return
-
-        async with aiofiles.open(file, "w+") as f:
+            fetcher = await self.fetch(url=url, session=session, **kwargs)
+            with open(file, 'wb') as f:
+                pickle.dump(fetcher, f, -1)
             png_clean()
-            await f.write(to_write)
+        except Exception as e:
+            logger.exception(e, exc_info=True)
+
 
     async def update(self, session: ClientSession, **kwargs):
         tasks = []

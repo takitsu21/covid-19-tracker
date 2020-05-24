@@ -141,21 +141,16 @@ class AutoUpdater(commands.Cog):
                 headers={"Super-Secret": config("uri_key")}
             )
             try:
-                tmp = await utils.from_json(utils.DATA_PATH)
-                if tmp["success"]:
-                    self.bot._data = tmp
-                    await plot_csv(utils.STATS_PATH, self.bot._data)
-                    await plot_csv(utils.STATS_LOG_PATH, self.bot._data, logarithmic=True)
-                    await ctx.send("Manual update is a success!")
+                self.bot._data = utils.load_pickle()
+                await plot_csv(utils.STATS_PATH, self.bot._data)
+                await plot_csv(utils.STATS_LOG_PATH, self.bot._data, logarithmic=True)
+                await ctx.send("Manual update is a success!")
             except Exception as e:
                 await ctx.send(f"{type(e).__name__} : {e}")
         else:
             await ctx.send("If you know this command that mean you saw it on github haha :p But still, you're not allowed to do this.")
 
     async def send_tracker(self):
-        DATA = await utils.from_json(utils.DATA_PATH)
-        data = DATA["total"]
-
         embed = discord.Embed(
                 description="You can support me on [Kofi](https://ko-fi.com/takitsu) and vote on [top.gg](https://top.gg/bot/682946560417333283/vote) for the bot.\n[World Health Organization advices](https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public)",
                 timestamp=dt.datetime.utcnow(),
@@ -168,38 +163,38 @@ class AutoUpdater(commands.Cog):
         embed.set_thumbnail(url=self.bot.thumb + str(uuid.uuid4()))
         embed.add_field(
             name="<:confirmed:688686089548202004> Confirmed",
-            value=f"{data['confirmed']}"
+            value=f"{self.bot._data['total']['confirmed']}"
             )
         embed.add_field(
                 name="<:recov:688686059567185940> Recovered",
-                value=f"{data['recovered']} (**{utils.percentage(data['confirmed'], data['recovered'])}**)"
+                value=f"{self.bot._data['total']['recovered']} (**{utils.percentage(self.bot._data['total']['confirmed'], self.bot._data['total']['recovered'])}**)"
             )
         embed.add_field(
             name="<:_death:688686194917244928> Deaths",
-            value=f"{data['deaths']} (**{utils.percentage(data['confirmed'], data['deaths'])}**)"
+            value=f"{self.bot._data['total']['deaths']} (**{utils.percentage(self.bot._data['total']['confirmed'], self.bot._data['total']['deaths'])}**)"
         )
 
         embed.add_field(
             name="<:_calendar:692860616930623698> Today confirmed",
-            value=f"{data['today']['confirmed']} (**{utils.percentage(data['confirmed'], data['today']['confirmed'])}**)"
+            value=f"{self.bot._data['total']['today']['confirmed']} (**{utils.percentage(self.bot._data['total']['confirmed'], self.bot._data['total']['today']['confirmed'])}**)"
         )
         embed.add_field(
             name="<:_calendar:692860616930623698> Today recovered",
-            value=f"{data['today']['recovered']} (**{utils.percentage(data['confirmed'], data['today']['recovered'])}**)"
+            value=f"{self.bot._data['total']['today']['recovered']} (**{utils.percentage(self.bot._data['total']['confirmed'], self.bot._data['total']['today']['recovered'])}**)"
         )
         embed.add_field(
             name="<:_calendar:692860616930623698> Today deaths",
-            value=f"{data['today']['deaths']} (**{utils.percentage(data['confirmed'], data['today']['deaths'])}**)"
+            value=f"{self.bot._data['total']['today']['deaths']} (**{utils.percentage(self.bot._data['total']['confirmed'], self.bot._data['total']['today']['deaths'])}**)"
         )
         embed.add_field(
                 name="<:bed_hospital:692857285499682878> Active",
-                value=f"{data['active']} (**{utils.percentage(data['confirmed'], data['active'])}**)"
+                value=f"{self.bot._data['total']['active']} (**{utils.percentage(self.bot._data['total']['confirmed'], self.bot._data['total']['active'])}**)"
             )
         tracked = db.send_tracker()
         for t in tracked:
             try:
                 dm = self.bot.get_user(int(t["user_id"]))
-                header, text = utils.string_formatting(DATA, t["country"].split(" "))
+                header, text = utils.string_formatting(self.bot._data, t["country"].split(" "))
                 embed.description = "You can support me on <:kofi:693473314433138718>[Kofi](https://ko-fi.com/takitsu) and vote on [top.gg](https://top.gg/bot/682946560417333283/vote) for the bot. <:github:693519776022003742> [Source code](https://github.com/takitsu21/covid-19-tracker)\n\n" + text
 
                 with open("stats.png", "rb") as p:
@@ -218,7 +213,9 @@ class AutoUpdater(commands.Cog):
                 pass
 
     async def parse_and_update(self):
-        await up.update(self.bot.http_session)
+        updating = await up.update(self.bot.http_session)
+        self.bot.news = utils.load_news()
+        self.bot._data = utils.load_pickle()
         logger.info("New data downloaded")
         try:
             await plot_csv(utils.STATS_PATH, self.bot._data)
@@ -231,10 +228,7 @@ class AutoUpdater(commands.Cog):
     async def main(self):
         self.bot.http_session = ClientSession()
         await self.parse_and_update()
-        self.bot._data = await utils.from_json(utils.DATA_PATH)
-        self.bot._backup = self.bot._data
         await self.bot.wait_until_ready()
-
         starting = True
         while True:
             try:
@@ -242,19 +236,9 @@ class AutoUpdater(commands.Cog):
                 if not starting:
                     self.interval_update += 1
                     try:
-                        # if self.bot._data["success"]:
-                        #     self.bot._backup = self.bot._data
                         await self.parse_and_update()
-                        tmp = await utils.from_json(utils.DATA_PATH)
-                        if tmp["success"]:
-                            self.bot._backup = tmp
-                            self.bot._data = tmp
-                    except:
-                        try:
-                            if self.bot._backup["success"]:
-                                self.bot._data = self.bot._backup
-                        except:
-                            pass
+                    except Exception as e:
+                        logger.exception(e, exc_info=True)
                     finally:
                         await self.send_notifications()
                         await self.send_tracker()

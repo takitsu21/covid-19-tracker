@@ -110,9 +110,8 @@ class Datacmds(commands.Cog):
                     timestamp=utils.discord_timestamp()
                 )
         else:
-            DATA = self.bot._data
 
-            header, text = utils.string_formatting(DATA, country)
+            header, text = utils.string_formatting(self.bot._data, country)
             embed = discord.Embed(
                 description=header + "\n\n" + text,
                 color=utils.COLOR,

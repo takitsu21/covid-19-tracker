@@ -56,7 +56,7 @@ class Covid(commands.AutoShardedBot):
         self.remove_command("help")
         self._load_extensions()
         self._data = None
-        self._backup = None
+        self.news = None
         self.http_session = None
         self.thumb = "https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/COVID-19_Outbreak_World_Map.svg/langfr-1000px-COVID-19_Outbreak_World_Map.svg.png?t="
         self.author_thumb = "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/International_Flag_of_Planet_Earth.svg/1200px-International_Flag_of_Planet_Earth.svg.png"
@@ -161,7 +161,6 @@ class Covid(commands.AutoShardedBot):
 
     async def on_ready(self):
         await self.wait_until_ready()
-        self._data = await utils.from_json(utils.DATA_PATH)
         i = 0
         while True:
             try:
@@ -196,4 +195,4 @@ class Covid(commands.AutoShardedBot):
 
 if __name__ == "__main__":
     bot = Covid()
-    bot.run(decouple.config("debug"), reconnect=True)
+    bot.run(decouple.config("token"), reconnect=True)
