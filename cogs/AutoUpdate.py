@@ -226,8 +226,8 @@ class AutoUpdater(commands.Cog):
         logger.info("New plot generated")
 
     async def main(self):
-        self.bot.http_session = ClientSession()
-        await self.parse_and_update()
+        # self.bot.http_session = ClientSession()
+        # await self.parse_and_update()
         await self.bot.wait_until_ready()
         starting = True
         while True:

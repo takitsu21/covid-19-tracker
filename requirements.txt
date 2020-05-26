@@ -1,6 +1,6 @@
 requests
 python-decouple
-git+https://github.com/Rapptz/discord.py
+git+https://github.com/Rapptz/discord.py@sharding-rework
 matplotlib
 pymysql
 aiofiles

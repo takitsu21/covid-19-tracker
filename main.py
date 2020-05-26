@@ -49,9 +49,8 @@ class Covid(commands.AutoShardedBot):
     def __init__(self, *args, loop=None, **kwargs):
         super().__init__(
             command_prefix=_get_prefix,
-            activity=discord.Game(name="Loading shards..."),
-            status=discord.Status.dnd,
-            case_insensitive=True
+            activity=discord.Game(name="c!help | Loading shards..."),
+            status=discord.Status.dnd
             )
         self.remove_command("help")
         self._load_extensions()
@@ -166,14 +165,14 @@ class Covid(commands.AutoShardedBot):
             try:
                 await self.change_presence(
                         activity=discord.Game(
-                            name=f"[c!help] | {len(self.guilds)} servers | [@Coronavirus COVID-19 help]"
+                            name=f"c!help | {len(self.guilds)} servers | @Coronavirus COVID-19 help"
                             )
                         )
             except Exception as e:
                 logger.exception(e, exc_info=True)
                 await self.change_presence(
                         activity=discord.Game(
-                            name="[c!help] | Updating data or API down..."
+                            name="c!help | @Coronavirus COVID-19 help"
                             ),
                         status=discord.Status.dnd
                         )
@@ -195,4 +194,4 @@ class Covid(commands.AutoShardedBot):
 
 if __name__ == "__main__":
     bot = Covid()
-    bot.run(decouple.config("token"), reconnect=True)
+    bot.run(decouple.config("token"))
