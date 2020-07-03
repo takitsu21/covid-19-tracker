@@ -69,7 +69,7 @@ async def plot_csv(path, data, dark=True, logarithmic=False, country=None, regio
         ax.tick_params(axis='x', colors='white')
         ax.tick_params(axis='y', colors='white')
 
-        leg = plt.legend(["Actives", "Recovered", "Deaths", "Confirmed"], facecolor='0.1', loc="upper left")
+        leg = plt.legend(["Active", "Recovered", "Deaths", "Confirmed"], facecolor='0.1', loc="upper left")
         for text in leg.get_texts():
             text.set_color("white")
 
