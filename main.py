@@ -55,6 +55,7 @@ class Covid(commands.AutoShardedBot):
         self.remove_command("help")
         self._load_extensions()
         self._data = None
+        self._populations = None
         self.news = None
         self.http_session = None
         self.thumb = "https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/COVID-19_Outbreak_World_Map.svg/langfr-1000px-COVID-19_Outbreak_World_Map.svg.png?t="

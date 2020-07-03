@@ -216,6 +216,7 @@ class AutoUpdater(commands.Cog):
         updating = await up.update(self.bot.http_session)
         self.bot.news = utils.load_news()
         self.bot._data = utils.load_pickle()
+        self.bot._populations = utils.load_populations()
         logger.info("New data downloaded")
         try:
             await plot_csv(utils.STATS_PATH, self.bot._data)
