@@ -129,7 +129,7 @@ class AutoUpdater(commands.Cog):
                 await channel.send(file=img, embed=embed)
             except Exception as e:
                 pass
-        logger.info("Notifications sended")
+        logger.info("Notifications sent")
 
     @commands.command()
     async def manual(self, ctx):
@@ -148,7 +148,7 @@ class AutoUpdater(commands.Cog):
             except Exception as e:
                 await ctx.send(f"{type(e).__name__} : {e}")
         else:
-            await ctx.send("If you know this command that mean you saw it on github haha :p But still, you're not allowed to do this.")
+            await ctx.send("If you know this command that means you saw it on github haha :p But still, you're not allowed to do this.")
 
     async def send_tracker(self):
         embed = discord.Embed(
