@@ -46,6 +46,11 @@ class Help(commands.Cog):
             inline=False
         )
         embed.add_field(
+            name=f"📈 **`{ctx.prefix}<g | graph> <proportion> <deaths | confirmed | recovered | active> <top | country[]>`**",
+            value=f"Views graphical statistics. You can find countries with **full name** or **[ISO-3166-1](https://fr.wikipedia.org/wiki/ISO_3166-1)**.\n\n **Proportion**: This is the value / population * 100 \n\n __Examples__ : `{ctx.prefix}graph proportion top`, `{ctx.prefix}g proportion deaths us gb it es mx fr`, `{ctx.prefix}g proportion active gb`",
+            inline=False
+        )
+        embed.add_field(
             name=f"📈 **`{ctx.prefix}country <country>`**",
             value=f"Views information about multiple chosen country/region. You can either use **autocompletion** or **[ISO-3166-1](https://fr.wikipedia.org/wiki/ISO_3166-1)**.\n __Examples__ : `{ctx.prefix}country fr usa it gb`",
             inline=False

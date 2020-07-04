@@ -141,3 +141,67 @@ async def make_courbe(data, country=None, region=None, continent=None) -> Tuple[
         raise PlotEmpty(f"Plot empty, length : {len(timeline)}")
 
     return rearrange(timeline, confirmed, recovered, deaths, active)
+
+# function to plot data from the c!graph command
+async def plot_graph(path, data, value, measure, dark=True):
+    # value is the name of the value to be graphed
+
+    # the number of days to graph
+    max_days_back = 76
+
+    days_back = 10000
+    shortest = {}
+    timeline = []
+    for c in data:
+        l = len(c['history'])
+        if l < days_back:
+            days_back = l
+            shortest = c['history']
+    
+    for s in shortest:
+        timeline.append(s[:-3])
+
+    if days_back > max_days_back:
+        days_back = max_days_back
+
+    timeline = timeline[-days_back:]
+
+    # get yvalue data from data
+    yvalues = []
+    for c in data:
+        p = []
+        for d in c['history']:
+            p.append(c['history'][d]['proportion'])
+        yvalues.append(p[-days_back:])
+
+    fig, ax = plt.subplots()
+    alpha = .2
+    ax.spines['bottom'].set_visible(False)
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+    ax.spines['left'].set_visible(False)
+
+    ax.xaxis.set_major_locator(MultipleLocator(7))
+    # plot lines
+    # TODO: implement all countries
+    for c in range(len(yvalues)):
+        ax.plot(timeline, yvalues[c], ".-", alpha=0.5)
+
+    ticks = [i for i in range(len(timeline)) if i % int(days_back / 5) == 0]
+    plt.xticks(ticks, ha="center")
+    ax.yaxis.grid(True)
+    plt.ylabel(f"{value.capitalize()} of {measure.capitalize()} (%)")
+    plt.xlabel("Timeline (DD/MM)")
+
+    if dark:
+        ax.xaxis.label.set_color('white')
+        ax.yaxis.label.set_color('white')
+        ax.tick_params(axis='x', colors='white')
+        ax.tick_params(axis='y', colors='white')
+        leg = plt.legend([name['country']['name'] for name in data ], facecolor='0.1', loc="upper left")
+        for text in leg.get_texts():
+            text.set_color("white")
+
+        plt.savefig(path, transparent=True)
+
+    plt.close(fig)

@@ -22,6 +22,7 @@ URI_DATA      = config("uri_data")
 DATA_PATH     = "data/datas.pickle"
 CSV_DATA_PATH = "data/parsed_csv.json"
 NEWS_PATH     = "data/news.pickle"
+POP_PATH      = "data/populations.csv"
 BACKUP_PATH   = "backup/datas.json"
 
 COLOR                    = 0xd6b360
@@ -71,6 +72,14 @@ def load_news():
 def load_pickle():
     with open(DATA_PATH, 'rb') as f:
         return pickle.load(f)
+    
+def load_populations():
+    d = {}
+    with open(POP_PATH, 'r', encoding='utf-8-sig') as f:
+        for line in f:                
+            (key, val) = line.rsplit(',', 1)
+            d[key] = int(val)
+        return d
 
 def string_formatting(data_parsed: dict, param: list=[]) -> Tuple[str, str]:
     max_length = DISCORD_LIMIT - 50
