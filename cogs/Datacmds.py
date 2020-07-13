@@ -152,32 +152,32 @@ class Datacmds(commands.Cog):
             )
         embed.add_field(
             name="<:confirmed:688686089548202004> Confirmed",
-            value=f"{data['confirmed']}",
+            value=f"{data['confirmed']:,}",
             )
         embed.add_field(
                 name="<:recov:688686059567185940> Recovered",
-                value=f"{data['recovered']} (**{utils.percentage(data['confirmed'], data['recovered'])}**)",
+                value=f"{data['recovered']:,} (**{utils.percentage(data['confirmed'], data['recovered'])}**)",
             )
         embed.add_field(
             name="<:_death:688686194917244928> Deaths",
-            value=f"{data['deaths']} (**{utils.percentage(data['confirmed'], data['deaths'])}**)",
+            value=f"{data['deaths']:,} (**{utils.percentage(data['confirmed'], data['deaths'])}**)",
         )
 
         embed.add_field(
             name="<:_calendar:692860616930623698> Today confirmed",
-            value=f"+{data['today']['confirmed']} (**{utils.percentage(data['confirmed'], data['today']['confirmed'])}**)"
+            value=f"+{data['today']['confirmed']:,} (**{utils.percentage(data['confirmed'], data['today']['confirmed'])}**)"
         )
         embed.add_field(
             name="<:_calendar:692860616930623698> Today recovered",
-            value=f"+{data['today']['recovered']} (**{utils.percentage(data['confirmed'], data['today']['recovered'])}**)"
+            value=f"+{data['today']['recovered']:,} (**{utils.percentage(data['confirmed'], data['today']['recovered'])}**)"
         )
         embed.add_field(
             name="<:_calendar:692860616930623698> Today deaths",
-            value=f"+{data['today']['deaths']} (**{utils.percentage(data['confirmed'], data['today']['deaths'])}**)"
+            value=f"+{data['today']['deaths']:,} (**{utils.percentage(data['confirmed'], data['today']['deaths'])}**)"
         )
         embed.add_field(
                 name="<:bed_hospital:692857285499682878> Active",
-                value=f"{data['active']} (**{utils.percentage(data['confirmed'], data['active'])}**)"
+                value=f"{data['active']:,} (**{utils.percentage(data['confirmed'], data['active'])}**)"
             )
         splited = country
 
@@ -226,20 +226,20 @@ class Datacmds(commands.Cog):
                 )
                 embed.add_field(
                     name="<:confirmed:688686089548202004> Confirmed",
-                    value=f"{confirmed}"
+                    value=f"{confirmed:,}"
                 )
                 embed.add_field(
                     name="<:recov:688686059567185940> Recovered",
-                    value=f"{recovered} (**{utils.percentage(confirmed, recovered)}**)"
+                    value=f"{recovered:,} (**{utils.percentage(confirmed, recovered)}**)"
                 )
                 embed.add_field(
                     name="<:_death:688686194917244928> Deaths",
-                    value=f"{deaths} (**{utils.percentage(confirmed, deaths)}**)"
+                    value=f"{deaths:,} (**{utils.percentage(confirmed, deaths)}**)"
                 )
 
                 embed.add_field(
                     name="<:_calendar:692860616930623698> Today confirmed",
-                    value=f"+{today['confirmed']} (**{utils.percentage(confirmed, today['confirmed'])}**)"
+                    value=f"+{today['confirmed']:,} (**{utils.percentage(confirmed, today['confirmed'])}**)"
                 )
                 embed.add_field(
                     name="<:_calendar:692860616930623698> Today recovered",
@@ -247,11 +247,11 @@ class Datacmds(commands.Cog):
                 )
                 embed.add_field(
                     name="<:_calendar:692860616930623698> Today deaths",
-                    value=f"+{today['deaths']} (**{utils.percentage(confirmed, today['deaths'])}**)"
+                    value=f"+{today['deaths']:,} (**{utils.percentage(confirmed, today['deaths'])}**)"
                 )
                 embed.add_field(
                     name="<:bed_hospital:692857285499682878> Active",
-                    value=f"{stats['statistics']['active']} (**{utils.percentage(confirmed, stats['statistics']['active'])}**)"
+                    value=f"{stats['statistics']['active']:,} (**{utils.percentage(confirmed, stats['statistics']['active'])}**)"
                 )
 
             except Exception as e:
@@ -327,7 +327,7 @@ class Datacmds(commands.Cog):
                     pop = self.bot._populations
 
                     calculatedData = {}
-                    
+
                     # loop through all stats
                     for i in range(len(stats)):
                         if args[0] == "proportion":
@@ -341,7 +341,7 @@ class Datacmds(commands.Cog):
 
                     # get history stats for first x countries in the dict
                     graph = []
-                    
+
                     count = 6
                     for c in calculatedData:
                         if count > 0:
@@ -365,7 +365,7 @@ class Datacmds(commands.Cog):
                         description=f"Here is a graph of the **{args[0].capitalize()}** of **{args[1].capitalize()}** of COVID-19. " + description[args[0]],
                         timestamp=dt.datetime.utcnow(),
                         color=utils.COLOR
-                    )  
+                    )
 
                     for c in graph:
                         embed.add_field(
@@ -379,7 +379,7 @@ class Datacmds(commands.Cog):
                     with open(path, "rb") as p:
                         img = discord.File(p, filename=path)
 
-                    embed.set_image(url=f'attachment://{path}')    
+                    embed.set_image(url=f'attachment://{path}')
 
                 else:
                     # presumably the user has entered one or more countries
@@ -420,7 +420,7 @@ class Datacmds(commands.Cog):
                         description=f"Here is a graph of the **{args[0].capitalize()}** of **{args[1].capitalize()}** of COVID-19. " + description[args[0]],
                         timestamp=dt.datetime.utcnow(),
                         color=utils.COLOR
-                    )  
+                    )
 
                     # add field with the data
                     # also create file path for graph
@@ -440,9 +440,9 @@ class Datacmds(commands.Cog):
                     with open(path, "rb") as p:
                         img = discord.File(p, filename=path)
 
-                    embed.set_image(url=f'attachment://{path}')     
-        
-    
+                    embed.set_image(url=f'attachment://{path}')
+
+
 
             embed.set_author(name=f"Coronavirus COVID-19 Graphs - {args[0].capitalize()} of {args[1].capitalize()}",
                         url="https://www.who.int/home",

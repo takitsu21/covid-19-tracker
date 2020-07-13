@@ -72,11 +72,11 @@ def load_news():
 def load_pickle():
     with open(DATA_PATH, 'rb') as f:
         return pickle.load(f)
-    
+
 def load_populations():
     d = {}
     with open(POP_PATH, 'r', encoding='utf-8-sig') as f:
-        for line in f:                
+        for line in f:
             (key, val) = line.rsplit(',', 1)
             d[key] = int(val)
         return d
@@ -116,9 +116,9 @@ def string_formatting(data_parsed: dict, param: list=[]) -> Tuple[str, str]:
                         if country not in check:
                             if (p_length in range(2,4) and (p == code.lower()) or p == iso3.lower()) or (country.lower().startswith(p) and p_length not in range(2,4)):
                                 if i % 2 == 0:
-                                    text += f"**{truncated} : {stats['confirmed']} <:confirmed:688686089548202004> [+{v['today']['confirmed']}], {stats['recovered']} recovered [+{v['today']['recovered']}], {stats['deaths']} deaths [+{v['today']['deaths']}]**\n"
+                                    text += f"**{truncated} : {stats['confirmed']:,} <:confirmed:688686089548202004> [+{v['today']['confirmed']:,}], {stats['recovered']:,} recovered [+{v['today']['recovered']:,}], {stats['deaths']:,} deaths [+{v['today']['deaths']:,}]**\n"
                                 else:
-                                    text += f"{truncated} : {stats['confirmed']} <:confirmed:688686089548202004> [+{v['today']['confirmed']}], {stats['recovered']} recovered [+{v['today']['recovered']}], {stats['deaths']} deaths [+{v['today']['deaths']}]\n"
+                                    text += f"{truncated} : {stats['confirmed']:,} <:confirmed:688686089548202004> [+{v['today']['confirmed']:,}], {stats['recovered']:,} recovered [+{v['today']['recovered']:,}], {stats['deaths']:,} deaths [+{v['today']['deaths']:,}]\n"
                                 check.append(country)
                                 length = len(text) + header_length
                                 i += 1
@@ -144,9 +144,9 @@ def string_formatting(data_parsed: dict, param: list=[]) -> Tuple[str, str]:
                 truncated = country
             if stats['confirmed']:
                 if i % 2 == 0:
-                    text += f"**{truncated} : {confirmed} [+{v['today']['confirmed']}]**\n"
+                    text += f"**{truncated} : {confirmed:,} [+{v['today']['confirmed']:,}]**\n"
                 else:
-                    text += f"{truncated} : {confirmed} [+{v['today']['confirmed']}]\n"
+                    text += f"{truncated} : {confirmed:,} [+{v['today']['confirmed']:,}]\n"
                 i += 1
                 length = len(text) + header_length
             if length >= max_length:
@@ -279,7 +279,7 @@ def region_format(data, country, state):
 
 
 def mkheader(confirmed, dfc, recov, dfr, pr, deaths, dfd, pd, is_on_mobile):
-    header = "You can support me on <:kofi:693473314433138718>[Kofi](https://ko-fi.com/takitsu) and vote on [top.gg](https://top.gg/bot/682946560417333283/vote) for the bot. <:github:693519776022003742> [Source code](https://github.com/takitsu21/covid-19-tracker)\n<:confirmed:688686089548202004> Confirmed **{}** [+**{}**]\n<:recov:688686059567185940> Recovered **{}** (**{}**) [+**{}**]\n<:_death:688686194917244928> Deaths **{}** (**{}**) [+**{}**]"
+    header = "You can support me on <:kofi:693473314433138718>[Kofi](https://ko-fi.com/takitsu) and vote on [top.gg](https://top.gg/bot/682946560417333283/vote) for the bot. <:github:693519776022003742> [Source code](https://github.com/takitsu21/covid-19-tracker)\n<:confirmed:688686089548202004> Confirmed **{:,}** [+**{:,}**]\n<:recov:688686059567185940> Recovered **{:,}** (**{}**) [+**{:,}**]\n<:_death:688686194917244928> Deaths **{:,}** (**{}**) [+**{:,}**]"
     return header.format(
         confirmed,
         dfc,

@@ -47,17 +47,17 @@ async def plot_csv(path, data, dark=True, logarithmic=False, country=None, regio
         plt.yscale('log')
 
     ax.xaxis.set_major_locator(MultipleLocator(7))
-    ax.plot(timeline, active, ".-", color="yellow", alpha=0.5)
-    ax.plot(timeline, recovered, ".-", color="lightgreen")
-    ax.plot(timeline, deaths, ".-", color="#e62712")
-    ax.plot(timeline, confirmed, ".-", color="orange")
+    ax.plot(timeline, active, "-", color="yellow", alpha=0.5)
+    ax.plot(timeline, recovered, "-", color="lightgreen")
+    ax.plot(timeline, deaths, "-", color="#e62712")
+    ax.plot(timeline, confirmed, "-", color="orange")
 
     # plt.fill_between(timeline, confirmed, recovered, color="orange", alpha=alpha)
     # plt.fill_between(timeline, recovered, deaths, color="lightgreen", alpha=alpha)
     # if not logarithmic:
     #     plt.fill_between(timeline, deaths, color="#e62712", alpha=alpha)
 
-    ticks = [i for i in range(len(timeline)) if i % 15 == 0]
+    ticks = [i for i in range(len(timeline)) if i % 21 == 0]
     plt.xticks(ticks, ha="center")
     ax.yaxis.grid(True)
     plt.ylabel("Total cases")
@@ -157,7 +157,6 @@ async def plot_graph(path, data, value, measure, dark=True):
         if l < days_back:
             days_back = l
             shortest = c['history']
-    
     for s in shortest:
         timeline.append(s[:-3])
 
