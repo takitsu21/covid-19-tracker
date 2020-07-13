@@ -195,4 +195,4 @@ class Covid(commands.AutoShardedBot):
 
 if __name__ == "__main__":
     bot = Covid()
-    bot.run(decouple.config("token"))
+    bot.run(decouple.config("token"), reconnect=True)

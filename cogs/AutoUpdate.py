@@ -83,32 +83,32 @@ class AutoUpdater(commands.Cog):
                 )
                 embed.add_field(
                     name="<:confirmed:688686089548202004> Confirmed",
-                    value=f"{confirmed}"
+                    value=f"{confirmed:,}"
                 )
                 embed.add_field(
                     name="<:recov:688686059567185940> Recovered",
-                    value=f"{recovered} (**{utils.percentage(confirmed, recovered)}**)"
+                    value=f"{recovered:,} (**{utils.percentage(confirmed, recovered)}**)"
                 )
                 embed.add_field(
                     name="<:_death:688686194917244928> Deaths",
-                    value=f"{deaths} (**{utils.percentage(confirmed, deaths)}**)"
+                    value=f"{deaths:,} (**{utils.percentage(confirmed, deaths)}**)"
                 )
 
                 embed.add_field(
                     name="<:_calendar:692860616930623698> Today confirmed",
-                    value=f"+{today['confirmed']} (**{utils.percentage(confirmed, today['confirmed'])}**)"
+                    value=f"+{today['confirmed']:,} (**{utils.percentage(confirmed, today['confirmed'])}**)"
                 )
                 embed.add_field(
                     name="<:_calendar:692860616930623698> Today recovered",
-                    value=f"+{today['recovered']} (**{utils.percentage(confirmed, today['recovered'])}**)"
+                    value=f"+{today['recovered']:,} (**{utils.percentage(confirmed, today['recovered'])}**)"
                 )
                 embed.add_field(
                     name="<:_calendar:692860616930623698> Today deaths",
-                    value=f"+{today['deaths']} (**{utils.percentage(confirmed, today['deaths'])}**)"
+                    value=f"+{today['deaths']:,} (**{utils.percentage(confirmed, today['deaths'])}**)"
                 )
                 embed.add_field(
                     name="<:bed_hospital:692857285499682878> Active",
-                    value=f"{active} (**{utils.percentage(confirmed, active)}**)"
+                    value=f"{active:,} (**{utils.percentage(confirmed, active)}**)"
                 )
                 with open(version, "rb") as p:
                     img = discord.File(p, filename=version)
@@ -129,7 +129,7 @@ class AutoUpdater(commands.Cog):
                 await channel.send(file=img, embed=embed)
             except Exception as e:
                 pass
-        logger.info("Notifications sended")
+        logger.info("Notifications sent")
 
     @commands.command()
     async def manual(self, ctx):
@@ -148,7 +148,7 @@ class AutoUpdater(commands.Cog):
             except Exception as e:
                 await ctx.send(f"{type(e).__name__} : {e}")
         else:
-            await ctx.send("If you know this command that mean you saw it on github haha :p But still, you're not allowed to do this.")
+            await ctx.send("If you know this command that means you saw it on github haha :p But still, you're not allowed to do this.")
 
     async def send_tracker(self):
         embed = discord.Embed(
@@ -163,32 +163,32 @@ class AutoUpdater(commands.Cog):
         embed.set_thumbnail(url=self.bot.thumb + str(uuid.uuid4()))
         embed.add_field(
             name="<:confirmed:688686089548202004> Confirmed",
-            value=f"{self.bot._data['total']['confirmed']}"
+            value=f"{self.bot._data['total']['confirmed']:,}"
             )
         embed.add_field(
                 name="<:recov:688686059567185940> Recovered",
-                value=f"{self.bot._data['total']['recovered']} (**{utils.percentage(self.bot._data['total']['confirmed'], self.bot._data['total']['recovered'])}**)"
+                value=f"{self.bot._data['total']['recovered']:,} (**{utils.percentage(self.bot._data['total']['confirmed'], self.bot._data['total']['recovered'])}**)"
             )
         embed.add_field(
             name="<:_death:688686194917244928> Deaths",
-            value=f"{self.bot._data['total']['deaths']} (**{utils.percentage(self.bot._data['total']['confirmed'], self.bot._data['total']['deaths'])}**)"
+            value=f"{self.bot._data['total']['deaths']:,} (**{utils.percentage(self.bot._data['total']['confirmed'], self.bot._data['total']['deaths'])}**)"
         )
 
         embed.add_field(
             name="<:_calendar:692860616930623698> Today confirmed",
-            value=f"{self.bot._data['total']['today']['confirmed']} (**{utils.percentage(self.bot._data['total']['confirmed'], self.bot._data['total']['today']['confirmed'])}**)"
+            value=f"+{self.bot._data['total']['today']['confirmed']:,} (**{utils.percentage(self.bot._data['total']['confirmed'], self.bot._data['total']['today']['confirmed'])}**)"
         )
         embed.add_field(
             name="<:_calendar:692860616930623698> Today recovered",
-            value=f"{self.bot._data['total']['today']['recovered']} (**{utils.percentage(self.bot._data['total']['confirmed'], self.bot._data['total']['today']['recovered'])}**)"
+            value=f"+{self.bot._data['total']['today']['recovered']:,} (**{utils.percentage(self.bot._data['total']['confirmed'], self.bot._data['total']['today']['recovered'])}**)"
         )
         embed.add_field(
             name="<:_calendar:692860616930623698> Today deaths",
-            value=f"{self.bot._data['total']['today']['deaths']} (**{utils.percentage(self.bot._data['total']['confirmed'], self.bot._data['total']['today']['deaths'])}**)"
+            value=f"+{self.bot._data['total']['today']['deaths']:,} (**{utils.percentage(self.bot._data['total']['confirmed'], self.bot._data['total']['today']['deaths'])}**)"
         )
         embed.add_field(
                 name="<:bed_hospital:692857285499682878> Active",
-                value=f"{self.bot._data['total']['active']} (**{utils.percentage(self.bot._data['total']['confirmed'], self.bot._data['total']['active'])}**)"
+                value=f"{self.bot._data['total']['active']:,} (**{utils.percentage(self.bot._data['total']['confirmed'], self.bot._data['total']['active'])}**)"
             )
         tracked = db.send_tracker()
         for t in tracked:
@@ -227,8 +227,11 @@ class AutoUpdater(commands.Cog):
         logger.info("New plot generated")
 
     async def main(self):
-        # self.bot.http_session = ClientSession()
-        # await self.parse_and_update()
+        self.bot.news = utils.load_news()
+        self.bot._data = utils.load_pickle()
+        self.bot._populations = utils.load_populations()
+        self.bot.http_session = ClientSession()
+        await self.parse_and_update()
         await self.bot.wait_until_ready()
         starting = True
         while True:
