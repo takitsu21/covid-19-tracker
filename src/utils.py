@@ -261,11 +261,11 @@ def region_format(data, country, state):
         bold = "**" if k % 2 == 0 else ""
 
         if state == "all":
-            text += f"{bold}{state_name_trunc} : {statistics['confirmed']} [+{s['today']['confirmed']}] confirmed - {statistics['recovered']} recovered - {statistics['deaths']} deaths{bold}\n"
+            text += f"{bold}{state_name_trunc} : {statistics['confirmed']:,} [+{s['today']['confirmed']:,}] confirmed - {statistics['recovered']:,} recovered - {statistics['deaths']:,} deaths{bold}\n"
             k += 1
 
         elif state_name.lower() == state:
-            text += f"{bold}{state_name_trunc} : {statistics['confirmed']} [+{s['today']['confirmed']}] confirmed - {statistics['recovered']} recovered - {statistics['deaths']} deaths{bold}\n"
+            text += f"{bold}{state_name_trunc} : {statistics['confirmed']:,} [+{s['today']['confirmed']:,}] confirmed - {statistics['recovered']:,} recovered - {statistics['deaths']:,} deaths{bold}\n"
             k += 1
         length = len(text) + header_length
         if length >= max_length:

@@ -243,7 +243,7 @@ class Datacmds(commands.Cog):
                 )
                 embed.add_field(
                     name="<:_calendar:692860616930623698> Today recovered",
-                    value=f"+{today['recovered']} (**{utils.percentage(confirmed, today['recovered'])}**)"
+                    value=f"+{today['recovered']:,} (**{utils.percentage(confirmed, today['recovered'])}**)"
                 )
                 embed.add_field(
                     name="<:_calendar:692860616930623698> Today deaths",

@@ -28,6 +28,27 @@ def rearrange(timeline, confirmed, recovered, deaths, active):
         i += 1
     return timeline[i:], confirmed[i:], logarify(recovered[i:]), logarify(deaths[i:]), logarify(active[i:])
 
+def fix_peaks(peaks):
+    """
+    This function is meant to remove or at least reduce
+    the data peaks when issues are occuring on the API
+    """
+    for i in range(1, len(peaks)):
+        if (peaks[i] - peaks[i-1]) < 0:
+            peaks[i] = peaks[i-1]
+    return peaks
+
+def fix_active_peaks(peaks):
+    """
+    This function is meant to remove or at least reduce
+    the data peaks when issues are occuring on the API
+    """
+    for i in range(1, len(peaks) - 1):
+        if (peaks[i-1] < peaks[i] and peaks[i+1] < peaks[i]) \
+        or (peaks[i-1] > peaks[i] and peaks[i+1] > peaks[i]):
+            peaks[i] = peaks[i-1]
+    return peaks
+
 def logarify(y):
     for i in range(len(y)):
         if y[i] == 0:
@@ -47,10 +68,10 @@ async def plot_csv(path, data, dark=True, logarithmic=False, country=None, regio
         plt.yscale('log')
 
     ax.xaxis.set_major_locator(MultipleLocator(7))
-    ax.plot(timeline, active, "-", color="yellow", alpha=0.5)
-    ax.plot(timeline, recovered, "-", color="lightgreen")
-    ax.plot(timeline, deaths, "-", color="#e62712")
-    ax.plot(timeline, confirmed, "-", color="orange")
+    ax.plot(timeline, fix_active_peaks(active), "-", color="yellow", alpha=0.5)
+    ax.plot(timeline, fix_peaks(recovered), "-", color="lightgreen")
+    ax.plot(timeline, fix_peaks(deaths), "-", color="#e62712")
+    ax.plot(timeline, fix_peaks(confirmed), "-", color="orange")
 
     # plt.fill_between(timeline, confirmed, recovered, color="orange", alpha=alpha)
     # plt.fill_between(timeline, recovered, deaths, color="lightgreen", alpha=alpha)
