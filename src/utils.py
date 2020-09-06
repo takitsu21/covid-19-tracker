@@ -24,6 +24,8 @@ CSV_DATA_PATH = "data/parsed_csv.json"
 NEWS_PATH     = "data/news.pickle"
 POP_PATH      = "data/populations.csv"
 BACKUP_PATH   = "backup/datas.json"
+API_ROOT = config("api_root")
+
 
 COLOR                    = 0xd6b360
 DISCORD_LIMIT            = 2 ** 11 # 2048
@@ -346,6 +348,50 @@ def filter_continent(data, continent):
 
     return continents
 
+async def get(session: ClientSession, endpoint, **kwargs):
+    url = API_ROOT + endpoint
+    resp = await session.request(
+            method="GET",
+            url=url,
+            headers={"Authorization": config("Authorization")},
+            **kwargs
+        )
+    while resp.status not in range(200, 300):
+            try:
+                resp = await session.request(
+                    method="GET",
+                    url=url,
+                    headers={"Authorization": config("Authorization")},
+                    **kwargs
+                )
+                logger.info(resp.status)
+            except Exception as e:
+                logger.exception(e, exc_info=True)
+    data = await resp.json()
+    return data
+
+async def _get(endpoint, **kwargs):
+    url = API_ROOT + endpoint
+    session = ClientSession()
+    resp = await session.request(
+            method="GET",
+            url=url,
+            headers={"Authorization": config("Authorization")},
+            **kwargs
+        )
+    while resp.status not in range(200, 300):
+            try:
+                resp = await session.request(
+                    method="GET",
+                    url=url,
+                    headers={"Authorization": config("Authorization")},
+                    **kwargs
+                )
+                logger.info(resp.status)
+            except Exception as e:
+                logger.exception(e, exc_info=True)
+    data = await resp.json()
+    return data
 
 class UpdateHandler:
     def __init__(self, lang="en"):
@@ -363,6 +409,7 @@ class UpdateHandler:
             url=url,
             **kwargs
         )
+
         while resp.status not in range(200, 300):
             try:
                 resp = await session.request(
@@ -398,3 +445,7 @@ class UpdateHandler:
                     self._write(url=url, file=fpath, session=session)
                 )
         await asyncio.gather(*tasks)
+
+if __name__ == "__main__":
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(_get("/all/france"))

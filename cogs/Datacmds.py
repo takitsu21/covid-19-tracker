@@ -90,8 +90,8 @@ class Datacmds(commands.Cog):
             icon_url=self.bot.author_thumb
             )
         embed.set_thumbnail(url=self.bot.thumb + str(time.time()))
-        if not os.path.exists(utils.STATS_PATH):
-            await plot_csv(utils.STATS_PATH, self.bot._data)
+        # if not os.path.exists(utils.STATS_PATH):
+        #     await plot_csv(utils.STATS_PATH, self.bot._data)
         embed.set_footer(text=utils.last_update(utils.DATA_PATH),
                         icon_url=ctx.me.avatar_url)
 
@@ -134,51 +134,17 @@ class Datacmds(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command(name="stats", aliases=["stat", "statistic", "s"])
-    @commands.cooldown(3, 30, commands.BucketType.user)
+    @commands.cooldown(5, 30, commands.BucketType.user)
     async def stats(self, ctx, *country):
         is_log = False
-        data = self.bot._data["total"]
+        graph_type = "Linear"
         embed = discord.Embed(
                 description="You can support me on <:kofi:693473314433138718>[Kofi](https://ko-fi.com/takitsu) and vote on [top.gg](https://top.gg/bot/682946560417333283/vote) for the bot. <:github:693519776022003742> [Source code](https://github.com/takitsu21/covid-19-tracker)",
                 timestamp=dt.datetime.utcnow(),
                 color=utils.COLOR
-                )
-        embed.set_author(
-            name="Coronavirus COVID-19 linear stats",
-            icon_url=self.bot.author_thumb
             )
-        embed.set_thumbnail(
-            url=self.bot.thumb + str(time.time())
-            )
-        embed.add_field(
-            name="<:confirmed:688686089548202004> Confirmed",
-            value=f"{data['confirmed']:,}",
-            )
-        embed.add_field(
-                name="<:recov:688686059567185940> Recovered",
-                value=f"{data['recovered']:,} (**{utils.percentage(data['confirmed'], data['recovered'])}**)",
-            )
-        embed.add_field(
-            name="<:_death:688686194917244928> Deaths",
-            value=f"{data['deaths']:,} (**{utils.percentage(data['confirmed'], data['deaths'])}**)",
-        )
-
-        embed.add_field(
-            name="<:_calendar:692860616930623698> Today confirmed",
-            value=f"+{data['today']['confirmed']:,} (**{utils.percentage(data['confirmed'], data['today']['confirmed'])}**)"
-        )
-        embed.add_field(
-            name="<:_calendar:692860616930623698> Today recovered",
-            value=f"+{data['today']['recovered']:,} (**{utils.percentage(data['confirmed'], data['today']['recovered'])}**)"
-        )
-        embed.add_field(
-            name="<:_calendar:692860616930623698> Today deaths",
-            value=f"+{data['today']['deaths']:,} (**{utils.percentage(data['confirmed'], data['today']['deaths'])}**)"
-        )
-        embed.add_field(
-                name="<:bed_hospital:692857285499682878> Active",
-                value=f"{data['active']:,} (**{utils.percentage(data['confirmed'], data['active'])}**)"
-            )
+        if len(country) == 1 and country[0].lower() == "log" or not len(country):
+            data = await utils.get(self.bot.http_session, f"/all/world")
         splited = country
 
         if len(splited) == 1 and splited[0].lower() == "log":
@@ -188,89 +154,100 @@ class Datacmds(commands.Cog):
             )
             is_log = True
             version = utils.STATS_LOG_PATH
+            graph_type = "Logarithmic"
         elif not len(country):
             version = utils.STATS_PATH
         else:
             try:
-
-
                 if splited[0].lower() == "log":
                     is_log = True
-                    graph_type = "Logarithmic"
+
                     joined = ' '.join(country[1:]).lower()
-                    stats = utils._get_country(self.bot._data, joined)
-                    version = stats["country"]["code"].lower() + utils.STATS_LOG_PATH
+                    data = await utils.get(self.bot.http_session, f"/all/{joined}")
+                    version = data["iso2"].lower() + utils.STATS_LOG_PATH
 
                 else:
-                    graph_type = "Linear"
                     joined = ' '.join(country).lower()
-                    stats = utils._get_country(self.bot._data, joined)
-                    version = stats["country"]["code"].lower() + utils.STATS_PATH
+                    data = await utils.get(self.bot.http_session, f"/all/{joined}")
+                    version = data["iso2"].lower() + utils.STATS_PATH
                 if not os.path.exists(version):
-                    await plot_csv(version, self.bot._data, country=joined, logarithmic=is_log)
-
-
-                today = stats["today"]
-                confirmed = stats["statistics"]["confirmed"]
-                recovered = stats["statistics"]["recovered"]
-                deaths = stats["statistics"]["deaths"]
-                active = stats["statistics"]["active"]
-                embed = discord.Embed(
-                    description="You can support me on <:kofi:693473314433138718>[Kofi](https://ko-fi.com/takitsu) and vote on [top.gg](https://top.gg/bot/682946560417333283/vote) for the bot. <:github:693519776022003742> [Source code](https://github.com/takitsu21/covid-19-tracker)",
-                    timestamp=dt.datetime.utcnow(),
-                    color=utils.COLOR
-                )
-                embed.set_author(
-                    name=f"Coronavirus COVID-19 {graph_type} graph - {stats['country']['name']}",
-                    icon_url=f"https://raw.githubusercontent.com/hjnilsson/country-flags/master/png250px/{stats['country']['code'].lower()}.png"
-                )
-                embed.add_field(
-                    name="<:confirmed:688686089548202004> Confirmed",
-                    value=f"{confirmed:,}"
-                )
-                embed.add_field(
-                    name="<:recov:688686059567185940> Recovered",
-                    value=f"{recovered:,} (**{utils.percentage(confirmed, recovered)}**)"
-                )
-                embed.add_field(
-                    name="<:_death:688686194917244928> Deaths",
-                    value=f"{deaths:,} (**{utils.percentage(confirmed, deaths)}**)"
-                )
-
-                embed.add_field(
-                    name="<:_calendar:692860616930623698> Today confirmed",
-                    value=f"+{today['confirmed']:,} (**{utils.percentage(confirmed, today['confirmed'])}**)"
-                )
-                embed.add_field(
-                    name="<:_calendar:692860616930623698> Today recovered",
-                    value=f"+{today['recovered']:,} (**{utils.percentage(confirmed, today['recovered'])}**)"
-                )
-                embed.add_field(
-                    name="<:_calendar:692860616930623698> Today deaths",
-                    value=f"+{today['deaths']:,} (**{utils.percentage(confirmed, today['deaths'])}**)"
-                )
-                embed.add_field(
-                    name="<:bed_hospital:692857285499682878> Active",
-                    value=f"{stats['statistics']['active']:,} (**{utils.percentage(confirmed, stats['statistics']['active'])}**)"
-                )
+                    history_confirmed = await utils.get(self.bot.http_session, f"/history/confirmed/{joined}")
+                    history_recovered = await utils.get(self.bot.http_session, f"/history/recovered/{joined}")
+                    history_deaths = await utils.get(self.bot.http_session, f"/history/deaths/{joined}")
+                    await plot_csv(
+                        version,
+                        history_confirmed,
+                        history_recovered,
+                        history_deaths,
+                        logarithmic=is_log)
 
             except Exception as e:
+                print(type(e).__name__, e)
                 version = utils.STATS_PATH
 
+        confirmed = data["totalCases"]
+        recovered = data["totalRecovered"]
+        deaths = data["totalDeaths"]
+        active = data["activeCases"]
+        embed.set_author(
+            name=f"Coronavirus COVID-19 {graph_type} graph - {data['country']}",
+            icon_url=f"https://raw.githubusercontent.com/hjnilsson/country-flags/master/png250px/{data['iso2'].lower()}.png"
+        )
+        embed.add_field(
+            name="<:confirmed:688686089548202004> Confirmed",
+            value=f"{confirmed:,}"
+        )
+        embed.add_field(
+            name="<:recov:688686059567185940> Recovered",
+            value=f"{recovered:,} (**{utils.percentage(confirmed, recovered)}**)"
+        )
+        embed.add_field(
+            name="<:_death:688686194917244928> Deaths",
+            value=f"{deaths:,} (**{utils.percentage(confirmed, deaths)}**)"
+        )
+
+        embed.add_field(
+            name="<:_calendar:692860616930623698> Today confirmed",
+            value=f"+{data['newCases']:,} (**{utils.percentage(confirmed, data['newCases'])}**)"
+        )
+        embed.add_field(
+            name="<:_calendar:692860616930623698> Today deaths",
+            value=f"+{data['newDeaths']:,} (**{utils.percentage(confirmed, data['newDeaths'])}**)"
+        )
+        embed.add_field(
+            name="<:bed_hospital:692857285499682878> Active",
+            value=f"{active:,} (**{utils.percentage(confirmed, active)}**)"
+        )
+        embed.add_field(
+            name="<:critical:752228850091556914> Serious critical",
+            value=f"{data['seriousCritical']:,} (**{utils.percentage(confirmed, data['seriousCritical'])}**)"
+        )
+        if data["totalTests"]:
+            embed.add_field(
+                name="<:test:752252962532884520> Total test",
+                value=f"{data['totalTests']:,}"
+            )
+
         if not os.path.exists(version):
-            await plot_csv(version, self.bot._data, logarithmic=is_log)
+            history_confirmed = await utils.get(self.bot.http_session, f"/history/confirmed/total")
+            history_recovered = await utils.get(self.bot.http_session, f"/history/recovered/total")
+            history_deaths = await utils.get(self.bot.http_session, f"/history/deaths/total")
+            await plot_csv(
+                version,
+                history_confirmed,
+                history_recovered,
+                history_deaths,
+                logarithmic=is_log)
         embed.set_footer(
             text=utils.last_update(version),
             icon_url=ctx.me.avatar_url
-            )
-
+        )
         with open(version, "rb") as p:
             img = discord.File(p, filename=version)
 
-        try:
-            embed.set_thumbnail(url=stats["country"]["map"])
-        except:
-            embed.set_thumbnail(url=self.bot.thumb + str(time.time()))
+        embed.set_thumbnail(
+            url=self.bot.thumb + str(time.time())
+        )
 
 
         embed.set_image(url=f'attachment://{version}')
@@ -709,8 +686,16 @@ class Datacmds(commands.Cog):
                 graph_type = "linear"
                 version = continent + utils.STATS_PATH
                 is_log = False
-            if not os.path.exists(version):
-                await plot_csv(version, self.bot._data, continent=data, logarithmic=is_log)
+            # if not os.path.exists(version):
+            #     history_confirmed = await utils.get(self.bot.http_session, f"/history/confirmed/{joined}")
+            #     history_recovered = await utils.get(self.bot.http_session, f"/history/recovered/{joined}")
+            #     history_deaths = await utils.get(self.bot.http_session, f"/history/deaths/{joined}")
+            #     await plot_csv(
+            #         version,
+            #         history_confirmed,
+            #         history_recovered,
+            #         history_deaths,
+            #         logarithmic=is_log)
 
 
             embed.set_author(

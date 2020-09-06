@@ -79,18 +79,18 @@ class Covid(commands.AutoShardedBot):
             except Exception:
                 logger.exception(f"Fail to unload {file}")
 
-    async def on_command_error(self, ctx, error):
-        if isinstance(error, commands.CommandOnCooldown):
-            await ctx.send('{} This command is ratelimited, please try again in {:.2f}s'.format(ctx.author.mention, error.retry_after))
-        else:
-            # raise error
-            embed = discord.Embed(
-                title="Error",
-                description=f"{error} Invalid command see `c!help`.\nIf you think that is a bot error, report this issue on my discord [here](https://discordapp.com/invite/wTxbQYb) thank you.",
-                timestamp=datetime.datetime.utcnow(),
-                color=utils.COLOR
-            )
-            await ctx.send(embed=embed)
+    # async def on_command_error(self, ctx, error):
+    #     if isinstance(error, commands.CommandOnCooldown):
+    #         await ctx.send('{} This command is ratelimited, please try again in {:.2f}s'.format(ctx.author.mention, error.retry_after))
+    #     else:
+    #         # raise error
+    #         embed = discord.Embed(
+    #             title="Error",
+    #             description=f"{error} Invalid command see `c!help`.\nIf you think that is a bot error, report this issue on my discord [here](https://discordapp.com/invite/wTxbQYb) thank you.",
+    #             timestamp=datetime.datetime.utcnow(),
+    #             color=utils.COLOR
+    #         )
+    #         await ctx.send(embed=embed)
 
     async def on_guild_join(self, guild: discord.Guild):
         await self.wait_until_ready()
@@ -195,4 +195,4 @@ class Covid(commands.AutoShardedBot):
 
 if __name__ == "__main__":
     bot = Covid()
-    bot.run(decouple.config("token"), reconnect=True)
+    bot.run(decouple.config("debug"), reconnect=True)

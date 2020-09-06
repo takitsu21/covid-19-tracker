@@ -1,12 +1,14 @@
-from typing import List, Dict, Tuple
+import datetime
+from typing import Dict, List, Tuple
+
+import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
 import numpy as np
-import datetime
-import matplotlib.dates as mdates
-from matplotlib.ticker import (MultipleLocator, FormatStrFormatter,
-                               AutoMinorLocator)
-import src.utils as utils
+from aiohttp import ClientSession
+from matplotlib.ticker import (AutoMinorLocator, FormatStrFormatter,
+                               MultipleLocator)
 
+import src.utils as utils
 
 month = mdates.MonthLocator()
 days = mdates.DayLocator()
@@ -55,8 +57,15 @@ def logarify(y):
             y[i] = 1
     return y
 
-async def plot_csv(path, data, dark=True, logarithmic=False, country=None, region=None, continent=None):
-    timeline, confirmed, recovered, deaths, active = await make_courbe(data, country, region, continent)
+async def plot_csv(path,
+    total_confirmed,
+    total_recovered,
+    total_deaths,
+    logarithmic=False):
+    timeline, confirmed, recovered, deaths, active = await make_courbe(
+        total_confirmed,
+        total_recovered,
+        total_deaths)
     fig, ax = plt.subplots()
     alpha = .2
     ax.spines['bottom'].set_visible(False)
@@ -73,95 +82,58 @@ async def plot_csv(path, data, dark=True, logarithmic=False, country=None, regio
     ax.plot(timeline, fix_peaks(deaths), "-", color="#e62712")
     ax.plot(timeline, fix_peaks(confirmed), "-", color="orange")
 
-    # plt.fill_between(timeline, confirmed, recovered, color="orange", alpha=alpha)
-    # plt.fill_between(timeline, recovered, deaths, color="lightgreen", alpha=alpha)
-    # if not logarithmic:
-    #     plt.fill_between(timeline, deaths, color="#e62712", alpha=alpha)
-
-    ticks = [i for i in range(len(timeline)) if i % 21 == 0]
+    ticks = [i for i in range(len(timeline)) if i % 30 == 0]
     plt.xticks(ticks, ha="center")
     ax.yaxis.grid(True)
     plt.ylabel("Total cases")
     plt.xlabel("Timeline (DD/MM)")
 
-    if dark:
-        ax.xaxis.label.set_color('white')
-        ax.yaxis.label.set_color('white')
-        ax.tick_params(axis='x', colors='white')
-        ax.tick_params(axis='y', colors='white')
+    ax.xaxis.label.set_color('white')
+    ax.yaxis.label.set_color('white')
+    ax.tick_params(axis='x', colors='white')
+    ax.tick_params(axis='y', colors='white')
 
-        leg = plt.legend(["Active", "Recovered", "Deaths", "Confirmed"], facecolor='0.1', loc="upper left")
-        for text in leg.get_texts():
-            text.set_color("white")
+    leg = plt.legend(["Active", "Recovered", "Deaths", "Confirmed"], facecolor='0.1', loc="upper left")
+    for text in leg.get_texts():
+        text.set_color("white")
 
-        if not logarithmic:
-            ax.set_ylim(ymin=1)
-        ylabs = []
-        locs, _ = plt.yticks()
+    if not logarithmic:
+        ax.set_ylim(ymin=1)
+    ylabs = []
+    locs, _ = plt.yticks()
 
-        if logarithmic:
-            locs = list(map(lambda x: x * 100, locs[:-1]))
-        for iter_loc in locs:
-            ylabs.append(utils.human_format(int(iter_loc)))
+    if logarithmic:
+        locs = list(map(lambda x: x * 100, locs[:-1]))
+    for iter_loc in locs:
+        ylabs.append(utils.human_format(int(iter_loc)))
 
-        plt.yticks(locs, ylabs)
-        plt.savefig(path, transparent=True)
+    plt.yticks(locs, ylabs)
+    plt.savefig(path, transparent=True)
 
     plt.close(fig)
 
-async def make_courbe(data, country=None, region=None, continent=None) -> Tuple[List, List]:
-    timeline = []
+async def make_courbe(
+    total_confirmed,
+    total_recovered,
+    total_deaths) -> Tuple[List, List]:
+
+    timeline = list(x[:-3] for x in total_confirmed["history"].keys())
     confirmed = []
     recovered = []
     deaths = []
     active = []
-    code_found = ""
-    if continent is not None:
-        for c in continent["data"]:
-            timeline.append(c[:-3])
-            confirmed.append(continent["data"][c]["confirmed"])
-            recovered.append(continent["data"][c]["recovered"])
-            deaths.append(continent["data"][c]["deaths"])
-            active.append(continent["data"][c]["active"])
+    for c, r, d in zip(total_confirmed["history"],
+                        total_recovered["history"],
+                        total_deaths["history"]):
 
-    elif country is None:
-        for d in data["total"]["history"]:
-            timeline.append(d[:-3])
-            confirmed.append(data["total"]["history"][d]["confirmed"])
-            recovered.append(data["total"]["history"][d]["recovered"])
-            deaths.append(data["total"]["history"][d]["deaths"])
-            active.append(data["total"]["history"][d]["active"])
-
-    elif isinstance(region, dict):
-        for h in region:
-            timeline.append(h[:-3])
-            confirmed.append(region[h]["confirmed"])
-            recovered.append(region[h]["recovered"])
-            deaths.append(region[h]["deaths"])
-            active.append(region[h]["active"])
-    else:
-
-        for d in data["sorted"]:
-            try:
-                country_name = d["country"]["name"]
-                code = d["country"]["code"]
-                iso3 = d["country"]["iso3"]
-            except:
-                continue
-
-            if country == country_name.lower() or code.lower() == country or iso3.lower() == country:
-                for c in d["history"]:
-                    timeline.append(c[:-3])
-                    confirmed.append(d["history"][c]["confirmed"])
-                    recovered.append(d["history"][c]["recovered"])
-                    deaths.append(d["history"][c]["deaths"])
-                    active.append(d["history"][c]["active"])
-                break
-
-    if not len(timeline):
-        raise PlotEmpty(f"Plot empty, length : {len(timeline)}")
-
-    return rearrange(timeline, confirmed, recovered, deaths, active)
+        try:
+            confirmed.append(total_confirmed["history"][c])
+            recovered.append(total_recovered["history"][r])
+            deaths.append(total_deaths["history"][d])
+            active.append(total_confirmed["history"][c] - total_recovered["history"][r])
+        except TypeError:
+            pass
+    return timeline, confirmed, recovered, deaths, active
 
 # function to plot data from the c!graph command
 async def plot_graph(path, data, value, measure, dark=True):
