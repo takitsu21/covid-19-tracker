@@ -8,6 +8,7 @@ import time
 
 import decouple
 import discord
+from aiohttp import ClientSession
 from discord.ext import commands
 from discord.ext.commands import when_mentioned_or
 from discord.utils import find
@@ -160,20 +161,22 @@ class Covid(commands.AutoShardedBot):
         #     pass
 
     async def on_ready(self):
+        self.http_session = ClientSession(loop=self.loop)
+        utils.png_clean()
         await self.wait_until_ready()
         i = 0
         while True:
             try:
                 await self.change_presence(
                         activity=discord.Game(
-                            name=f"c!help | {len(self.guilds)} servers | @Coronavirus COVID-19 help"
+                            name=f"c!help | coronavirus.jessicoh.com/api/"
                             )
                         )
             except Exception as e:
                 logger.exception(e, exc_info=True)
                 await self.change_presence(
                         activity=discord.Game(
-                            name="c!help | @Coronavirus COVID-19 help"
+                            name="c!help | coronavirus.jessicoh.com/api/"
                             ),
                         status=discord.Status.dnd
                         )

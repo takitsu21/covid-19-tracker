@@ -25,7 +25,7 @@ class AutoUpdater(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.interval_update = 0
-        self.bot.loop.create_task(self.main())
+        # self.bot.loop.create_task(self.main())
 
     async def send_notifications(self):
         data = self.bot._data

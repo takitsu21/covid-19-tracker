@@ -31,55 +31,51 @@ class Datacmds(commands.Cog):
     async def list_countries(self, ctx):
         text = ""
         i = 1
-        for c in self.bot._data["sorted"]:
-            if c["statistics"]["confirmed"] > 0:
-                length = len(text + c["country"]["name"] + ", ")
+        data = await utils.get(self.bot.http_session, "/all")
+        text = ""
+        overflow_text = ""
+        embeds = []
+        for c in data:
+            overflow_text += c["country"] + ", "
+            if len(overflow_text) >= utils.DISCORD_LIMIT:
 
-                if length >= utils.DISCORD_LIMIT:
-                    embed = discord.Embed(
-                        description=text.rstrip(","),
-                        color=utils.COLOR,
-                        timestamp=utils.discord_timestamp()
-                    )
-                    embed.set_author(
-                        name=f"All countries affected by Coronavirus COVID-19 - Page {i}",
-                        icon_url=self.bot.author_thumb
-                    )
-                    i += 1
-                    text = ""
-                    embed.set_footer(text=utils.last_update(utils.DATA_PATH),
-                            icon_url=ctx.me.avatar_url)
-                    embed.set_thumbnail(url=self.bot.thumb + str(time.time()))
-                    await ctx.send(embed=embed)
+                embed = discord.Embed(
+                    description=text.rstrip(", "),
+                    color=utils.COLOR,
+                    timestamp=utils.discord_timestamp()
+                )
+                text = overflow_text
+                overflow_text = ""
+                embeds.append(embed)
+            text = overflow_text
 
-                try:
-                    text += c["country"]["name"] + ", "
-                except:
-                    pass
-
-        if len(text):
+        if text:
             embed = discord.Embed(
-                description=text.rstrip(","),
-                color=utils.COLOR,
-                timestamp=utils.discord_timestamp()
-            )
-            embed.set_author(
-                name=f"All countries affected by Coronavirus COVID-19 - Page {i}",
-                icon_url=self.bot.author_thumb
-            )
-            embed.set_footer(text=utils.last_update(utils.DATA_PATH),
+                    description=text.rstrip(", "),
+                    color=utils.COLOR,
+                    timestamp=utils.discord_timestamp()
+                )
+
+            embeds.append(embed)
+
+        for i, _embed in enumerate(embeds):
+            _embed.set_author(
+                    name=f"All countries affected by Coronavirus COVID-19 - Page {i+1}",
+                    icon_url=self.bot.author_thumb
+                )
+            _embed.set_footer(text=utils.last_update(data[0]["lastUpdate"]),
                             icon_url=ctx.me.avatar_url)
-            embed.set_thumbnail(url=self.bot.thumb + str(time.time()))
-            await ctx.send(embed=embed)
+            _embed.set_thumbnail(url=self.bot.thumb + str(time.time()))
+            await ctx.send(embed=_embed)
 
     @commands.command(name="info")
     @commands.cooldown(3, 30, commands.BucketType.user)
     async def info(self, ctx):
-        DATA = self.bot._data
+        data = await utils.get(self.bot.http_session, "/all")
 
-        header, text = utils.string_formatting(DATA)
+        text = utils.string_formatting(data)
         embed = discord.Embed(
-            description=header + "\n\n" + text,
+            description=text,
             color=utils.COLOR,
             timestamp=utils.discord_timestamp()
         )
@@ -90,56 +86,63 @@ class Datacmds(commands.Cog):
             icon_url=self.bot.author_thumb
             )
         embed.set_thumbnail(url=self.bot.thumb + str(time.time()))
-        # if not os.path.exists(utils.STATS_PATH):
-        #     await plot_csv(utils.STATS_PATH, self.bot._data)
-        embed.set_footer(text=utils.last_update(utils.DATA_PATH),
+        embed.set_footer(text="coronavirus.jessicoh.com/api | " + utils.last_update(data[0]["lastUpdate"]),
                         icon_url=ctx.me.avatar_url)
 
+        if not os.path.exists(utils.STATS_PATH):
+            history_confirmed = await utils.get(self.bot.http_session, f"/history/confirmed/total")
+            history_recovered = await utils.get(self.bot.http_session, f"/history/recovered/total")
+            history_deaths = await utils.get(self.bot.http_session, f"/history/deaths/total")
+            await plot_csv(
+                utils.STATS_PATH,
+                history_confirmed,
+                history_recovered,
+                history_deaths)
         with open(utils.STATS_PATH, "rb") as p:
             img = discord.File(p, filename=utils.STATS_PATH)
         embed.set_image(url=f'attachment://{utils.STATS_PATH}')
         await ctx.send(file=img, embed=embed)
 
-    @commands.command(name="country", aliases=["c"])
-    @commands.cooldown(5, 30, commands.BucketType.user)
-    async def country(self, ctx, *country):
-        if not len(country):
-            embed = discord.Embed(
-                    description="No args provided, I can't tell you which country/region is affected if you won't tell me everything!",
-                    color=utils.COLOR,
-                    timestamp=utils.discord_timestamp()
-                )
-        else:
+    # @commands.command(name="country", aliases=["c"])
+    # @commands.cooldown(5, 30, commands.BucketType.user)
+    # async def country(self, ctx, *country):
+    #     if not len(country):
+    #         embed = discord.Embed(
+    #                 description="No args provided, I can't tell you which country/region is affected if you won't tell me everything!",
+    #                 color=utils.COLOR,
+    #                 timestamp=utils.discord_timestamp()
+    #             )
+    #     else:
 
-            header, text = utils.string_formatting(self.bot._data, country)
-            embed = discord.Embed(
-                description=header + "\n\n" + text,
-                color=utils.COLOR,
-                timestamp=utils.discord_timestamp()
-            )
-            if not len(text):
-                embed = discord.Embed(
-                    description="Wrong country selected",
-                    color=utils.COLOR,
-                    timestamp=utils.discord_timestamp()
-                )
-        embed.set_author(name="Country affected by COVID-19",
-                        url="https://www.who.int/home",
-                        icon_url=self.bot.author_thumb)
-        embed.set_thumbnail(url=self.bot.thumb + str(time.time()))
-        embed.set_footer(
-            text=utils.last_update(utils.DATA_PATH),
-            icon_url=ctx.me.avatar_url
-        )
-        await ctx.send(embed=embed)
+    #         header, text = utils.string_formatting(self.bot._data, country)
+    #         embed = discord.Embed(
+    #             description=header + "\n\n" + text,
+    #             color=utils.COLOR,
+    #             timestamp=utils.discord_timestamp()
+    #         )
+    #         if not len(text):
+    #             embed = discord.Embed(
+    #                 description="Wrong country selected",
+    #                 color=utils.COLOR,
+    #                 timestamp=utils.discord_timestamp()
+    #             )
+    #     embed.set_author(name="Country affected by COVID-19",
+    #                     url="https://www.who.int/home",
+    #                     icon_url=self.bot.author_thumb)
+    #     embed.set_thumbnail(url=self.bot.thumb + str(time.time()))
+    #     embed.set_footer(
+    #         text=utils.last_update(utils.DATA_PATH),
+    #         icon_url=ctx.me.avatar_url
+    #     )
+    #     await ctx.send(embed=embed)
 
     @commands.command(name="stats", aliases=["stat", "statistic", "s"])
-    @commands.cooldown(5, 30, commands.BucketType.user)
+    # @commands.cooldown(5, 30, commands.BucketType.user)
     async def stats(self, ctx, *country):
         is_log = False
         graph_type = "Linear"
         embed = discord.Embed(
-                description="You can support me on <:kofi:693473314433138718>[Kofi](https://ko-fi.com/takitsu) and vote on [top.gg](https://top.gg/bot/682946560417333283/vote) for the bot. <:github:693519776022003742> [Source code](https://github.com/takitsu21/covid-19-tracker)",
+                description=utils.mkheader(),
                 timestamp=dt.datetime.utcnow(),
                 color=utils.COLOR
             )
@@ -223,9 +226,13 @@ class Datacmds(commands.Cog):
             value=f"{data['seriousCritical']:,} (**{utils.percentage(confirmed, data['seriousCritical'])}**)"
         )
         if data["totalTests"]:
+            percent_pop = ""
+            if data["population"]:
+                percent_pop = f"(**{utils.percentage(data['population'], data['totalTests'])}**)"
+
             embed.add_field(
                 name="<:test:752252962532884520> Total test",
-                value=f"{data['totalTests']:,}"
+                value=f"{data['totalTests']:,} {percent_pop}"
             )
 
         if not os.path.exists(version):
@@ -238,18 +245,17 @@ class Datacmds(commands.Cog):
                 history_recovered,
                 history_deaths,
                 logarithmic=is_log)
-        embed.set_footer(
-            text=utils.last_update(version),
-            icon_url=ctx.me.avatar_url
-        )
+
         with open(version, "rb") as p:
             img = discord.File(p, filename=version)
 
+        embed.set_footer(
+            text=utils.last_update(data["lastUpdate"]),
+            icon_url=ctx.me.avatar_url
+        )
         embed.set_thumbnail(
             url=self.bot.thumb + str(time.time())
         )
-
-
         embed.set_image(url=f'attachment://{version}')
         await ctx.send(file=img, embed=embed)
 
@@ -612,59 +618,77 @@ class Datacmds(commands.Cog):
     async def region(self, ctx, *params):
         if len(params):
             country, state = utils.parse_state_input(*params)
-            header, text = utils.region_format(self.bot._data, country, state)
-            embed = discord.Embed(
-                color=utils.COLOR,
-                timestamp=dt.datetime.utcnow()
-            )
-            if len(text):
-                embed.description = header + text
+            if state == "all":
+                pass
             else:
-                try:
-                    available_states = ""
-                    for c in utils.get_states(self.bot._data, country):
-                        available_states += c["name"] + "\n"
-                    if len(available_states):
-                        embed = discord.Embed(
-                            description=f"**Here is a list of available province/state for this country:**\n{available_states}",
-                            color=utils.COLOR,
-                            timestamp=utils.discord_timestamp()
-                        )
-                    else:
-                        embed = discord.Embed(
-                            description=f"Wrong province/state or country, see `{ctx.prefix}help`.",
-                            color=utils.COLOR,
-                            timestamp=utils.discord_timestamp()
-                        )
-                except Exception as e:
-                    embed = discord.Embed(
-                        description=f"Wrong province/state or country, see `{ctx.prefix}help`.",
-                        color=utils.COLOR,
-                        timestamp=utils.discord_timestamp()
+                # try:
+                version = state.lower().replace(" ", "_") + utils.STATS_PATH
+                history_confirmed = await utils.get(self.bot.http_session, f"/history/confirmed/{country}/{state}")
+                history_recovered = await utils.get(self.bot.http_session, f"/history/recovered/{country}/{state}")
+                history_deaths = await utils.get(self.bot.http_session, f"/history/deaths/{country}/{state}")
+                confirmed = list(history_confirmed["history"].values())[-1]
+                deaths = list(history_deaths["history"].values())[-1]
+
+                if country in ("us", "united states", "usa"):
+                    is_us = True
+                    recovered = 0
+                    active = 0
+                else:
+                    is_us = False
+                    recovered = list(history_recovered["history"].values())[-1]
+                    active = confirmed - (recovered + deaths)
+                if not os.path.exists(version):
+                    await plot_csv(
+                        version,
+                        history_confirmed,
+                        history_recovered,
+                        history_deaths,
+                        is_us=is_us)
+
+
+                embed = discord.Embed(
+                    description=utils.mkheader(),
+                    timestamp=dt.datetime.utcnow(),
+                    color=utils.COLOR
+                )
+                embed.set_author(
+                    name=f"Coronavirus COVID-19 - {state.capitalize()}",
+                    icon_url=self.bot.author_thumb
+                )
+                embed.add_field(
+                    name="<:confirmed:688686089548202004> Confirmed",
+                    value=f"{confirmed:,}"
+                )
+                embed.add_field(
+                    name="<:_death:688686194917244928> Deaths",
+                    value=f"{deaths:,} (**{utils.percentage(confirmed, deaths)}**)"
+                )
+                if recovered:
+                    embed.add_field(
+                        name="<:recov:688686059567185940> Recovered",
+                        value=f"{recovered:,} (**{utils.percentage(confirmed, recovered)}**)"
                     )
+                    embed.add_field(
+                        name="<:bed_hospital:692857285499682878> Active",
+                        value=f"{active:,} (**{utils.percentage(confirmed, active)}**)"
+                    )
+
+                # except:
+                #     raise RegionNotFound("Region not found, it might be possible that the region isn't yet available in the data.")
         else:
-            embed = discord.Embed(
-                description=f"Missing args, see `{ctx.prefix}help`.\nSupported countries (**try your region if it doesn't work that mean this region is not yet supported**).",
-                color=utils.COLOR,
-                timestamp=utils.discord_timestamp()
-            )
-        embed.set_author(
-            name="Coronavirus COVID-19 (State/Province)",
-            icon_url=self.bot.author_thumb
-        )
+            return await ctx.send("No arguments provided.")
+        with open(version, "rb") as p:
+            img = discord.File(p, filename=version)
 
         embed.set_footer(
-            text=utils.last_update(utils.DATA_PATH),
+            text=f"coronavirus.jessicoh.com/api/ | {list(history_confirmed['history'].keys())[-1]}",
             icon_url=ctx.me.avatar_url
         )
-        try:
-            embed.set_thumbnail(url=stats["country"]["map"])
-        except:
-            embed.set_thumbnail(url=self.bot.thumb + str(time.time()))
-        try:
-            await ctx.send(file=img, embed=embed)
-        except:
-            await ctx.send(embed=embed)
+        embed.set_thumbnail(
+            url=self.bot.thumb + str(time.time())
+        )
+        embed.set_image(url=f'attachment://{version}')
+        await ctx.send(file=img, embed=embed)
 
     @commands.command(name="continent")
     @commands.cooldown(3, 30, commands.BucketType.user)

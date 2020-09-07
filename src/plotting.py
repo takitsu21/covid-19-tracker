@@ -61,11 +61,12 @@ async def plot_csv(path,
     total_confirmed,
     total_recovered,
     total_deaths,
-    logarithmic=False):
+    logarithmic=False,
+    is_us=False):
     timeline, confirmed, recovered, deaths, active = await make_courbe(
         total_confirmed,
         total_recovered,
-        total_deaths)
+        total_deaths, is_us=is_us)
     fig, ax = plt.subplots()
     alpha = .2
     ax.spines['bottom'].set_visible(False)
@@ -77,25 +78,31 @@ async def plot_csv(path,
         plt.yscale('log')
 
     ax.xaxis.set_major_locator(MultipleLocator(7))
-    ax.plot(timeline, fix_active_peaks(active), "-", color="yellow", alpha=0.5)
-    ax.plot(timeline, fix_peaks(recovered), "-", color="lightgreen")
+
+
     ax.plot(timeline, fix_peaks(deaths), "-", color="#e62712")
     ax.plot(timeline, fix_peaks(confirmed), "-", color="orange")
+    if not is_us:
+        ax.plot(timeline, fix_active_peaks(active), "-", color="yellow", alpha=0.5)
+        ax.plot(timeline, fix_peaks(recovered), "-", color="lightgreen")
+        leg = plt.legend(["Active", "Recovered", "Deaths", "Confirmed"], facecolor='0.1', loc="upper left")
+    else:
+        leg = plt.legend(["Deaths", "Confirmed"], facecolor='0.1', loc="upper left")
 
+    for text in leg.get_texts():
+        text.set_color("white")
     ticks = [i for i in range(len(timeline)) if i % 30 == 0]
     plt.xticks(ticks, ha="center")
     ax.yaxis.grid(True)
-    plt.ylabel("Total cases")
-    plt.xlabel("Timeline (DD/MM)")
+    plt.ylabel("Data")
+    plt.xlabel("Timeline (mm/dd)")
 
     ax.xaxis.label.set_color('white')
     ax.yaxis.label.set_color('white')
     ax.tick_params(axis='x', colors='white')
     ax.tick_params(axis='y', colors='white')
 
-    leg = plt.legend(["Active", "Recovered", "Deaths", "Confirmed"], facecolor='0.1', loc="upper left")
-    for text in leg.get_texts():
-        text.set_color("white")
+
 
     if not logarithmic:
         ax.set_ylim(ymin=1)
@@ -115,24 +122,34 @@ async def plot_csv(path,
 async def make_courbe(
     total_confirmed,
     total_recovered,
-    total_deaths) -> Tuple[List, List]:
+    total_deaths,
+    is_us=False) -> Tuple[List, List]:
 
     timeline = list(x[:-3] for x in total_confirmed["history"].keys())
     confirmed = []
     recovered = []
     deaths = []
     active = []
-    for c, r, d in zip(total_confirmed["history"],
-                        total_recovered["history"],
-                        total_deaths["history"]):
 
-        try:
-            confirmed.append(total_confirmed["history"][c])
-            recovered.append(total_recovered["history"][r])
-            deaths.append(total_deaths["history"][d])
-            active.append(total_confirmed["history"][c] - total_recovered["history"][r])
-        except TypeError:
-            pass
+    if not is_us:
+        for c, r, d in zip(total_confirmed["history"],
+                            total_recovered["history"],
+                            total_deaths["history"]):
+            try:
+                confirmed.append(total_confirmed["history"][c])
+                recovered.append(total_recovered["history"][r])
+                deaths.append(total_deaths["history"][d])
+                active.append(total_confirmed["history"][c] - total_recovered["history"][r])
+            except TypeError:
+                pass
+    else:
+        for c, d in zip(total_confirmed["history"],
+                            total_deaths["history"]):
+            try:
+                confirmed.append(total_confirmed["history"][c])
+                deaths.append(total_deaths["history"][d])
+            except TypeError:
+                pass
     return timeline, confirmed, recovered, deaths, active
 
 # function to plot data from the c!graph command

@@ -38,9 +38,11 @@ STATS_LOG_PATH  = "log_stats.png"
 
 
 class CountryNotFound(Exception):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    pass
 
+
+class RegionNotFound(Exception):
+    pass
 
 def _get_country(data, country):
     for d in data["sorted"]:
@@ -83,82 +85,28 @@ def load_populations():
             d[key] = int(val)
         return d
 
-def string_formatting(data_parsed: dict, param: list=[]) -> Tuple[str, str]:
+def string_formatting(dataset: list, param: list=[]) -> str:
     max_length = DISCORD_LIMIT - 50
-    length = 0
-    old_text = ""
-    text = ""
-    d = {}
+    overflow_string = ""
+    rows = ""
     truncated = ""
-    header = mkheader(
-        data_parsed["total"]['confirmed'], data_parsed["total"]["today"]["confirmed"],
-        data_parsed["total"]['recovered'], percentage(data_parsed["total"]["confirmed"], data_parsed["total"]["recovered"]),
-        data_parsed["total"]["today"]["recovered"], data_parsed["total"]['deaths'], percentage(data_parsed["total"]["confirmed"], data_parsed["total"]["deaths"]), data_parsed["total"]["today"]["deaths"], True
-    )
+    header = mkheader()
     header_length = len(header)
     param_length = len(param)
-    i = 0
-    if param_length:
-        check = []
-        for p in param:
-            p = p.lower()
-            p_length = len(p)
+    bold = ""
+    for i, d in enumerate(dataset, start=1):
+        bold = "**" if i % 2 == 0 else ""
+        total_cases = f"{d['totalCases']:,}".replace(",", " ")
+        new_cases = f"{d['newCases']:,}".replace(",", " ")
+        truncated = d['country'][0:15] + "..." if len(d['country']) >= 18 \
+            else d['country']
 
-            for k, v in data_parsed["data"].items():
-                try:
-                    country = v["country"]["name"] if v["country"]["name"] is not None else "Null"
-                    code = v['country']['code'] if v["country"]["code"] is not None else "Null"
-                    stats = v['statistics']
-                    iso3 = v["country"]["iso3"]
-                    if len(country) >= 15:
-                        truncated = country[0:15] + "..."
-                    else:
-                        truncated = country
-                    try:
-                        if country not in check:
-                            if (p_length in range(2,4) and (p == code.lower()) or p == iso3.lower()) or (country.lower().startswith(p) and p_length not in range(2,4)):
-                                if i % 2 == 0:
-                                    text += f"**{truncated} : {stats['confirmed']:,} <:confirmed:688686089548202004> [+{v['today']['confirmed']:,}], {stats['recovered']:,} recovered [+{v['today']['recovered']:,}], {stats['deaths']:,} deaths [+{v['today']['deaths']:,}]**\n"
-                                else:
-                                    text += f"{truncated} : {stats['confirmed']:,} <:confirmed:688686089548202004> [+{v['today']['confirmed']:,}], {stats['recovered']:,} recovered [+{v['today']['recovered']:,}], {stats['deaths']:,} deaths [+{v['today']['deaths']:,}]\n"
-                                check.append(country)
-                                length = len(text) + header_length
-                                i += 1
-                    except:
-                        continue
-                except KeyError:
-                    pass
-            if length < max_length:
-                old_text = text
-    else:
+        overflow_string += f"{bold}{truncated} : {total_cases} [+{new_cases}]{bold}\n"
 
-        for v in data_parsed["sorted"]:
-            try:
-                confirmed = v['statistics']['confirmed']
-                country = v['country']['name'] if v["country"]["name"] is not None else "Null"
-                stats = v['statistics']
-            except KeyError:
-                continue
-
-            if len(country) >= 15:
-                truncated = country[0:15] + "..."
-            else:
-                truncated = country
-            if stats['confirmed']:
-                if i % 2 == 0:
-                    text += f"**{truncated} : {confirmed:,} [+{v['today']['confirmed']:,}]**\n"
-                else:
-                    text += f"{truncated} : {confirmed:,} [+{v['today']['confirmed']:,}]\n"
-                i += 1
-                length = len(text) + header_length
-            if length >= max_length:
-                break
-            else:
-                old_text = text
-
-    if length >= max_length:
-        text = old_text
-    return header, text
+        if (len(overflow_string) + header_length) >= max_length:
+            break
+        rows = overflow_string
+    return header + rows
 
 def get_country(data, country, type, value=True):
     country = country.lower()
@@ -190,9 +138,8 @@ def discord_timestamp():
 def last_key(csv_data: List[dict]) -> int:
     return list(csv_data[0].keys())[-1]
 
-def last_update(fpath: str):
-    lcu = dt.datetime.utcfromtimestamp(os.path.getctime(fpath))
-    return f"Last update {lcu.strftime('%Y-%m-%d %H:%M:%S')} GMT +0000"
+def last_update(t: int):
+    return f"Last update {dt.datetime.utcfromtimestamp(t).strftime('%m/%d/%Y %H:%M:%S')} UTC"
 
 def percentage(total, x):
     return "{:.2f}%".format(x * 100 / total) if total > 0 else 0
@@ -238,60 +185,45 @@ def human_format(num: int) -> str:
         pass
     return '{}{}'.format(int(num), ['', 'K', 'M', 'G', 'T', 'P'][magnitude])
 
-def region_format(data, country, state):
-    states = get_states(data, country)
-    text = ""
-    old_text = ""
-    length = 0
-    max_length = DISCORD_LIMIT- 50
-    k = 0
+# def region_format(data, country, state):
+#     states = get_states(data, country)
+#     text = ""
+#     overlflow_text = ""
+#     length = 0
+#     max_length = DISCORD_LIMIT- 50
+#     k = 0
 
-    tot = data['total']
-    header = mkheader(
-        tot['confirmed'], tot["today"]["confirmed"],
-        tot['recovered'], percentage(tot["confirmed"], tot["recovered"]),
-        tot["today"]["recovered"], tot['deaths'], percentage(tot["confirmed"], tot["deaths"]), tot["today"]["deaths"], True
-    )
-    header_length = len(header)
-    for s in states:
-        state_name = s['name']
-        statistics = s['statistics']
-        if len(state_name) >= 15:
-            state_name_trunc = state_name[0:15] + "..."
-        else:
-            state_name_trunc = state_name
-        bold = "**" if k % 2 == 0 else ""
+#     tot = data['total']
+#     header = mkheader()
+#     header_length = len(header)
+#     for r in data:
+#         if len(r[]) >= 18:
+#             state_name_trunc = state_name[0:15] + "..."
+#         else:
+#             state_name_trunc = state_name
+#         bold = "**" if k % 2 == 0 else ""
 
-        if state == "all":
-            text += f"{bold}{state_name_trunc} : {statistics['confirmed']:,} [+{s['today']['confirmed']:,}] confirmed - {statistics['recovered']:,} recovered - {statistics['deaths']:,} deaths{bold}\n"
-            k += 1
+#         if state == "all":
+#             text += f"{bold}{state_name_trunc} : {statistics['confirmed']:,} [+{s['today']['confirmed']:,}] confirmed - {statistics['recovered']:,} recovered - {statistics['deaths']:,} deaths{bold}\n"
+#             k += 1
 
-        elif state_name.lower() == state:
-            text += f"{bold}{state_name_trunc} : {statistics['confirmed']:,} [+{s['today']['confirmed']:,}] confirmed - {statistics['recovered']:,} recovered - {statistics['deaths']:,} deaths{bold}\n"
-            k += 1
-        length = len(text) + header_length
-        if length >= max_length:
-            break
-        else:
-            old_text = text
-    if length >= max_length:
-        text = old_text
+#         elif state_name.lower() == state:
+#             text += f"{bold}{state_name_trunc} : {statistics['confirmed']:,} [+{s['today']['confirmed']:,}] confirmed - {statistics['recovered']:,} recovered - {statistics['deaths']:,} deaths{bold}\n"
+#             k += 1
+#         length = len(text) + header_length
+#         if length >= max_length:
+#             break
+#         else:
+#             old_text = text
+#     if length >= max_length:
+#         text = old_text
 
-    return header + "\n\n", text
+#     return header + "\n\n", text
 
 
-def mkheader(confirmed, dfc, recov, dfr, pr, deaths, dfd, pd, is_on_mobile):
-    header = "You can support me on <:kofi:693473314433138718>[Kofi](https://ko-fi.com/takitsu) and vote on [top.gg](https://top.gg/bot/682946560417333283/vote) for the bot. <:github:693519776022003742> [Source code](https://github.com/takitsu21/covid-19-tracker)\n<:confirmed:688686089548202004> Confirmed **{:,}** [+**{:,}**]\n<:recov:688686059567185940> Recovered **{:,}** (**{}**) [+**{:,}**]\n<:_death:688686194917244928> Deaths **{:,}** (**{}**) [+**{:,}**]"
-    return header.format(
-        confirmed,
-        dfc,
-        recov,
-        dfr,
-        pr,
-        deaths,
-        dfd,
-        pd
-    )
+def mkheader():
+    header = "You can support me on <:kofi:693473314433138718>[Kofi](https://ko-fi.com/takitsu) and vote on [top.gg](https://top.gg/bot/682946560417333283/vote) for the bot. <:github:693519776022003742> [Source code](https://github.com/takitsu21/covid-19-tracker), <:api:752610700177965146> [API](https://coronavirus.jessicoh.com/api/) the bot is using.\n\n"
+    return header
 
 
 def png_clean():
