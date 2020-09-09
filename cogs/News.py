@@ -10,6 +10,7 @@ import src.utils as utils
 
 class News(commands.Cog):
     """Help commands"""
+    __slots__ = ("bot")
     def __init__(self, bot):
         self.bot = bot
 
@@ -42,7 +43,7 @@ class News(commands.Cog):
             except discord.errors.HTTPException:
                 break
         embed.set_thumbnail(url="https://avatars2.githubusercontent.com/u/32527401?s=400&v=4")
-        embed.set_footer(text=utils.last_update(utils.NEWS_PATH) + " | newsapi.org",
+        embed.set_footer(text="newsapi.org",
                         icon_url=ctx.me.avatar_url)
         await ctx.send(embed=embed)
 

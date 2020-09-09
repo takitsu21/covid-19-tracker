@@ -15,13 +15,11 @@ days = mdates.DayLocator()
 
 
 class LengthError(Exception):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    pass
 
 
 class PlotEmpty(Exception):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    pass
 
 
 def rearrange(timeline, confirmed, recovered, deaths, active):

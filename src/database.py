@@ -31,6 +31,7 @@ logger = logging.getLogger("covid-19")
 #         await cur.close()
 
 class Database:
+    __slots__ = ("conn")
     def __init__(self, conn=None):
         self.conn = conn
 

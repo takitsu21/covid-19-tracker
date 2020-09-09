@@ -13,6 +13,7 @@ from src.database import db
 
 class Help(commands.Cog):
     """Help commands"""
+    __slots__ = ("bot", "_id", "thumb")
     def __init__(self, bot):
         self.bot = bot
         self._id = 162200556234866688
@@ -32,12 +33,12 @@ class Help(commands.Cog):
         )
         embed.add_field(
             name=f"📈 **`{ctx.prefix}info`**",
-            value="Views every confirmed case",
+            value="Views every countries affected.",
             inline=False
         )
         embed.add_field(
             name=f"📈 **`{ctx.prefix}list`**",
-            value="Views every country available to be chosen with other commands.",
+            value="Views every country available.",
             inline=False
         )
         embed.add_field(
@@ -45,26 +46,26 @@ class Help(commands.Cog):
             value=f"Views graphical statistics. If no args provided return linear graph for total cases. You can find countries with **full name** or **[ISO-3166-1](https://fr.wikipedia.org/wiki/ISO_3166-1)**.\n __Examples__ : `{ctx.prefix}stats us`, `{ctx.prefix}s log usa`, `{ctx.prefix}stats log`",
             inline=False
         )
-        embed.add_field(
-            name=f"📈 **`{ctx.prefix}<g | graph> <proportion> <deaths | confirmed | recovered | active> <top | country[]>`**",
-            value=f"Views graphical statistics. You can find countries with **full name** or **[ISO-3166-1](https://fr.wikipedia.org/wiki/ISO_3166-1)**.\n\n **Proportion**: This is the value / population * 100 \n\n __Examples__ : `{ctx.prefix}graph proportion top`, `{ctx.prefix}g proportion deaths us gb it es mx fr`, `{ctx.prefix}g proportion active gb`",
-            inline=False
-        )
-        embed.add_field(
-            name=f"📈 **`{ctx.prefix}country <country>`**",
-            value=f"Views information about multiple chosen country/region. You can either use **autocompletion** or **[ISO-3166-1](https://fr.wikipedia.org/wiki/ISO_3166-1)**.\n __Examples__ : `{ctx.prefix}country fr usa it gb`",
-            inline=False
-        )
+        # embed.add_field(
+        #     name=f"📈 **`{ctx.prefix}<g | graph> <proportion> <deaths | confirmed | recovered | active> <top | country[]>`**",
+        #     value=f"Views graphical statistics. You can find countries with **full name** or **[ISO-3166-1](https://fr.wikipedia.org/wiki/ISO_3166-1)**.\n\n **Proportion**: This is the value / population * 100 \n\n __Examples__ : `{ctx.prefix}graph proportion top`, `{ctx.prefix}g proportion deaths us gb it es mx fr`, `{ctx.prefix}g proportion active gb`",
+        #     inline=False
+        # )
+        # embed.add_field(
+        #     name=f"📈 **`{ctx.prefix}country <country>`**",
+        #     value=f"Views information about multiple chosen country/region. You can either use **autocompletion** or **[ISO-3166-1](https://fr.wikipedia.org/wiki/ISO_3166-1)**.\n __Examples__ : `{ctx.prefix}country fr usa it gb`",
+        #     inline=False
+        # )
         embed.add_field(
             name=f"📈 **`{ctx.prefix}<r | region> <state/province | all> in <country>`**",
             value=f"Certain regions are not supported yet.\nThe `in` (mandatory symbol) is interpreted as separator between the country and the region/province so don't forget it.\n __Examples__ : `{ctx.prefix}r new york in us`, `{ctx.prefix}region all in china`",
             inline=False
         )
-        embed.add_field(
-            name=f"📈 **`{ctx.prefix}continent <continent>`**",
-            value="Views graph start according to the given continent, available (**AF, AS, EU, NA, SA, OC**)",
-            inline=False
-        )
+        # embed.add_field(
+        #     name=f"📈 **`{ctx.prefix}continent <continent>`**",
+        #     value="Views graph start according to the given continent, available (**AF, AS, EU, NA, SA, OC**)",
+        #     inline=False
+        # )
         embed.add_field(
             name=f"📈 **`{ctx.prefix}track <country | disable>`**",
             value=f"Track country (bot will DM you update) the command needs to be typed in a server channel not DM.\n__Examples__ : `{ctx.prefix}track us`, `{ctx.prefix}track disable`",
@@ -205,7 +206,7 @@ class Help(commands.Cog):
     @commands.command(name="sources", aliases=["source"])
     async def sources(self, ctx):
         embed = discord.Embed(
-            description="[CSSEGISandData](https://github.com/CSSEGISandData/COVID-19)\n[World Health Organization (WHO)](https://www.who.int/)\nThis bot does not use Worldometer's data as it is not accurate and only statistics on the potential cases, recoveries and deaths. The data used by the bot comes directly from the World Health Organisation and Johns Hopkins University as there are more trustworthy. The data is updated once every hour.",
+            description="<:api:752610700177965146> [API](coronavirus.jessicoh.com/api)\nFor now sources comes from [JHU](https://github.com/CSSEGISandData/COVID-19/) and [worldometer](https://www.worldometers.info/coronavirus/). The API will be improved day by day and surely use other sources.\nYou can access to the <:github:693519776022003742> [source code](https://github.com/takitsu21/covid19-api)",
             color=utils.COLOR,
             timestamp=utils.discord_timestamp()
             )

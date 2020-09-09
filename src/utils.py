@@ -25,7 +25,7 @@ NEWS_PATH     = "data/news.pickle"
 POP_PATH      = "data/populations.csv"
 BACKUP_PATH   = "backup/datas.json"
 API_ROOT = config("api_root")
-
+NEWS_URL = f"http://newsapi.org/v2/top-headlines?apiKey={config('news_api')}&language=en&q=coronavirus covid 19"
 
 COLOR                    = 0xd6b360
 DISCORD_LIMIT            = 2 ** 11 # 2048
@@ -44,20 +44,12 @@ class CountryNotFound(Exception):
 class RegionNotFound(Exception):
     pass
 
-def _get_country(data, country):
-    for d in data["sorted"]:
-        try:
-            country_data = d["country"]["name"]
-            code = d["country"]["code"]
-            iso3 = d["country"]["iso3"]
-        except:
-            continue
-        try:
-            if country_data.lower() == country or code.lower() == country or iso3.lower() == country:
-                return d
-        except:
-            continue
-    raise CountryNotFound(f"{country} not found")
+def get_country_history(data, country):
+    for k, v in data.items():
+        if country.lower() in \
+            (k.lower(), v['iso2'].lower(), v['iso3'].lower()):
+            return v
+    return None
 
 def matching_path(fpath: str):
     try:
@@ -108,21 +100,12 @@ def string_formatting(dataset: list, param: list=[]) -> str:
         rows = overflow_string
     return header + rows
 
-def get_country(data, country, type, value=True):
+def get_country(data, country):
     country = country.lower()
-    for d in data['sorted']:
-        try:
-            country_n = d['country']['name']
-            country_code = d['country']['code']
-            stats = d['statistics']
-            if value:
-                if country_n.lower() == country or country == country_code.lower():
-                    return stats[type]
-            else:
-                if not isinstance(country_code, int) and country == country_code.lower():
-                    return country_n
-        except:
-            pass
+    for d in data:
+        if country in \
+        (d['country'].lower(), d['iso2'].lower(), d['iso3'].lower()):
+            return d
     return None
 
 def trigger_typing(func):
@@ -143,21 +126,6 @@ def last_update(t: int):
 
 def percentage(total, x):
     return "{:.2f}%".format(x * 100 / total) if total > 0 else 0
-
-def get_states(data: dict, country: str) -> list:
-    for v in data["sorted"]:
-        try:
-            dc_name = v['country']['name'] if v['country']['name'] is not None else "."
-            code = v['country']['code'] if v['country']['code'] is not None else "."
-            iso3 = v['country']['iso3'] if v['country']['iso3'] is not None else "."
-        except Exception as e:
-            continue
-        if dc_name.lower() == country or code.lower() == country or iso3.lower() == country:
-            try:
-                return v['regions']
-            except KeyError:
-                return []
-    return []
 
 def parse_state_input(*params: list) -> Tuple[str, str]:
     country = ""
@@ -185,40 +153,60 @@ def human_format(num: int) -> str:
         pass
     return '{}{}'.format(int(num), ['', 'K', 'M', 'G', 'T', 'P'][magnitude])
 
-# def region_format(data, country, state):
-#     states = get_states(data, country)
-#     text = ""
-#     overlflow_text = ""
-#     length = 0
-#     max_length = DISCORD_LIMIT- 50
-#     k = 0
+def region_format(confirmed, recovered, deaths):
+    overflow_text = text = ""
+    header = mkheader()
+    header_length = len(header)
+    embeds = []
+    i = 0
+    if recovered.get("message"):
+        for c, d in zip(confirmed, deaths):
+            bold = "**" if i % 2 == 0 else ""
+            total_cases = list(confirmed[c]["history"].values())[-1]
+            total_deaths = list(deaths[d]["history"].values())[-1]
+            overflow_text += f"{bold}{c} : {total_cases} - {total_deaths} deaths{bold}\n"
+            if (len(overflow_text) + header_length) >= DISCORD_LIMIT:
+                embed = discord.Embed(
+                    description=text,
+                    color=COLOR,
+                    timestamp=discord_timestamp()
+                )
+                text = overflow_text
+                overflow_text = ""
+                embeds.append(embed)
+            text = overflow_text
+            i += 1
+    else:
+        for c, r, d in zip(confirmed, recovered, deaths):
+            bold = "**" if i % 2 == 0 else ""
+            total_cases = list(confirmed[c]["history"].values())[-1]
+            try:
+                total_recovered = list(recovered[r]["history"].values())[-1]
+            except Exception as e:
+                print(type(e), e)
+                total_recovered = 0
+            total_deaths = list(deaths[d]["history"].values())[-1]
+            overflow_text += f"{bold}{c} : {total_cases} - {total_recovered} recovered - {total_deaths} deaths{bold}\n"
+            if (len(overflow_text) + header_length) >= DISCORD_LIMIT:
+                embed = discord.Embed(
+                    description=text,
+                    color=COLOR,
+                    timestamp=discord_timestamp()
+                )
+                text = overflow_text
+                overflow_text = ""
+                embeds.append(embed)
+            text = overflow_text
+            i += 1
+    if text:
+        embed = discord.Embed(
+                description=text,
+                color=COLOR,
+                timestamp=discord_timestamp()
+            )
 
-#     tot = data['total']
-#     header = mkheader()
-#     header_length = len(header)
-#     for r in data:
-#         if len(r[]) >= 18:
-#             state_name_trunc = state_name[0:15] + "..."
-#         else:
-#             state_name_trunc = state_name
-#         bold = "**" if k % 2 == 0 else ""
-
-#         if state == "all":
-#             text += f"{bold}{state_name_trunc} : {statistics['confirmed']:,} [+{s['today']['confirmed']:,}] confirmed - {statistics['recovered']:,} recovered - {statistics['deaths']:,} deaths{bold}\n"
-#             k += 1
-
-#         elif state_name.lower() == state:
-#             text += f"{bold}{state_name_trunc} : {statistics['confirmed']:,} [+{s['today']['confirmed']:,}] confirmed - {statistics['recovered']:,} recovered - {statistics['deaths']:,} deaths{bold}\n"
-#             k += 1
-#         length = len(text) + header_length
-#         if length >= max_length:
-#             break
-#         else:
-#             old_text = text
-#     if length >= max_length:
-#         text = old_text
-
-#     return header + "\n\n", text
+        embeds.append(embed)
+    return embeds
 
 
 def mkheader():
@@ -230,55 +218,6 @@ def png_clean():
     for file in os.listdir("."):
         if file.endswith("png"):
             os.remove(file)
-
-def filter_continent(data, continent):
-    continents = {"data":{}}
-    confirmed = 0
-    recovered = 0
-    deaths = 0
-    active = 0
-    today_confirmed = 0
-    today_recovered = 0
-    today_deaths = 0
-    for d in data["sorted"]:
-        try:
-            if d["country"]["continent"].lower() == continent:
-                today_confirmed += d["today"]["confirmed"]
-                today_recovered += d["today"]["recovered"]
-                today_deaths += d["today"]["deaths"]
-
-                active += d["statistics"]["active"]
-                confirmed += d["statistics"]["confirmed"]
-                recovered += d["statistics"]["recovered"]
-                deaths += d["statistics"]["deaths"]
-                for h in d["history"]:
-                    if h not in continents["data"]:
-                        continents["data"][h] = {
-                            "confirmed": 0,
-                            "recovered": 0,
-                            "deaths": 0,
-                            "active": 0
-                        }
-                    continents["data"][h]["confirmed"] += d["history"][h]["confirmed"]
-                    continents["data"][h]["recovered"] += d["history"][h]["recovered"]
-                    continents["data"][h]["deaths"] += d["history"][h]["deaths"]
-                    continents["data"][h]["active"] += d["history"][h]["active"]
-        except:
-            pass
-
-    continents["total"] = {
-        "confirmed": confirmed,
-        "recovered": recovered,
-        "deaths": deaths,
-        "active": active
-    }
-    continents["today"] = {
-        "confirmed": today_confirmed,
-        "recovered": today_recovered,
-        "deaths": today_deaths
-    }
-
-    return continents
 
 async def get(session: ClientSession, endpoint, **kwargs):
     url = API_ROOT + endpoint
@@ -302,81 +241,33 @@ async def get(session: ClientSession, endpoint, **kwargs):
     data = await resp.json()
     return data
 
-async def _get(endpoint, **kwargs):
-    url = API_ROOT + endpoint
-    session = ClientSession()
+async def fetch(url: str, session: ClientSession, **kwargs):
     resp = await session.request(
-            method="GET",
-            url=url,
-            headers={"Authorization": config("Authorization")},
-            **kwargs
-        )
+        method="GET",
+        url=url,
+        **kwargs
+    )
+
     while resp.status not in range(200, 300):
-            try:
-                resp = await session.request(
-                    method="GET",
-                    url=url,
-                    headers={"Authorization": config("Authorization")},
-                    **kwargs
-                )
-                logger.info(resp.status)
-            except Exception as e:
-                logger.exception(e, exc_info=True)
+        try:
+            resp = await session.request(
+                method="GET",
+                url=url,
+                **kwargs
+            )
+            logger.info(resp.status)
+        except Exception as e:
+            logger.exception(e, exc_info=True)
     data = await resp.json()
     return data
 
-class UpdateHandler:
-    def __init__(self, lang="en"):
-        self.news_api_key = config("news_api")
-        self.q = "coronavirus covid 19"
-        self.lang = lang
-        self.update_list = {
-            f"http://newsapi.org/v2/top-headlines?apiKey={self.news_api_key}&language={self.lang}&q={self.q}": NEWS_PATH,
-            config("uri_data"): DATA_PATH
-        }
-
-    async def fetch(self, url: str, session: ClientSession, **kwargs):
-        resp = await session.request(
-            method="GET",
-            url=url,
-            **kwargs
-        )
-
-        while resp.status not in range(200, 300):
-            try:
-                resp = await session.request(
-                    method="GET",
-                    url=url,
-                    **kwargs
-                )
-                logger.info(resp.status)
-            except Exception as e:
-                logger.exception(e, exc_info=True)
-        data = await resp.json()
-        return data
-
-    async def _write(self, url:str, file: IO, session: ClientSession, **kwargs):
-        try:
-            fetcher = await self.fetch(url=url, session=session, **kwargs)
-            with open(file, 'wb') as f:
-                pickle.dump(fetcher, f, -1)
-            png_clean()
-        except Exception as e:
-            logger.exception(e, exc_info=True)
-
-
-    async def update(self, session: ClientSession, **kwargs):
-        tasks = []
-        for url, fpath in self.update_list.items():
-            if fpath == DATA_PATH:
-                tasks.append(
-                    self._write(url=url, file=fpath, session=session, headers={"Super-Secret": config("uri_key")}, **kwargs)
-                )
-            else:
-                tasks.append(
-                    self._write(url=url, file=fpath, session=session)
-                )
-        await asyncio.gather(*tasks)
+async def _write(url:str, file: IO, session: ClientSession, **kwargs):
+    try:
+        fetcher = await fetch(url=url, session=session, **kwargs)
+        with open(file, 'wb') as f:
+            pickle.dump(fetcher, f, -1)
+    except Exception as e:
+        logger.exception(e, exc_info=True)
 
 if __name__ == "__main__":
     loop = asyncio.get_event_loop()

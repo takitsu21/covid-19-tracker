@@ -14,7 +14,6 @@ from discord.ext.commands import when_mentioned_or
 from discord.utils import find
 
 import src.utils as utils
-from src import up
 from src.database import db
 
 logger = logging.getLogger('covid-19')
@@ -47,6 +46,7 @@ def _get_prefix(bot, message):
 
 
 class Covid(commands.AutoShardedBot):
+    __slots__ = ("thumb", "http_session", "author_thumb", "news")
     def __init__(self, *args, loop=None, **kwargs):
         super().__init__(
             command_prefix=_get_prefix,
@@ -55,8 +55,6 @@ class Covid(commands.AutoShardedBot):
             )
         self.remove_command("help")
         self._load_extensions()
-        self._data = None
-        self._populations = None
         self.news = None
         self.http_session = None
         self.thumb = "https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/COVID-19_Outbreak_World_Map.svg/langfr-1000px-COVID-19_Outbreak_World_Map.svg.png?t="
@@ -80,18 +78,18 @@ class Covid(commands.AutoShardedBot):
             except Exception:
                 logger.exception(f"Fail to unload {file}")
 
-    # async def on_command_error(self, ctx, error):
-    #     if isinstance(error, commands.CommandOnCooldown):
-    #         await ctx.send('{} This command is ratelimited, please try again in {:.2f}s'.format(ctx.author.mention, error.retry_after))
-    #     else:
-    #         # raise error
-    #         embed = discord.Embed(
-    #             title="Error",
-    #             description=f"{error} Invalid command see `c!help`.\nIf you think that is a bot error, report this issue on my discord [here](https://discordapp.com/invite/wTxbQYb) thank you.",
-    #             timestamp=datetime.datetime.utcnow(),
-    #             color=utils.COLOR
-    #         )
-    #         await ctx.send(embed=embed)
+    async def on_command_error(self, ctx, error):
+        if isinstance(error, commands.CommandOnCooldown):
+            await ctx.send('{} This command is ratelimited, please try again in {:.2f}s'.format(ctx.author.mention, error.retry_after))
+        else:
+            # raise error
+            embed = discord.Embed(
+                title="Error",
+                description=f"{error} Invalid command see `c!help`.\nIf you think that is a bot error, report this issue on my discord [here](https://discordapp.com/invite/wTxbQYb) thank you.",
+                timestamp=datetime.datetime.utcnow(),
+                color=utils.COLOR
+            )
+            await ctx.send(embed=embed)
 
     async def on_guild_join(self, guild: discord.Guild):
         await self.wait_until_ready()
@@ -161,26 +159,32 @@ class Covid(commands.AutoShardedBot):
         #     pass
 
     async def on_ready(self):
-        self.http_session = ClientSession(loop=self.loop)
-        utils.png_clean()
+        if self.http_session is None:
+            self.http_session = ClientSession(loop=self.loop)
+
         await self.wait_until_ready()
-        i = 0
-        while True:
-            try:
-                await self.change_presence(
-                        activity=discord.Game(
-                            name=f"c!help | coronavirus.jessicoh.com/api/"
-                            )
-                        )
-            except Exception as e:
-                logger.exception(e, exc_info=True)
-                await self.change_presence(
-                        activity=discord.Game(
-                            name="c!help | coronavirus.jessicoh.com/api/"
-                            ),
-                        status=discord.Status.dnd
-                        )
-            await asyncio.sleep(360)
+        await self.change_presence(
+        activity=discord.Game(
+            name=f"c!help | coronavirus.jessicoh.com/api/"
+            )
+        )
+        # i = 0
+        # while True:
+        #     try:
+        #         await self.change_presence(
+        #                 activity=discord.Game(
+        #                     name=f"c!help | coronavirus.jessicoh.com/api/"
+        #                     )
+        #                 )
+        #     except Exception as e:
+        #         logger.exception(e, exc_info=True)
+        #         await self.change_presence(
+        #                 activity=discord.Game(
+        #                     name="c!help | coronavirus.jessicoh.com/api/"
+        #                     ),
+        #                 status=discord.Status.dnd
+        #                 )
+        #     await asyncio.sleep(360)
 
     def run(self, token, *args, **kwargs):
         try:
@@ -198,4 +202,4 @@ class Covid(commands.AutoShardedBot):
 
 if __name__ == "__main__":
     bot = Covid()
-    bot.run(decouple.config("debug"), reconnect=True)
+    bot.run(decouple.config("token"), reconnect=True)
