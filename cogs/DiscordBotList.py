@@ -13,14 +13,10 @@ logger = logging.getLogger("covid-19")
 
 class TopGG(commands.Cog):
     """Handles interactions with the top.gg API"""
-
+    __slots__ = ("bot", "token", "dblpy")
     def __init__(self, bot):
         self.bot = bot
         self.token = config('dbl_token') # set this to your DBL token
-        # try:
-        # self.dblpy = dbl.DBLClient(self.bot, self.token, webhook_path='/webhook', webhook_auth='mE5iPShY2qrymFGeV2MD', webhook_port=5000) # Autopost will post your guild count every 30 minutes
-        # except Exception as e:
-        #     logger.exception(e, exc_info=True)
         self.dblpy = dbl.DBLClient(self.bot, self.token)
         self.bot.loop.create_task(self.update_stats())
 

@@ -8,12 +8,12 @@ import time
 
 import decouple
 import discord
+from aiohttp import ClientSession
 from discord.ext import commands
 from discord.ext.commands import when_mentioned_or
 from discord.utils import find
 
 import src.utils as utils
-from src import up
 from src.database import db
 
 logger = logging.getLogger('covid-19')
@@ -46,6 +46,7 @@ def _get_prefix(bot, message):
 
 
 class Covid(commands.AutoShardedBot):
+    __slots__ = ("thumb", "http_session", "author_thumb", "news")
     def __init__(self, *args, loop=None, **kwargs):
         super().__init__(
             command_prefix=_get_prefix,
@@ -54,8 +55,6 @@ class Covid(commands.AutoShardedBot):
             )
         self.remove_command("help")
         self._load_extensions()
-        self._data = None
-        self._populations = None
         self.news = None
         self.http_session = None
         self.thumb = "https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/COVID-19_Outbreak_World_Map.svg/langfr-1000px-COVID-19_Outbreak_World_Map.svg.png?t="
@@ -160,24 +159,32 @@ class Covid(commands.AutoShardedBot):
         #     pass
 
     async def on_ready(self):
+        if self.http_session is None:
+            self.http_session = ClientSession(loop=self.loop)
+
         await self.wait_until_ready()
-        i = 0
-        while True:
-            try:
-                await self.change_presence(
-                        activity=discord.Game(
-                            name=f"c!help | {len(self.guilds)} servers | @Coronavirus COVID-19 help"
-                            )
-                        )
-            except Exception as e:
-                logger.exception(e, exc_info=True)
-                await self.change_presence(
-                        activity=discord.Game(
-                            name="c!help | @Coronavirus COVID-19 help"
-                            ),
-                        status=discord.Status.dnd
-                        )
-            await asyncio.sleep(360)
+        await self.change_presence(
+        activity=discord.Game(
+            name=f"c!help | coronavirus.jessicoh.com/api/"
+            )
+        )
+        # i = 0
+        # while True:
+        #     try:
+        #         await self.change_presence(
+        #                 activity=discord.Game(
+        #                     name=f"c!help | coronavirus.jessicoh.com/api/"
+        #                     )
+        #                 )
+        #     except Exception as e:
+        #         logger.exception(e, exc_info=True)
+        #         await self.change_presence(
+        #                 activity=discord.Game(
+        #                     name="c!help | coronavirus.jessicoh.com/api/"
+        #                     ),
+        #                 status=discord.Status.dnd
+        #                 )
+        #     await asyncio.sleep(360)
 
     def run(self, token, *args, **kwargs):
         try:
