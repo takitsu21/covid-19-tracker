@@ -14,7 +14,6 @@ from decouple import config
 from discord.ext import commands
 
 import src.utils as utils
-from src.database import db
 from src.plotting import plot_csv
 
 logger = logging.getLogger("covid-19")
@@ -28,7 +27,7 @@ class AutoUpdater(commands.Cog):
         self.bot.loop.create_task(self.main())
 
     async def send_notifications(self):
-        channels_id = db.to_send()
+        channels_id = await self.bot.to_send()
         total_history_confirmed = await utils.get(self.bot.http_session, "/history/confirmed/total/")
         total_history_recovered = await utils.get(self.bot.http_session, "/history/recovered/total/")
         total_history_deaths = await utils.get(self.bot.http_session, "/history/deaths/total/")
@@ -147,7 +146,7 @@ class AutoUpdater(commands.Cog):
         history_deaths = await utils.get(self.bot.http_session, "/history/deaths/")
 
         all_data = await utils.get(self.bot.http_session, "/all/")
-        tracked = db.send_tracker()
+        tracked = await self.bot.send_tracker()
         for t in tracked:
             try:
                 embed = discord.Embed(
@@ -155,16 +154,17 @@ class AutoUpdater(commands.Cog):
                     timestamp=dt.datetime.utcnow(),
                     color=utils.COLOR
                 )
-
-                if t["country"] == "all":
+                path = utils.STATS_PATH
+                if t["country"].lower() == "all":
                     country = "World"
                 else:
                     country = t["country"]
+                    path = (country.replace(" ", "_") + utils.STATS_PATH).lower()
                 data = utils.get_country(all_data, country)
                 if data is None:
                     continue
 
-                path = (country.replace(" ", "_") + utils.STATS_PATH).lower()
+
                 confirmed = data["totalCases"]
                 recovered = data["totalRecovered"]
                 deaths = data["totalDeaths"]
@@ -243,19 +243,22 @@ class AutoUpdater(commands.Cog):
         logger.info("Tracker sent")
 
     async def main(self):
+        if self.bot.auto_update_running:
+            return
         self.bot.news = utils.load_news()
         if self.bot.http_session is None:
             self.bot.http_session = ClientSession(loop=self.bot.loop)
         await self.bot.wait_until_ready()
         utils.png_clean()
         starting = True
+        self.bot.auto_update_running = True
         while True:
             before = time.time()
             if not starting:
                 self.interval_update += 1
                 await utils._write(utils.NEWS_URL, utils.NEWS_PATH, self.bot.http_session)
                 self.bot.news = utils.load_news()
-
+                utils.png_clean()
 
                 await self.send_notifications()
                 await self.send_tracker()

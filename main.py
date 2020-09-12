@@ -6,15 +6,17 @@ import os
 import random
 import time
 
-import decouple
+import aiomysql
 import discord
 from aiohttp import ClientSession
+from decouple import config
 from discord.ext import commands
 from discord.ext.commands import when_mentioned_or
 from discord.utils import find
 
 import src.utils as utils
-from src.database import db
+from src.database import Pool
+
 
 logger = logging.getLogger('covid-19')
 logger.setLevel(logging.DEBUG)
@@ -30,35 +32,40 @@ handler.setFormatter(logging.Formatter(
 logger.addHandler(handler)
 
 
-def _get_prefix(bot, message):
-    if message.content[0:2] == "C!":
-        return when_mentioned_or("C!")(bot, message)
-    return when_mentioned_or("c!")(bot, message)
-
-# def _get_prefix(bot, message):
-#     if message.content[0:2] in ("C!", "c!"):
-#         return when_mentioned_or("c!")(bot, message)
-#     try:
-#         prefix = db.get_prefix(str(message.guild.id))[0]["prefix"]
-#     except:
-#         prefix = "c!"
-#     return when_mentioned_or(prefix)(bot, message)
-
-
-class Covid(commands.AutoShardedBot):
-    __slots__ = ("thumb", "http_session", "author_thumb", "news")
+class Covid(commands.AutoShardedBot, Pool):
+    __slots__ = (
+        "thumb",
+        "http_session",
+        "author_thumb",
+        "news",
+        "pool",
+        "auto_update_running"
+    )
     def __init__(self, *args, loop=None, **kwargs):
         super().__init__(
-            command_prefix=_get_prefix,
+            command_prefix=self._get_prefix,
             activity=discord.Game(name="c!help | Loading shards..."),
             status=discord.Status.dnd
             )
+        super(Pool, self).__init__()
         self.remove_command("help")
         self._load_extensions()
         self.news = None
         self.http_session = None
+        self.pool = None
+        self.auto_update_running = False
         self.thumb = "https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/COVID-19_Outbreak_World_Map.svg/langfr-1000px-COVID-19_Outbreak_World_Map.svg.png?t="
         self.author_thumb = "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/International_Flag_of_Planet_Earth.svg/1200px-International_Flag_of_Planet_Earth.svg.png"
+
+    async def _get_prefix(self, bot, message):
+        try:
+            prefix = await self.getg_prefix(message.guild.id)
+        except:
+            if message.content[0:2] == "C!":
+                prefix = "C!"
+            else:
+                prefix = "c!"
+        return when_mentioned_or(prefix)(bot, message)
 
     def _load_extensions(self):
         for file in os.listdir("cogs/"):
@@ -150,18 +157,31 @@ class Covid(commands.AutoShardedBot):
 
     async def on_guild_remove(self, guild: discord.Guild):
         try:
-            db.delete_notif(guild.id)
+            await self.delete_notif(guild.id)
         except:
             pass
-        # try:
-        #     db.delete_prefix(guild.id)
-        # except:
-        #     pass
+        try:
+            await self.delete_prefix(guild.id)
+        except:
+            pass
 
     async def on_ready(self):
         if self.http_session is None:
             self.http_session = ClientSession(loop=self.loop)
-
+        if self.pool is None:
+            try:
+                self.pool = await aiomysql.create_pool(
+                        host=config("db_host"),
+                        port=3306,
+                        user=config("db_user"),
+                        password=config("db_token"),
+                        db=config("db_user"),
+                        loop=self.loop,
+                        maxsize=1000,
+                        autocommit=True
+                    )
+            except Exception as e:
+                logger.exception(e, exc_info=True)
         await self.wait_until_ready()
         await self.change_presence(
         activity=discord.Game(
@@ -191,8 +211,8 @@ class Covid(commands.AutoShardedBot):
             super().run(token, *args, **kwargs)
         except KeyboardInterrupt:
             try:
-                self.http_session.close()
-                db._close()
+                self.loop.run_until_complete(self._close())
+                self.loop.run_until_complete(self.http_session.close())
                 logger.info("Shutting down")
                 exit(0)
             except Exception as e:
@@ -202,4 +222,4 @@ class Covid(commands.AutoShardedBot):
 
 if __name__ == "__main__":
     bot = Covid()
-    bot.run(decouple.config("token"), reconnect=True)
+    bot.run(config("debug"), reconnect=True)

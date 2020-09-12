@@ -159,12 +159,12 @@ def region_format(confirmed, recovered, deaths):
     header_length = len(header)
     embeds = []
     i = 0
-    if recovered.get("message"):
+    if type(recovered) == int:
         for c, d in zip(confirmed, deaths):
             bold = "**" if i % 2 == 0 else ""
             total_cases = list(confirmed[c]["history"].values())[-1]
             total_deaths = list(deaths[d]["history"].values())[-1]
-            overflow_text += f"{bold}{c} : {total_cases} - {total_deaths} deaths{bold}\n"
+            overflow_text += f"{bold}{c} : {total_cases:,} confirmed - {total_deaths:,} deaths{bold}\n"
             if (len(overflow_text) + header_length) >= DISCORD_LIMIT:
                 embed = discord.Embed(
                     description=text,
@@ -183,10 +183,9 @@ def region_format(confirmed, recovered, deaths):
             try:
                 total_recovered = list(recovered[r]["history"].values())[-1]
             except Exception as e:
-                print(type(e), e)
                 total_recovered = 0
             total_deaths = list(deaths[d]["history"].values())[-1]
-            overflow_text += f"{bold}{c} : {total_cases} - {total_recovered} recovered - {total_deaths} deaths{bold}\n"
+            overflow_text += f"{bold}{c} : {total_cases:,} confirmed - {total_recovered:,} recovered - {total_deaths:,} deaths{bold}\n"
             if (len(overflow_text) + header_length) >= DISCORD_LIMIT:
                 embed = discord.Embed(
                     description=text,
@@ -227,17 +226,22 @@ async def get(session: ClientSession, endpoint, **kwargs):
             headers={"Authorization": config("Authorization")},
             **kwargs
         )
-    while resp.status not in range(200, 300):
-            try:
-                resp = await session.request(
-                    method="GET",
-                    url=url,
-                    headers={"Authorization": config("Authorization")},
-                    **kwargs
-                )
-                logger.info(resp.status)
-            except Exception as e:
-                logger.exception(e, exc_info=True)
+    # while resp.status not in range(200, 300):
+    #     if resp.status == 404:
+    #         return
+    #     try:
+    #         resp = await session.request(
+    #             method="GET",
+    #             url=url,
+    #             headers={"Authorization": config("Authorization")},
+    #             **kwargs
+    #         )
+    #         logger.info(resp.status)
+    #     except Exception as e:
+    #         logger.exception(e, exc_info=True)
+    if resp.status not in range(200, 300):
+        # raise CountryNotFound("Country/Region cannot be found. Please try again.")
+        return resp.status
     data = await resp.json()
     return data
 
