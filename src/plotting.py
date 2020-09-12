@@ -60,13 +60,14 @@ async def plot_csv(path,
     total_recovered,
     total_deaths,
     logarithmic=False,
-    is_us=False):
+    is_us=False,
+    is_daily=False):
     timeline, confirmed, recovered, deaths, active = await make_courbe(
         total_confirmed,
         total_recovered,
         total_deaths, is_us=is_us)
-    fig, ax = plt.subplots()
     alpha = .2
+    fig, ax = plt.subplots()
     ax.spines['bottom'].set_visible(False)
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(False)
@@ -76,14 +77,12 @@ async def plot_csv(path,
         plt.yscale('log')
 
     ax.xaxis.set_major_locator(MultipleLocator(7))
-
-
     ax.plot(timeline, fix_peaks(deaths), "-", color="#e62712")
     ax.plot(timeline, fix_peaks(confirmed), "-", color="orange")
     if not is_us:
         ax.plot(timeline, fix_active_peaks(active), "-", color="yellow", alpha=0.5)
         ax.plot(timeline, fix_peaks(recovered), "-", color="lightgreen")
-        leg = plt.legend(["Active", "Recovered", "Deaths", "Confirmed"], facecolor='0.1', loc="upper left")
+        leg = plt.legend(["Deaths", "Confirmed", "Active", "Recovered"], facecolor='0.1', loc="upper left")
     else:
         leg = plt.legend(["Deaths", "Confirmed"], facecolor='0.1', loc="upper left")
 
