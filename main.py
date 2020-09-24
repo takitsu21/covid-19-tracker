@@ -56,6 +56,7 @@ class Covid(commands.AutoShardedBot, Pool):
         self.auto_update_running = False
         self.thumb = "https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/COVID-19_Outbreak_World_Map.svg/langfr-1000px-COVID-19_Outbreak_World_Map.svg.png?t="
         self.author_thumb = "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/International_Flag_of_Planet_Earth.svg/1200px-International_Flag_of_Planet_Earth.svg.png"
+        self.loop.create_task(self.init_async())
 
     async def _get_prefix(self, bot, message):
         try:
@@ -165,7 +166,7 @@ class Covid(commands.AutoShardedBot, Pool):
         except:
             pass
 
-    async def on_ready(self):
+    async def init_async(self):
         if self.http_session is None:
             self.http_session = ClientSession(loop=self.loop)
         if self.pool is None:
@@ -176,35 +177,20 @@ class Covid(commands.AutoShardedBot, Pool):
                         user=config("db_user"),
                         password=config("db_token"),
                         db=config("db_user"),
+                        maxsize=100,
                         loop=self.loop,
-                        maxsize=1000,
                         autocommit=True
                     )
             except Exception as e:
                 logger.exception(e, exc_info=True)
-        await self.wait_until_ready()
+
+    async def on_ready(self):
+        await self.init_async()
         await self.change_presence(
         activity=discord.Game(
             name=f"c!help | coronavirus.jessicoh.com/api/"
             )
         )
-        # i = 0
-        # while True:
-        #     try:
-        #         await self.change_presence(
-        #                 activity=discord.Game(
-        #                     name=f"c!help | coronavirus.jessicoh.com/api/"
-        #                     )
-        #                 )
-        #     except Exception as e:
-        #         logger.exception(e, exc_info=True)
-        #         await self.change_presence(
-        #                 activity=discord.Game(
-        #                     name="c!help | coronavirus.jessicoh.com/api/"
-        #                     ),
-        #                 status=discord.Status.dnd
-        #                 )
-        #     await asyncio.sleep(360)
 
     def run(self, token, *args, **kwargs):
         try:

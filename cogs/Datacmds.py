@@ -566,6 +566,7 @@ class Datacmds(commands.Cog):
                     title=f"{ctx.prefix}notification",
                     description=f"Make sure that you didn't have made any mistake, please retry\n`{ctx.prefix}notification <country | disable> [every NUMBER] [hours | days | weeks]`\n__Examples__ : `{ctx.prefix}notification usa every 3 hours` (send a message to the current channel every 3 hours about United States), `{ctx.prefix}notification united states every 1 day`, `{ctx.prefix}notification disable`"
                 )
+                print(e)
 
             if country == "disable":
                 await self.bot.delete_notif(str(ctx.guild.id))

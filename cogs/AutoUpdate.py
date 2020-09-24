@@ -25,6 +25,7 @@ class AutoUpdater(commands.Cog):
         self.bot = bot
         self.interval_update = 0
         self.bot.loop.create_task(self.main())
+        self.bot.loop.create_task(self.bot._clear_free_conn())
 
     async def send_notifications(self):
         channels_id = await self.bot.to_send()
@@ -48,16 +49,17 @@ class AutoUpdater(commands.Cog):
                     timestamp=dt.datetime.utcnow(),
                     color=utils.COLOR
                 )
-
-                if guild["country"] == "all":
+                path = utils.STATS_PATH
+                if guild["country"].lower() in ("all", "world"):
                     country = "World"
                 else:
                     country = guild["country"]
+                    path = (country.replace(" ", "_") + utils.STATS_PATH).lower()
+
                 data = utils.get_country(all_data, country)
                 if data is None:
                     continue
 
-                path = (country.replace(" ", "_") + utils.STATS_PATH).lower()
                 confirmed = data["totalCases"]
                 recovered = data["totalRecovered"]
                 deaths = data["totalDeaths"]
@@ -155,7 +157,7 @@ class AutoUpdater(commands.Cog):
                     color=utils.COLOR
                 )
                 path = utils.STATS_PATH
-                if t["country"].lower() == "all":
+                if t["country"].lower() in ("all", "world"):
                     country = "World"
                 else:
                     country = t["country"]
@@ -254,21 +256,27 @@ class AutoUpdater(commands.Cog):
         self.bot.auto_update_running = True
         while True:
             before = time.time()
-            if not starting:
-                self.interval_update += 1
-                await utils._write(utils.NEWS_URL, utils.NEWS_PATH, self.bot.http_session)
-                self.bot.news = utils.load_news()
-                utils.png_clean()
+            try:
 
-                await self.send_notifications()
-                await self.send_tracker()
-            else:
-                starting = False
+                if not starting:
+                    self.interval_update += 1
+                    await utils._write(utils.NEWS_URL, utils.NEWS_PATH, self.bot.http_session)
+                    self.bot.news = utils.load_news()
+                    utils.png_clean()
 
-            after = time.time()
+                    await self.send_notifications()
+                    await self.send_tracker()
+                else:
+                    starting = False
 
-            await asyncio.sleep(3600 - int(after - before))
 
+
+
+            except Exception as e:
+                logger.exception(e, exc_info=True)
+            finally:
+                after = time.time()
+                await asyncio.sleep(3600 - int(after - before))
 
 def setup(bot):
     bot.add_cog(AutoUpdater(bot))

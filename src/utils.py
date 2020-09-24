@@ -36,6 +36,7 @@ USER_AGENT      = {'User-Agent': 'Mozilla/5.0 (X11; Linux i586; rv:31.0) Gecko/2
 STATS_PATH      = "stats.png"
 STATS_LOG_PATH  = "log_stats.png"
 
+MAX_RETRIES = 10
 
 class CountryNotFound(Exception):
     pass
@@ -226,21 +227,17 @@ async def get(session: ClientSession, endpoint, **kwargs):
             headers={"Authorization": config("Authorization")},
             **kwargs
         )
-    # while resp.status not in range(200, 300):
-    #     if resp.status == 404:
-    #         return
-    #     try:
-    #         resp = await session.request(
-    #             method="GET",
-    #             url=url,
-    #             headers={"Authorization": config("Authorization")},
-    #             **kwargs
-    #         )
-    #         logger.info(resp.status)
-    #     except Exception as e:
-    #         logger.exception(e, exc_info=True)
+    i = 0
+    while resp.status == 503 and i < MAX_RETRIES:
+        resp = await session.request(
+            method="GET",
+            url=url,
+            headers={"Authorization": config("Authorization")},
+            **kwargs
+        )
+        i += 1
+        await asyncio.sleep(1)
     if resp.status not in range(200, 300):
-        # raise CountryNotFound("Country/Region cannot be found. Please try again.")
         return resp.status
     data = await resp.json()
     return data
@@ -272,7 +269,3 @@ async def _write(url:str, file: IO, session: ClientSession, **kwargs):
             pickle.dump(fetcher, f, -1)
     except Exception as e:
         logger.exception(e, exc_info=True)
-
-if __name__ == "__main__":
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(_get("/all/france"))

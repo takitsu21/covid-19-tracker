@@ -5,6 +5,7 @@ import os
 import datetime as dt
 import time
 import random
+from discord.ext.commands.core import is_owner
 from pymysql.err import IntegrityError
 
 import src.utils as utils
@@ -237,6 +238,19 @@ class Help(commands.Cog):
             icon_url=ctx.me.avatar_url
         )
         await ctx.send(embed=embed)
+
+    @commands.command()
+    @commands.is_owner()
+    async def debug(self, ctx, clear="n"):
+        print(f"current size : {self.bot.pool.size}")
+        print(f"freesize : {self.bot.pool.freesize}")
+        print(f"maxsize : {self.bot.pool.maxsize}")
+        print(f"{self.bot.pool.__dict__}")
+        if clear == "y":
+            await self.bot.pool.clear()
+        # print(f"{self.bot.pool.__dict__}")
+
+
 
     @commands.command(name="ping")
     @commands.cooldown(3, 30, commands.BucketType.user)
