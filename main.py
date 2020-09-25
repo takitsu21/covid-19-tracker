@@ -177,7 +177,7 @@ class Covid(commands.AutoShardedBot, Pool):
                         user=config("db_user"),
                         password=config("db_token"),
                         db=config("db_user"),
-                        maxsize=100,
+                        maxsize=50,
                         loop=self.loop,
                         autocommit=True
                     )
@@ -208,4 +208,4 @@ class Covid(commands.AutoShardedBot, Pool):
 
 if __name__ == "__main__":
     bot = Covid()
-    bot.run(config("debug"), reconnect=True)
+    bot.run(config("token"), reconnect=True)
