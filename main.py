@@ -1,10 +1,7 @@
-import asyncio
 import datetime
-import json
 import logging
 import os
-import random
-import time
+
 
 import aiomysql
 import discord
@@ -16,7 +13,6 @@ from discord.utils import find
 
 import src.utils as utils
 from src.database import Pool
-
 
 logger = logging.getLogger('covid-19')
 logger.setLevel(logging.DEBUG)
@@ -177,10 +173,12 @@ class Covid(commands.AutoShardedBot, Pool):
                         user=config("db_user"),
                         password=config("db_token"),
                         db=config("db_user"),
+                        minsize=5,
                         maxsize=50,
                         loop=self.loop,
                         autocommit=True
                     )
+                logger.info("pool created")
             except Exception as e:
                 logger.exception(e, exc_info=True)
 

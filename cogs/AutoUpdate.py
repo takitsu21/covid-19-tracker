@@ -25,7 +25,7 @@ class AutoUpdater(commands.Cog):
         self.bot = bot
         self.interval_update = 0
         self.bot.loop.create_task(self.main())
-        self.bot.loop.create_task(self.bot._clear_free_conn())
+        # self.bot.loop.create_task(self.bot._clear_free_conn())
 
     async def send_notifications(self):
         channels_id = await self.bot.to_send()
