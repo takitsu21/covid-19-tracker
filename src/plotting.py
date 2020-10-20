@@ -1,14 +1,8 @@
-import datetime
-from typing import Dict, List, Tuple
+from typing import List, Tuple
 
 import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
-import numpy as np
-from aiohttp import ClientSession
-from matplotlib.ticker import (AutoMinorLocator, FormatStrFormatter,
-                               MultipleLocator)
-
-import src.utils as utils
+from matplotlib.ticker import (MultipleLocator, EngFormatter)
 
 month = mdates.MonthLocator()
 days = mdates.DayLocator()
@@ -21,39 +15,6 @@ class LengthError(Exception):
 class PlotEmpty(Exception):
     pass
 
-
-def rearrange(timeline, confirmed, recovered, deaths, active):
-    i = 0
-    while confirmed[i] == 0:
-        i += 1
-    return timeline[i:], confirmed[i:], logarify(recovered[i:]), logarify(deaths[i:]), logarify(active[i:])
-
-def fix_peaks(peaks):
-    """
-    This function is meant to remove or at least reduce
-    the data peaks when issues are occuring on the API
-    """
-    for i in range(1, len(peaks)):
-        if (peaks[i] - peaks[i-1]) < 0:
-            peaks[i] = peaks[i-1]
-    return peaks
-
-def fix_active_peaks(peaks):
-    """
-    This function is meant to remove or at least reduce
-    the data peaks when issues are occuring on the API
-    """
-    for i in range(1, len(peaks) - 1):
-        if (peaks[i-1] < peaks[i] and peaks[i+1] < peaks[i]) \
-        or (peaks[i-1] > peaks[i] and peaks[i+1] > peaks[i]):
-            peaks[i] = peaks[i-1]
-    return peaks
-
-def logarify(y):
-    for i in range(len(y)):
-        if y[i] == 0:
-            y[i] = 1
-    return y
 
 async def plot_csv(path,
     total_confirmed,
@@ -77,11 +38,11 @@ async def plot_csv(path,
         plt.yscale('log')
 
     ax.xaxis.set_major_locator(MultipleLocator(7))
-    ax.plot(timeline, fix_peaks(deaths), "-", color="#e62712")
-    ax.plot(timeline, fix_peaks(confirmed), "-", color="orange")
+    ax.plot(timeline, deaths, "-", color="#e62712")
+    ax.plot(timeline, confirmed, "-", color="orange")
     if not is_us:
-        ax.plot(timeline, fix_active_peaks(active), "-", color="yellow", alpha=0.5)
-        ax.plot(timeline, fix_peaks(recovered), "-", color="lightgreen")
+        ax.plot(timeline, active, "-", color="yellow", alpha=0.5)
+        ax.plot(timeline, recovered, "-", color="lightgreen")
         leg = plt.legend(["Deaths", "Confirmed", "Active", "Recovered"], facecolor='0.1', loc="upper left")
     else:
         leg = plt.legend(["Deaths", "Confirmed"], facecolor='0.1', loc="upper left")
@@ -103,15 +64,14 @@ async def plot_csv(path,
 
     if not logarithmic:
         ax.set_ylim(ymin=1)
-    ylabs = []
     locs, _ = plt.yticks()
+
 
     if logarithmic:
         locs = list(map(lambda x: x * 100, locs[:-1]))
-    for iter_loc in locs:
-        ylabs.append(utils.human_format(int(iter_loc)))
+    formatter = EngFormatter(locs)
 
-    plt.yticks(locs, ylabs)
+    plt.yticks(locs, [formatter.format_eng(int(iter_loc)) for iter_loc in locs])
     plt.savefig(path, transparent=True)
 
     plt.close(fig)
@@ -148,6 +108,84 @@ async def make_courbe(
             except TypeError:
                 pass
     return timeline, confirmed, recovered, deaths, active
+
+def make_daily_courbe(data_confirmed, data_recovered, data_death):
+    timeline, confirmed, recovered, deaths = [], [], [], []
+    for c, r, d in zip(data_confirmed['daily'], data_recovered['daily'], data_death['daily']):
+        timeline.append(c[:-3])
+        confirmed.append(data_confirmed['daily'][c] if data_confirmed['daily'][c] >= 0 else 0)
+        recovered.append(data_recovered['daily'][r] if data_recovered['daily'][r] >= 0 else 0)
+        deaths.append(data_death['daily'][d] if data_death['daily'][d] >= 0 else 0)
+    return timeline, confirmed, recovered, deaths
+
+
+async def plot_bar_daily(path, confirmed, recovered, deaths):
+    timeline, confirmed, recovered, deaths = make_daily_courbe(confirmed, recovered, deaths)
+    ticks = [i for i in range(len(timeline)) if i % 30 == 0]
+    legs = []
+
+    ax1 = plt.subplot(3, 1, 1)
+    ax1.xaxis.label.set_color('white')
+    ax1.yaxis.label.set_color('white')
+
+    ax1.tick_params(axis='x', colors='white')
+    ax1.tick_params(axis='y', colors='white')
+    ax1.spines['bottom'].set_visible(False)
+    ax1.spines['top'].set_visible(False)
+    ax1.spines['right'].set_visible(False)
+    ax1.spines['left'].set_visible(False)
+    ax1.axes.get_xaxis().set_visible(False)
+    plt.xticks(ticks, ha="center")
+    labels = ["Confirmed"]
+    handles = [plt.Rectangle((0,0),1,1, color="orange") for label in labels]
+    legs.append(plt.legend(handles, labels, facecolor='0.1', loc="upper left", prop={"size": 8}))
+    ax1.bar(timeline, confirmed, color="orange")
+    locs, _ = plt.yticks()
+    formatter = EngFormatter(locs)
+    plt.yticks(locs, [formatter.format_eng(int(iter_loc)) for iter_loc in locs])
+
+    ax2 = plt.subplot(3, 1, 2)
+    ax2.xaxis.label.set_color('white')
+    ax2.yaxis.label.set_color('white')
+    ax2.tick_params(axis='x', colors='white')
+    ax2.tick_params(axis='y', colors='white')
+    plt.xticks(ticks, ha="center")
+    labels = ["Recovered"]
+    handles = [plt.Rectangle((0,0),1,1, color="lightgreen") for label in labels]
+    legs.append(plt.legend(handles, labels, facecolor='0.1', loc="upper left", prop={"size": 8}))
+    ax2.spines['bottom'].set_visible(False)
+    ax2.spines['top'].set_visible(False)
+    ax2.spines['right'].set_visible(False)
+    ax2.spines['left'].set_visible(False)
+    ax2.axes.get_xaxis().set_visible(False)
+    ax2.bar(timeline, recovered, color="lightgreen")
+    locs, _ = plt.yticks()
+    formatter = EngFormatter(locs)
+    plt.yticks(locs, [formatter.format_eng(int(iter_loc)) for iter_loc in locs])
+
+    ax3 = plt.subplot(3, 1, 3)
+    ax3.xaxis.label.set_color('white')
+    ax3.yaxis.label.set_color('white')
+    ax3.tick_params(axis='x', colors='white')
+    ax3.tick_params(axis='y', colors='white')
+    plt.xticks(ticks, ha="center")
+    labels = ["Deaths"]
+    handles = [plt.Rectangle((0, 0), 1, 1, color="#e62712") for label in labels]
+    legs.append(plt.legend(handles, labels, facecolor='0.1', loc="upper left", prop={"size": 8}))
+    ax3.spines['bottom'].set_visible(False)
+    ax3.spines['top'].set_visible(False)
+    ax3.spines['right'].set_visible(False)
+    ax3.spines['left'].set_visible(False)
+    ax3.bar(timeline, deaths, color="#e62712")
+    locs, _ = plt.yticks()
+    formatter = EngFormatter(locs)
+    plt.yticks(locs, [formatter.format_eng(int(iter_loc)) for iter_loc in locs])
+    plt.xlabel("Timeline (mm/dd)")
+    for leg in legs:
+        for text in leg.get_texts():
+            text.set_color("white")
+    plt.savefig(path, transparent=True)
+    plt.close('all')
 
 # function to plot data from the c!graph command
 async def plot_graph(path, data, value, measure, dark=True):
