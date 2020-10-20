@@ -1,15 +1,12 @@
-import asyncio
 import datetime as dt
 import os
 import time
-import uuid
 
 import discord
+import src.utils as utils
 from discord.ext import commands
 from pymysql.err import IntegrityError
-
-import src.utils as utils
-from src.plotting import PlotEmpty, plot_csv, plot_graph
+from src.plotting import plot_bar_daily, plot_csv
 
 
 class Datacmds(commands.Cog):
@@ -218,10 +215,16 @@ class Datacmds(commands.Cog):
         recovered = data["totalRecovered"]
         deaths = data["totalDeaths"]
         active = data["activeCases"]
-        embed.set_author(
-            name=f"Coronavirus COVID-19 {graph_type} graph - {data['country']}",
-            icon_url=f"https://raw.githubusercontent.com/hjnilsson/country-flags/master/png250px/{data['iso2'].lower()}.png"
-        )
+        if data['iso2']:
+            embed.set_author(
+                name=f"Coronavirus COVID-19 {graph_type} graph - {data['country']}",
+                icon_url=f"https://raw.githubusercontent.com/hjnilsson/country-flags/master/png250px/{data['iso2'].lower()}.png"
+            )
+        else:
+            embed.set_author(
+                name=f"Coronavirus COVID-19 {graph_type} graph - {data['country']}",
+                icon_url=self.bot.author_thumb
+            )
         embed.add_field(
             name="<:confirmed:688686089548202004> Confirmed",
             value=f"{confirmed:,}"
@@ -259,6 +262,10 @@ class Datacmds(commands.Cog):
             embed.add_field(
                 name="<:test:752252962532884520> Total test",
                 value=f"{data['totalTests']:,} {percent_pop}"
+            )
+            embed.add_field(
+                name="<:population:768055030813032499> Population",
+                value=f"{data['population']:,}"
             )
 
         if not os.path.exists(path):
@@ -848,6 +855,66 @@ class Datacmds(commands.Cog):
     #     except:
     #         embed.set_image(url=self.bot.thumb + str(time.time()))
     #         await ctx.send(embed=embed)
+
+    @commands.command(aliases=["d"])
+    @commands.cooldown(3, 30, commands.BucketType.user)
+    async def daily(self, ctx: commands.Context, *country):
+        embed = discord.Embed(
+            description=utils.mkheader(),
+            timestamp=dt.datetime.utcnow(),
+            color=utils.COLOR
+        )
+        try:
+            if country:
+                data_confirmed = await utils.get(self.bot.http_session, f"/daily/confirmed/{' '.join(country).lower()}")
+                data_recovered = await utils.get(self.bot.http_session, f"/daily/recovered/{' '.join(country).lower()}")
+                data_deaths = await utils.get(self.bot.http_session, f"/daily/deaths/{' '.join(country).lower()}")
+                path = data_confirmed["iso2"] + "daily.png"
+                embed.set_author(
+                    name=f"Coronavirus COVID-19 Daily cases graph - {data_confirmed['name']}",
+                    icon_url=f"https://raw.githubusercontent.com/hjnilsson/country-flags/master/png250px/{data_confirmed['iso2'].lower()}.png"
+                )
+
+            else:
+                data_confirmed = await utils.get(self.bot.http_session, f"/daily/confirmed/total")
+                data_recovered = await utils.get(self.bot.http_session, f"/daily/recovered/total")
+                data_deaths = await utils.get(self.bot.http_session, f"/daily/deaths/total")
+                path = "daily_world.png"
+                embed.set_author(
+                    name=f"Coronavirus COVID-19 Daily cases graph - World",
+                    icon_url=self.bot.author_thumb
+                )
+
+            if not os.path.exists(path):
+                await plot_bar_daily(path, data_confirmed, data_recovered, data_deaths)
+
+
+        except:
+            return await ctx.send("Please provide a valid country.")
+        embed.add_field(
+            name="<:confirmed:688686089548202004> Recent confirmed",
+            value=f"{list(data_confirmed['daily'].keys())[-1]} : {list(data_confirmed['daily'].values())[-1]:,}"
+        )
+        embed.add_field(
+            name="<:recov:688686059567185940> Recent recovered",
+            value=f"{list(data_recovered['daily'].keys())[-1]} : {list(data_recovered['daily'].values())[-1]:,}"
+        )
+        embed.add_field(
+            name="<:_death:688686194917244928> Recent deaths",
+            value=f"{list(data_deaths['daily'].keys())[-1]} : {list(data_deaths['daily'].values())[-1]:,}",
+            inline=False
+        )
+        embed.set_thumbnail(
+            url=self.bot.thumb + str(time.time())
+        )
+        with open(path, "rb") as p:
+            img = discord.File(p, filename=path)
+        embed.set_image(url=f'attachment://{path}')
+        embed.set_footer(
+            text="coronavirus.jessicoh.com/api/",
+            icon_url=ctx.me.avatar_url
+        )
+        await ctx.send(file=img, embed=embed)
 
 
 def setup(bot):

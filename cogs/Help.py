@@ -1,14 +1,10 @@
-import asyncio
-import discord
-from discord.ext import commands
-import os
 import datetime as dt
 import time
-import random
-from discord.ext.commands.core import is_owner
-from pymysql.err import IntegrityError
 
+import discord
 import src.utils as utils
+from discord.ext import commands
+from pymysql.err import IntegrityError
 
 
 class Help(commands.Cog):
@@ -48,13 +44,18 @@ class Help(commands.Cog):
                     value=f"Views graphical statistics. If no args provided return linear graph for total cases. You can find countries with **full name** or **[ISO-3166-1](https://fr.wikipedia.org/wiki/ISO_3166-1)**.\n __Examples__ : `{ctx.prefix}stats us`, `{ctx.prefix}s log usa`, `{ctx.prefix}stats log`, `{ctx.prefix}s`",
                     inline=False
                 )
+                embed.add_field(
+                    name=f"📊 **`{ctx.prefix}<d | daily> [country]`**",
+                    value=f"Views daily graphical statistics. If no args provided return World graph. You can find countries with **full name** or **[ISO-3166-1](https://fr.wikipedia.org/wiki/ISO_3166-1)**.\n __Examples__ : `{ctx.prefix}daily us`, `{ctx.prefix}daily`, `{ctx.prefix}daily italy`",
+                    inline=False
+                )
                 # embed.add_field(
                 #     name=f"📈 **`{ctx.prefix}<g | graph> <proportion> <deaths | confirmed | recovered | active> <top | country[]>`**",
                 #     value=f"Views graphical statistics. You can find countries with **full name** or **[ISO-3166-1](https://fr.wikipedia.org/wiki/ISO_3166-1)**.\n\n **Proportion**: This is the value / population * 100 \n\n __Examples__ : `{ctx.prefix}graph proportion top`, `{ctx.prefix}g proportion deaths us gb it es mx fr`, `{ctx.prefix}g proportion active gb`",
                 #     inline=False
                 # )
                 embed.add_field(
-                    name=f"📈 **`{ctx.prefix}country <country>`**",
+                    name=f"📈 **`{ctx.prefix}<c | country> <country>`**",
                     value=f"Views information about multiple chosen country. You can either use **autocompletion** or **[ISO-3166-1](https://fr.wikipedia.org/wiki/ISO_3166-1)**.\n __Examples__ : `{ctx.prefix}country fr usa it gb`",
                     inline=False
                 )
@@ -132,7 +133,7 @@ class Help(commands.Cog):
             )
             embed.add_field(
                 name=f"📈 **`{ctx.prefix}help stats`**",
-                value="Every commands for COVID 19 stats. (7 commands)",
+                value="Every commands for COVID 19 stats. (8 commands)",
                 inline=False
             )
             embed.add_field(
