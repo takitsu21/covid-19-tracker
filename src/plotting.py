@@ -2,7 +2,7 @@ from typing import List, Tuple
 
 import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
-from matplotlib.ticker import (MultipleLocator, EngFormatter)
+from matplotlib.ticker import EngFormatter, MultipleLocator
 
 month = mdates.MonthLocator()
 days = mdates.DayLocator()

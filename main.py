@@ -2,7 +2,6 @@ import datetime
 import logging
 import os
 
-
 import aiomysql
 import discord
 from aiohttp import ClientSession

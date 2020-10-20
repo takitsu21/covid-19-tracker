@@ -1,20 +1,16 @@
 import asyncio
-import csv
 import datetime as dt
 import functools
-import json
 import logging
 import os
 import pickle
 import time
-from typing import IO, Dict, List, Tuple
+from typing import IO, List, Tuple
 
-import aiofiles
 import discord
 from aiohttp import ClientSession
 from decouple import config
 from discord.ext import commands
-
 
 logger = logging.getLogger("covid-19")
 
@@ -208,7 +204,6 @@ def region_format(confirmed, recovered, deaths):
         embeds.append(embed)
     return embeds
 
-
 def mkheader():
     header = "You can support me on <:kofi:693473314433138718>[Kofi](https://ko-fi.com/takitsu) and vote on [top.gg](https://top.gg/bot/682946560417333283/vote) for the bot. <:github:693519776022003742> [Source code](https://github.com/takitsu21/covid-19-tracker), <:api:752610700177965146> [API](https://coronavirus.jessicoh.com/api/) the bot is using.\n\n"
     return header
@@ -228,7 +223,7 @@ async def get(session: ClientSession, endpoint, **kwargs):
             **kwargs
         )
     i = 0
-    while resp.status == 503 and i < MAX_RETRIES:
+    while resp.status == 503 and i < MAX_RETRIES: # avoid cloudflare limit
         resp = await session.request(
             method="GET",
             url=url,

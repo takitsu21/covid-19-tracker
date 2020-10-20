@@ -1,11 +1,6 @@
-import asyncio
-import datetime as dt
-import os
-
 import discord
-from discord.ext import commands
-
 import src.utils as utils
+from discord.ext import commands
 
 
 class News(commands.Cog):

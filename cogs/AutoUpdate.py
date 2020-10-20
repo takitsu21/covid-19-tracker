@@ -2,18 +2,12 @@ import asyncio
 import datetime as dt
 import logging
 import os
-import sys
 import time
-import uuid
-from typing import List
 
 import discord
-import requests
-from aiohttp import ClientSession
-from decouple import config
-from discord.ext import commands
-
 import src.utils as utils
+from aiohttp import ClientSession
+from discord.ext import commands
 from src.plotting import plot_csv
 
 logger = logging.getLogger("covid-19")
