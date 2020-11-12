@@ -74,7 +74,7 @@ async def plot_csv(path,
     plt.yticks(locs, [formatter.format_eng(int(iter_loc)) for iter_loc in locs])
     plt.savefig(path, transparent=True)
 
-    plt.close(fig)
+    plt.close('all')
 
 async def make_courbe(
     total_confirmed,
@@ -107,6 +107,8 @@ async def make_courbe(
                 deaths.append(total_deaths["history"][d])
             except TypeError:
                 pass
+
+    timeline = timeline[0:len(confirmed)]
     return timeline, confirmed, recovered, deaths, active
 
 def make_daily_courbe(data_confirmed, data_recovered, data_death):

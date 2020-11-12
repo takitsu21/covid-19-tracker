@@ -13,6 +13,8 @@ from discord.utils import find
 import src.utils as utils
 from src.database import Pool
 
+
+
 logger = logging.getLogger('covid-19')
 logger.setLevel(logging.DEBUG)
 handler = logging.FileHandler(
@@ -34,7 +36,10 @@ class Covid(commands.AutoShardedBot, Pool):
         "author_thumb",
         "news",
         "pool",
-        "auto_update_running"
+        "auto_update_running",
+        "msg_read",
+        "commands_used",
+        "script_start_dt"
     )
     def __init__(self, *args, loop=None, **kwargs):
         super().__init__(
@@ -49,6 +54,9 @@ class Covid(commands.AutoShardedBot, Pool):
         self.http_session = None
         self.pool = None
         self.auto_update_running = False
+        self.msg_read = 0
+        self.commands_used = 0
+        self.script_start_dt = datetime.datetime.now()
         self.thumb = "https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/COVID-19_Outbreak_World_Map.svg/langfr-1000px-COVID-19_Outbreak_World_Map.svg.png?t="
         self.author_thumb = "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/International_Flag_of_Planet_Earth.svg/1200px-International_Flag_of_Planet_Earth.svg.png"
         self.loop.create_task(self.init_async())
@@ -173,7 +181,7 @@ class Covid(commands.AutoShardedBot, Pool):
                         password=config("db_token"),
                         db=config("db_user"),
                         minsize=5,
-                        maxsize=50,
+                        maxsize=10,
                         loop=self.loop,
                         autocommit=True
                     )
@@ -189,6 +197,13 @@ class Covid(commands.AutoShardedBot, Pool):
             )
         )
 
+    async def on_command(self, ctx):
+        self.commands_used += 1
+
+    async def on_message(self, message):
+        self.msg_read += 1
+        return await self.process_commands(message)
+
     def run(self, token, *args, **kwargs):
         try:
             super().run(token, *args, **kwargs)
@@ -202,7 +217,6 @@ class Covid(commands.AutoShardedBot, Pool):
                 logger.exception(e, exc_info=True)
                 exit(1)
 
-
 if __name__ == "__main__":
     bot = Covid()
-    bot.run(config("token"), reconnect=True)
+    bot.run(config("debug"), reconnect=True)

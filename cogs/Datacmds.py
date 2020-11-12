@@ -1,13 +1,17 @@
 import datetime as dt
+import logging
 import os
 import time
 
 import discord
+import psutil
 import src.utils as utils
 from discord.ext import commands
+from matplotlib.pyplot import title
 from pymysql.err import IntegrityError
 from src.plotting import plot_bar_daily, plot_csv
 
+logger = logging.getLogger("covid-19")
 
 class Datacmds(commands.Cog):
     """Help commands"""
@@ -689,14 +693,15 @@ class Datacmds(commands.Cog):
                     confirmed = list(history_confirmed["history"].values())[-1]
                     deaths = list(history_deaths["history"].values())[-1]
 
-                    if country in ("us", "united states", "usa"):
-                        is_us = True
-                        recovered = 0
-                        active = 0
-                    else:
+                    try:
                         is_us = False
                         recovered = list(history_recovered["history"].values())[-1]
                         active = confirmed - (recovered + deaths)
+                    except:
+                        is_us = True
+                        recovered = 0
+                        active = 0
+
                     if not os.path.exists(path):
                         await plot_csv(
                             path,
@@ -735,7 +740,8 @@ class Datacmds(commands.Cog):
 
 
 
-            except:
+            except Exception as e:
+                logger.exception(e, exc_info=True)
                 raise utils.RegionNotFound("Region not found, it might be possible that the region isn't yet available in the data.")
         else:
             return await ctx.send("No arguments provided.")
@@ -915,6 +921,31 @@ class Datacmds(commands.Cog):
             icon_url=ctx.me.avatar_url
         )
         await ctx.send(file=img, embed=embed)
+
+    @commands.command()
+    async def messages_stats(self, ctx):
+        embed = discord.Embed(
+            title="Some discord stats",
+            timestamp=utils.discord_timestamp(),
+            description=f"Since script start {self.bot.script_start_dt}"
+        )
+        embed.add_field(
+            name="Message read",
+            value=self.bot.msg_read
+        )
+        embed.add_field(
+            name="Command used",
+            value=self.bot.commands_used
+        )
+        embed.add_field(
+            name="Memory usage",
+            value=f"{psutil.virtual_memory().percent}%"
+        )
+        embed.add_field(
+            name="CPU usage",
+            value=f"{psutil.cpu_percent()}%"
+        )
+        await ctx.send(embed=embed)
 
 
 def setup(bot):

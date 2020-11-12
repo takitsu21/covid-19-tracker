@@ -4,3 +4,4 @@ git+https://github.com/Rapptz/discord.py
 matplotlib
 pymysql
 aiohttp
+psutil
