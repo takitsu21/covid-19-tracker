@@ -1,11 +1,13 @@
 import discord
-import src.utils as utils
 from discord.ext import commands
+
+import src.utils as utils
 
 
 class News(commands.Cog):
     """Help commands"""
     __slots__ = ("bot")
+
     def __init__(self, bot):
         self.bot = bot
 
@@ -39,7 +41,7 @@ class News(commands.Cog):
                 break
         embed.set_thumbnail(url="https://avatars2.githubusercontent.com/u/32527401?s=400&v=4")
         embed.set_footer(text="newsapi.org",
-                        icon_url=ctx.me.avatar_url)
+                         icon_url=ctx.me.avatar_url)
         await ctx.send(embed=embed)
 
 

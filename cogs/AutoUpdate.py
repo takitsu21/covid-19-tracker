@@ -1,13 +1,14 @@
 import asyncio
 import datetime as dt
+from attr import has
+import discord
 import logging
 import os
 import time
-
-import discord
-import src.utils as utils
 from aiohttp import ClientSession
 from discord.ext import commands
+
+import src.utils as utils
 from src.plotting import plot_csv
 
 logger = logging.getLogger("covid-19")
@@ -15,6 +16,7 @@ logger = logging.getLogger("covid-19")
 
 class AutoUpdater(commands.Cog):
     __slots__ = ("bot", "interval_update")
+
     def __init__(self, bot):
         self.bot = bot
         self.interval_update = 0
@@ -51,7 +53,7 @@ class AutoUpdater(commands.Cog):
                     path = (country.replace(" ", "_") + utils.STATS_PATH).lower()
 
                 data = utils.get_country(all_data, country)
-                if data is None:
+                if data is None or True in (data['newCases'] > 0, data['newDeaths'] > 0):
                     continue
 
                 confirmed = data["totalCases"]
@@ -101,7 +103,6 @@ class AutoUpdater(commands.Cog):
                         value=f"{data['totalTests']:,} {percent_pop}"
                     )
 
-
                 if not os.path.exists(path) and country != "World":
                     await plot_csv(
                         path,
@@ -114,7 +115,6 @@ class AutoUpdater(commands.Cog):
                         total_history_confirmed,
                         total_history_recovered,
                         total_history_deaths)
-
 
                 with open(path, "rb") as p:
                     img = discord.File(p, filename=path)
@@ -157,10 +157,8 @@ class AutoUpdater(commands.Cog):
                     country = t["country"]
                     path = (country.replace(" ", "_") + utils.STATS_PATH).lower()
                 data = utils.get_country(all_data, country)
-                if data is None:
+                if data is None or True in (data['newCases'] > 0, data['newDeaths'] > 0):
                     continue
-
-
                 confirmed = data["totalCases"]
                 recovered = data["totalRecovered"]
                 deaths = data["totalDeaths"]
@@ -207,7 +205,6 @@ class AutoUpdater(commands.Cog):
                         name="<:test:752252962532884520> Total test",
                         value=f"{data['totalTests']:,} {percent_pop}"
                     )
-
 
                 if not os.path.exists(path) and country != "World":
                     await plot_csv(
@@ -271,6 +268,7 @@ class AutoUpdater(commands.Cog):
             finally:
                 after = time.time()
                 await asyncio.sleep(3600 - int(after - before))
+
 
 def setup(bot):
     bot.add_cog(AutoUpdater(bot))

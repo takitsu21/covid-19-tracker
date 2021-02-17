@@ -1,10 +1,10 @@
+import asyncio
+import datetime
 import dbl
 import discord
-from discord.ext import commands
-from decouple import config
 import logging
-import datetime
-import asyncio
+from decouple import config
+from discord.ext import commands
 
 import src.utils as utils
 
@@ -14,9 +14,10 @@ logger = logging.getLogger("covid-19")
 class TopGG(commands.Cog):
     """Handles interactions with the top.gg API"""
     __slots__ = ("bot", "token", "dblpy")
+
     def __init__(self, bot):
         self.bot = bot
-        self.token = config('dbl_token') # set this to your DBL token
+        self.token = config('dbl_token')  # set this to your DBL token
         self.dblpy = dbl.DBLClient(self.bot, self.token)
         self.bot.loop.create_task(self.update_stats())
 

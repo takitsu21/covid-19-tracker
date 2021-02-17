@@ -5,7 +5,9 @@ __pycache__/
 test.py
 *.png
 *.json
-
+plotting.py
+test.sh
+utils.py
 # C extensions
 *.so
 

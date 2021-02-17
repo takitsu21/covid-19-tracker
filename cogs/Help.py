@@ -1,15 +1,17 @@
 import datetime as dt
-import time
-
 import discord
-import src.utils as utils
+import gc
+import time
 from discord.ext import commands
 from pymysql.err import IntegrityError
+
+import src.utils as utils
 
 
 class Help(commands.Cog):
     """Help commands"""
     __slots__ = ("bot", "_id", "thumb")
+
     def __init__(self, bot):
         self.bot = bot
         self._id = 162200556234866688
@@ -158,10 +160,10 @@ class Help(commands.Cog):
     @commands.command(name="vote")
     async def vote(self, ctx):
         embed = discord.Embed(
-                description="[Click here](https://top.gg/bot/682946560417333283/vote)",
-                timestamp=utils.discord_timestamp(),
-                color=utils.COLOR
-            )
+            description="[Click here](https://top.gg/bot/682946560417333283/vote)",
+            timestamp=utils.discord_timestamp(),
+            color=utils.COLOR
+        )
         embed.set_author(name="Coronavirus COVID-19 Vote link", icon_url=ctx.me.avatar_url)
         embed.set_thumbnail(url=self.thumb)
         embed.set_footer(text="coronavirus.jessicoh.com/api/", icon_url=ctx.me.avatar_url)
@@ -170,10 +172,10 @@ class Help(commands.Cog):
     @commands.command(name="invite")
     async def invite(self, ctx):
         embed = discord.Embed(
-                description="[Click here](https://discordapp.com/oauth2/authorize?client_id=682946560417333283&scope=bot&permissions=313408)",
-                timestamp=utils.discord_timestamp(),
-                color=utils.COLOR
-            )
+            description="[Click here](https://discordapp.com/oauth2/authorize?client_id=682946560417333283&scope=bot&permissions=313408)",
+            timestamp=utils.discord_timestamp(),
+            color=utils.COLOR
+        )
         embed.set_author(name="Coronavirus COVID-19 Invite link", icon_url=ctx.me.avatar_url)
         embed.set_thumbnail(url=self.thumb)
         embed.set_footer(text="coronavirus.jessicoh.com/api/", icon_url=ctx.me.avatar_url)
@@ -189,10 +191,10 @@ class Help(commands.Cog):
     @commands.cooldown(5, 30, commands.BucketType.user)
     async def about(self, ctx):
         embed = discord.Embed(
-                description=utils.mkheader(),
-                timestamp=utils.discord_timestamp(),
-                color=utils.COLOR
-            )
+            description=utils.mkheader(),
+            timestamp=utils.discord_timestamp(),
+            color=utils.COLOR
+        )
         embed.set_author(name="Coronavirus COVID-19 Tracker", icon_url=ctx.me.avatar_url)
         embed.set_thumbnail(url=self.thumb)
         embed.add_field(name="Vote",
@@ -201,9 +203,9 @@ class Help(commands.Cog):
                         value="[Click here](https://discordapp.com/oauth2/authorize?client_id=682946560417333283&scope=bot&permissions=313408)")
         embed.add_field(name="Discord Support",
                         value="[Click here](https://discordapp.com/invite/wTxbQYb)")
-        embed.add_field(name = "Source code", value="[Click here](https://github.com/takitsu21/covid-19-tracker)")
-        embed.add_field(name="Help command",value=f"`{ctx.prefix}help` or `@mention help`")
-        embed.add_field(name="Prefix",value=f"`{ctx.prefix}` or `@mention`")
+        embed.add_field(name="Source code", value="[Click here](https://github.com/takitsu21/covid-19-tracker)")
+        embed.add_field(name="Help command", value=f"`{ctx.prefix}help` or `@mention help`")
+        embed.add_field(name="Prefix", value=f"`{ctx.prefix}` or `@mention`")
 
         nb_users = 0
         channels = 0
@@ -217,9 +219,10 @@ class Help(commands.Cog):
         embed.add_field(name="<:servers:693053697453850655> Servers", value=len(self.bot.guilds))
         embed.add_field(name="<:users:693053423494365214> Members", value=nb_users)
         embed.add_field(name="<:hashtag:693056105076621342> Channels", value=channels)
-        embed.add_field(name="<:stack:693054261512110091> Shards", value=f"{ctx.guild.shard_id + 1}/{self.bot.shard_count}")
+        embed.add_field(name="<:stack:693054261512110091> Shards",
+                        value=f"{ctx.guild.shard_id + 1}/{self.bot.shard_count}")
         embed.set_footer(text="Made by Taki#0853 (WIP) " + utils.last_update(data['lastUpdate']),
-                        icon_url=ctx.me.avatar_url)
+                         icon_url=ctx.me.avatar_url)
         await ctx.send(embed=embed)
 
     @commands.command(name="sources", aliases=["source"])
@@ -228,7 +231,7 @@ class Help(commands.Cog):
             description="<:api:752610700177965146> [API](coronavirus.jessicoh.com/api)\nFor now sources comes from [JHU](https://github.com/CSSEGISandData/COVID-19/) and [worldometer](https://www.worldometers.info/coronavirus/). The API will be improved day by day and surely use other sources.\nYou can access to the API <:github:693519776022003742> [source code](https://github.com/takitsu21/covid19-api).",
             color=utils.COLOR,
             timestamp=utils.discord_timestamp()
-            )
+        )
         embed.set_author(
             name="Sources used for stats",
             icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Octicons-mark-github.svg/1200px-Octicons-mark-github.svg.png"
@@ -251,8 +254,6 @@ class Help(commands.Cog):
             await self.bot.pool.clear()
         # print(f"{self.bot.pool.__dict__}")
 
-
-
     @commands.command(name="ping")
     @commands.cooldown(3, 30, commands.BucketType.user)
     async def ping(self, ctx):
@@ -261,10 +262,10 @@ class Help(commands.Cog):
         message = await ctx.send("🏓Ping!")
         ping = (time.monotonic() - before) * 1000
         embed = discord.Embed(
-                        color=utils.COLOR,
-                        title="Ping",
-                        description="🏓 Pong!\n**`{0}`** ms".format(int(ping))
-                        )
+            color=utils.COLOR,
+            title="Ping",
+            description="🏓 Pong!\n**`{0}`** ms".format(int(ping))
+        )
         embed.set_thumbnail(url=self.thumb)
         embed.set_footer(
             text="coronavirus.jessicoh.com/api/",
@@ -277,23 +278,24 @@ class Help(commands.Cog):
     async def suggestion(self, ctx, *message):
         if len(message) < 3:
             embed = discord.Embed(title="Suggestion",
-                                color=utils.COLOR,
-                                description="Message too short at least 3 words required.".format(ctx.author.mention),
-                                icon_url=ctx.me.avatar_url)
+                                  color=utils.COLOR,
+                                  description="Message too short at least 3 words required.".format(ctx.author.mention),
+                                  icon_url=ctx.me.avatar_url)
             embed.set_thumbnail(url=ctx.me.avatar_url)
             embed.set_footer(text="coronavirus.jessicoh.com/api/",
-                            icon_url=ctx.me.avatar_url)
+                             icon_url=ctx.me.avatar_url)
             return await ctx.send(embed=embed)
         dm = self.bot.get_user(self._id)
         message = ' '.join(message)
         await dm.send(f"[{ctx.author} - SUGGEST] -> {message}")
         embed = discord.Embed(title="Suggestion",
-                            color=utils.COLOR,
-                            description="{} Your suggestion has been sent @Taki#0853.\nThank you for the feedback!".format(ctx.author.mention),
-                            icon_url=ctx.me.avatar_url)
+                              color=utils.COLOR,
+                              description="{} Your suggestion has been sent @Taki#0853.\nThank you for the feedback!".format(
+                                  ctx.author.mention),
+                              icon_url=ctx.me.avatar_url)
         embed.set_thumbnail(url=ctx.me.avatar_url)
         embed.set_footer(text="coronavirus.jessicoh.com/api/",
-                        icon_url=ctx.me.avatar_url)
+                         icon_url=ctx.me.avatar_url)
         return await ctx.send(embed=embed)
 
     @commands.command(name="bug")
@@ -301,23 +303,25 @@ class Help(commands.Cog):
     async def bug(self, ctx, *message):
         if len(message) < 3:
             embed = discord.Embed(title="Bug report",
-                    color=utils.COLOR,
-                    description="{} Message too short at least 3 words required.".format(ctx.author.mention),
-                    icon_url=ctx.me.avatar_url)
+                                  color=utils.COLOR,
+                                  description="{} Message too short at least 3 words required.".format(
+                                      ctx.author.mention),
+                                  icon_url=ctx.me.avatar_url)
             embed.set_thumbnail(url=ctx.me.avatar_url)
             embed.set_footer(text="coronavirus.jessicoh.com/api/",
-                            icon_url=ctx.me.avatar_url)
+                             icon_url=ctx.me.avatar_url)
             return await ctx.send(embed=embed)
         dm = self.bot.get_user(self._id)
         message = ' '.join(message)
         await dm.send(f"[{ctx.author} - BUG] -> {message}")
         embed = discord.Embed(title="Bug report",
-                            color=utils.COLOR,
-                            description="Your bug report has been sent @Taki#0853.\nThank you for the feedback!".format(ctx.author.mention),
-                            icon_url=ctx.me.avatar_url)
+                              color=utils.COLOR,
+                              description="Your bug report has been sent @Taki#0853.\nThank you for the feedback!".format(
+                                  ctx.author.mention),
+                              icon_url=ctx.me.avatar_url)
         embed.set_thumbnail(url=ctx.me.avatar_url)
         embed.set_footer(text="coronavirus.jessicoh.com/api/",
-                        icon_url=ctx.me.avatar_url)
+                         icon_url=ctx.me.avatar_url)
         return await ctx.send(embed=embed)
 
     @commands.command(name="setprefix")
@@ -361,6 +365,13 @@ class Help(commands.Cog):
         self.bot._unload_extensions()
         self.bot._load_extensions()
         await ctx.send("Reloaded")
+
+    # @commands.command()
+    # @commands.is_owner()
+    # async def gc(self, ctx):
+    #     gc.collect()
+    #     await ctx.send("garbage collected")
+
 
 def setup(bot):
     bot.add_cog(Help(bot))

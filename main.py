@@ -13,19 +13,17 @@ from discord.utils import find
 import src.utils as utils
 from src.database import Pool
 
-
-
 logger = logging.getLogger('covid-19')
 logger.setLevel(logging.DEBUG)
 handler = logging.FileHandler(
-        filename='covid-19.log',
-        encoding='utf-8',
-        mode='w'
-    )
+    filename='covid-19.log',
+    encoding='utf-8',
+    mode='w'
+)
 handler.setFormatter(logging.Formatter(
-        '%(asctime)s:%(levelname)s:%(name)s: %(message)s'
-        )
-    )
+    '%(asctime)s:%(levelname)s:%(name)s: %(message)s'
+)
+)
 logger.addHandler(handler)
 
 
@@ -41,12 +39,13 @@ class Covid(commands.AutoShardedBot, Pool):
         "commands_used",
         "script_start_dt"
     )
+
     def __init__(self, *args, loop=None, **kwargs):
         super().__init__(
             command_prefix=self._get_prefix,
             activity=discord.Game(name="c!help | Loading shards..."),
             status=discord.Status.dnd
-            )
+        )
         super(Pool, self).__init__()
         self.remove_command("help")
         self._load_extensions()
@@ -91,7 +90,8 @@ class Covid(commands.AutoShardedBot, Pool):
 
     async def on_command_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
-            await ctx.send('{} This command is ratelimited, please try again in {:.2f}s'.format(ctx.author.mention, error.retry_after))
+            await ctx.send('{} This command is ratelimited, please try again in {:.2f}s'.format(ctx.author.mention,
+                                                                                                error.retry_after))
         else:
             # raise error
             embed = discord.Embed(
@@ -109,11 +109,12 @@ class Covid(commands.AutoShardedBot, Pool):
             general = find(lambda x: x.name == "general", guild.text_channels)
             if general and general.permissions_for(guild.me).send_messages:
                 embed = discord.Embed(
-                        description="You can support me on <:kofi:693473314433138718>[Kofi](https://ko-fi.com/takitsu) and vote on [top.gg](https://top.gg/bot/682946560417333283/vote) for the bot. <:github:693519776022003742> [Source code](https://github.com/takitsu21/covid-19-tracker)",
-                        timestamp=utils.discord_timestamp(),
-                        color=utils.COLOR
-                    )
-                embed.set_author(name="Coronavirus COVID-19 Tracker", icon_url=guild.me.avatar_url)
+                    description="You can support me on <:kofi:693473314433138718>[Kofi](https://ko-fi.com/takitsu) and vote on [top.gg](https://top.gg/bot/682946560417333283/vote) for the bot. <:github:693519776022003742> [Source code](https://github.com/takitsu21/covid-19-tracker)",
+                    timestamp=utils.discord_timestamp(),
+                    color=utils.COLOR
+                )
+                embed.set_author(
+                    name="Coronavirus COVID-19 Tracker", icon_url=guild.me.avatar_url)
                 embed.set_thumbnail(url=self.thumb)
                 embed.add_field(name="Vote",
                                 value="[Click here](https://top.gg/bot/682946560417333283/vote)")
@@ -121,23 +122,31 @@ class Covid(commands.AutoShardedBot, Pool):
                                 value="[Click here](https://discordapp.com/oauth2/authorize?client_id=682946560417333283&scope=bot&permissions=313408)")
                 embed.add_field(name="Discord Support",
                                 value="[Click here](https://discordapp.com/invite/wTxbQYb)")
-                embed.add_field(name = "Source code", value="[Click here](https://github.com/takitsu21/covid-19-tracker)")
-                embed.add_field(name="Help command",value="c!help")
-                embed.add_field(name="Prefix",value="c!")
+                embed.add_field(
+                    name="Source code", value="[Click here](https://github.com/takitsu21/covid-19-tracker)")
+                embed.add_field(name="Help command", value="c!help")
+                embed.add_field(name="Prefix", value="c!")
                 nb_users = 0
                 channels = 0
                 for s in self.guilds:
                     nb_users += len(s.members)
                     channels += len(s.channels)
-                embed.add_field(name="<:confirmed:688686089548202004> Confirmed", value=self._data["total"]["confirmed"])
-                embed.add_field(name="<:recov:688686059567185940> Recovered", value=self._data["total"]["recovered"])
-                embed.add_field(name="<:_death:688686194917244928> Deaths", value=self._data["total"]["deaths"])
-                embed.add_field(name="<:servers:693053697453850655> Servers", value=len(self.guilds))
-                embed.add_field(name="<:users:693053423494365214> Members", value=nb_users)
-                embed.add_field(name="<:hashtag:693056105076621342> Channels", value=channels)
-                embed.add_field(name="<:stack:693054261512110091> Shards", value=f"{ctx.guild.shard_id + 1}/{self.bot.shard_count}")
+                embed.add_field(name="<:confirmed:688686089548202004> Confirmed",
+                                value=self._data["total"]["confirmed"])
+                embed.add_field(name="<:recov:688686059567185940> Recovered",
+                                value=self._data["total"]["recovered"])
+                embed.add_field(
+                    name="<:_death:688686194917244928> Deaths", value=self._data["total"]["deaths"])
+                embed.add_field(
+                    name="<:servers:693053697453850655> Servers", value=len(self.guilds))
+                embed.add_field(
+                    name="<:users:693053423494365214> Members", value=nb_users)
+                embed.add_field(
+                    name="<:hashtag:693056105076621342> Channels", value=channels)
+                embed.add_field(name="<:stack:693054261512110091> Shards",
+                                value=f"{ctx.guild.shard_id + 1}/{self.bot.shard_count}")
                 embed.set_footer(text="Made by Taki#0853 (WIP) " + utils.last_update(utils.DATA_PATH),
-                                icon_url=guild.me.avatar_url)
+                                 icon_url=guild.me.avatar_url)
                 await general.send(embed=embed)
         except:
             pass
@@ -175,16 +184,16 @@ class Covid(commands.AutoShardedBot, Pool):
         if self.pool is None:
             try:
                 self.pool = await aiomysql.create_pool(
-                        host=config("db_host"),
-                        port=3306,
-                        user=config("db_user"),
-                        password=config("db_token"),
-                        db=config("db_user"),
-                        minsize=5,
-                        maxsize=10,
-                        loop=self.loop,
-                        autocommit=True
-                    )
+                    host=config("db_host"),
+                    port=3306,
+                    user=config("db_user"),
+                    password=config("db_token"),
+                    db=config("db_user"),
+                    minsize=5,
+                    maxsize=10,
+                    loop=self.loop,
+                    autocommit=True
+                )
                 logger.info("pool created")
             except Exception as e:
                 logger.exception(e, exc_info=True)
@@ -192,8 +201,8 @@ class Covid(commands.AutoShardedBot, Pool):
     async def on_ready(self):
         await self.init_async()
         await self.change_presence(
-        activity=discord.Game(
-            name=f"c!help | coronavirus.jessicoh.com/api/"
+            activity=discord.Game(
+                name=f"c!help | coronavirus.jessicoh.com/api/"
             )
         )
 
@@ -217,6 +226,15 @@ class Covid(commands.AutoShardedBot, Pool):
                 logger.exception(e, exc_info=True)
                 exit(1)
 
+
 if __name__ == "__main__":
+    import sentry_sdk
+    from sentry_sdk.integrations.aiohttp import AioHttpIntegration
+
+    sentry_sdk.init(
+        config("SENTRY_TOKEN"),
+        traces_sample_rate=1.0,
+        integrations=[AioHttpIntegration()]
+    )
     bot = Covid()
-    bot.run(config("debug"), reconnect=True)
+    bot.run(config("token"), reconnect=True)
