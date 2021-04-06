@@ -89,7 +89,7 @@ This project is licensed under the MIT License - see the [LICENSE.md] file for d
 
 ### Added
 
-- `c!list` -> list every country that can be call by bot commands.
+- `c!list` -> list every country that can be called by bot commands.
 - **[ISO-3166-1](https://fr.wikipedia.org/wiki/ISO_3166-1)** for all countries
 
 ### Fixed
