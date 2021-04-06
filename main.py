@@ -89,9 +89,17 @@ class Covid(commands.AutoShardedBot, Pool):
                 logger.exception(f"Fail to unload {file}")
 
     async def on_command_error(self, ctx, error):
+        if isinstance(error, commands.CommandNotFound):
+            await ctx.send(
+                f"That command does not exist :confused:\n"+
+                f"Please use `{self.command_prefix}help` for a list of commands"
+            )
+            # Handling Command Not Found Errors
         if isinstance(error, commands.CommandOnCooldown):
-            await ctx.send('{} This command is ratelimited, please try again in {:.2f}s'.format(ctx.author.mention,
-                                                                                                error.retry_after))
+            await ctx.send('{}'.format(ctx.author.mention),embed=discord.Embed(title=f":alarm_clock: Cooldown Error",
+                                  description=f'Please cooldown a little, try again in `{error.retry_after:.2}s`',
+                                  color=utils.COLOR),delete_after=5)
+            # A little artistic touch won't hurt, I'll attach a screenshot in the PR description
         else:
             # raise error
             embed = discord.Embed(
