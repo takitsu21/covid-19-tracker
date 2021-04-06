@@ -11,7 +11,7 @@
 
 # Coronavirus COVID-19
 
-Get the latest update with notification alerts and graphics stats about COVID-19! For every countries and regions! World news available too!
+Get the latest update with notification alerts and graphics stats about COVID-19! For every country and region! World news are available too!
 
 ## Commands
 
@@ -23,20 +23,20 @@ Prefix : **`c! or @mention`**
 
 | Command | Description |
 |-------|-----------|
-| **`c!help`** | Views help command. |
-| **`c!info`** | Views every confirmed case. |
+| **`c!help`** | Displays help command. |
+| **`c!info`** | Displays every confirmed case. |
 | **`c!list`** | List every country affected by COVID-19 |
-| **`c!<s / stats> [log / country / log [country]]`** | Views graphical statistics. If no args provided return linear graph for total cases. You can find countries with **full name** or **[ISO-3166-1](https://fr.wikipedia.org/wiki/ISO_3166-1)**.__Examples__ : `c!stats us`, `c!s log usa`, `c!stats log` |
-| **`c!<r / region> <state/province / all> in <country>`** | Supported countries (**China, Canada, United States, Australia, Cruise Ship**). Views regions infected in specific country or in all state with all arg. The `in` (mandatory symbol) is interpreted as separator between the country and the region/province so don't forget it. Example 1 : `c!r new york in us`. Example 2 : `c!region all in china`. |
+| **`c!<s / stats> [log / country / log [country]]`** | Displays graphical statistics. If no args provided return linear graph for total cases. You can find countries with **full name** or **[ISO-3166-1](https://fr.wikipedia.org/wiki/ISO_3166-1)**.__Examples__ : `c!stats us`, `c!s log usa`, `c!stats log` |
+| **`c!<r / region> <state/province / all> in <country>`** | Supported countries (**China, Canada, United States, Australia, Cruise Ship**). Displays regions infected within a  country or in the whole state with the `all` arg. The `in` (mandatory symbol) is interpreted as separator between the country and the region/province so don't forget it. Example 1 : `c!r new york in us`. Example 2 : `c!region all in china`. |
 | **`c!track <country / [disable]>`** | Track country (bot will DM you update). __Examples__ : `c!track us`, `c!track disable`. |
 | **`c!news`** | Views recent news about COVID-19 (update every 1 hour). |
-| **`c!notification <country / disable> <every NUMBER> <hours / days / weeks>`** | (Only administrator) When new data is found, the bot will send you a notification where you typed the command, server only. __Examples__ : `c!notification usa every 3 hours`, `c!notification disable` |
-| **`c!source`** | Views source data which the bot is based on. |
+| **`c!notification <country / disable> <every NUMBER> <hours / days / weeks>`** | (Only administrator) When new data is found, the bot will send you a notification where you executed the command, **server only**. __Examples__ : `c!notification usa every 3 hours`, `c!notification disable` |
+| **`c!source`** | Displays source data which the bot is based on. |
 | **`c!suggestion <message>`** | Send suggestion feedback. |
 | **`c!bug <message>`** | Send bug feedback. |
-| **`c!about`** | Views information about the bot. |
-| **`c!invite`** | Views bot link invite. |
-| **`c!vote`** | Views bot vote link. |
+| **`c!about`** | Displays information about the bot. |
+| **`c!invite`** | Displays bot link invite. |
+| **`c!vote`** | Displays bot vote link. |
 
 ## Few examples
 
@@ -78,6 +78,13 @@ This project is licensed under the MIT License - see the [LICENSE.md] file for d
 
 # Changelog
 
+## 0.0.7 - 2021-04-07
+
+### Fixed
+
+- Fixed minor typos
+- Fixed minor grammatical errors
+
 ## 0.0.6 - 2020-04-07
 
 ### Added
@@ -88,13 +95,13 @@ This project is licensed under the MIT License - see the [LICENSE.md] file for d
 ### Fixed
 
 - Improve bot stability.
-- Fix minor issues.
-- Fix typos.
+- Fixed minor issues.
+- Fixed typos.
 
 ### Changed
 
-- `c!notification <enable | disable>` -> `c!nofitication <country | disable> <every NUMBER> <hours | days | weeks>` you can have notification about country in a specific channel for your server.
-- `c!stats [log]` -> `c!<s | stats> [log | country | log [country]]` you can now have log graph for countries.
+- `c!notification <enable | disable>` -> `c!nofitication <country | disable> <every NUMBER> <hours | days | weeks>` you can have a notification about a country in a specific channel of your server.
+- `c!stats [log]` -> `c!<s | stats> [log | country | log [country]]` you can now have a log graph for countries.
 - Graph display Total confirmed - active.
 
 ## 0.0.5 - 2020-03-29
