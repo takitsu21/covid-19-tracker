@@ -82,7 +82,7 @@ This project is licensed under the MIT License - see the [LICENSE.md] file for d
 
 ### Changed
 
-- Improve charts for `c!daily` command which is prettier and more accurate.
+- Improve charts for `c!daily` command which is prettier and more accurate [(#19)](https://github.com/takitsu21/covid-19-tracker/pull/19).
 - Cooldown command prettier [(#17)](https://github.com/takitsu21/covid-19-tracker/pull/17). 
 
 ### Fixed
