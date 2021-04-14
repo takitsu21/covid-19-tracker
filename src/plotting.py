@@ -1,8 +1,8 @@
+from typing import Tuple
+
 import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
-from datetime import datetime, time
 from matplotlib.ticker import EngFormatter, MultipleLocator
-from typing import List, Tuple
 
 month = mdates.MonthLocator()
 days = mdates.DayLocator()
@@ -132,10 +132,14 @@ def make_daily_courbe(data_confirmed, data_recovered, data_death):
 async def plot_bar_daily(path, confirmed, recovered, deaths):
     timeline, confirmed, recovered, deaths = make_daily_courbe(
         confirmed, recovered, deaths)
-    ticks = [i for i in range(len(timeline)) if i % 60 == 0]
+    ticks = [i for i in range(len(timeline)) if i % 90 == 0]
     legs = []
 
-    ax1 = plt.subplot(3, 1, 1)
+    fig, axes = plt.subplots(3, 1)
+    ax1, ax2, ax3 = axes
+
+    plt.sca(ax1)
+    ax1.set_ylim(bottom=0., top=max(confirmed))
     ax1.xaxis.label.set_color('white')
     ax1.yaxis.label.set_color('white')
 
@@ -151,13 +155,15 @@ async def plot_bar_daily(path, confirmed, recovered, deaths):
     handles = [plt.Rectangle((0, 0), 1, 1, color="orange") for label in labels]
     legs.append(plt.legend(handles, labels, facecolor='0.1',
                            loc="upper left", prop={"size": 8}))
-    ax1.bar(timeline, confirmed, color="orange")
+    ax1.plot(timeline, confirmed, "-",  color="orange")
+
     locs, _ = plt.yticks()
     formatter = EngFormatter(locs)
     plt.yticks(locs, [formatter.format_eng(int(iter_loc))
                       for iter_loc in locs])
 
-    ax2 = plt.subplot(3, 1, 2)
+    plt.sca(ax2)
+    ax2.set_ylim(bottom=0., top=max(recovered))
     ax2.xaxis.label.set_color('white')
     ax2.yaxis.label.set_color('white')
     ax2.tick_params(axis='x', colors='white')
@@ -173,18 +179,20 @@ async def plot_bar_daily(path, confirmed, recovered, deaths):
     ax2.spines['right'].set_visible(False)
     ax2.spines['left'].set_visible(False)
     ax2.axes.get_xaxis().set_visible(False)
-    ax2.bar(timeline, recovered, color="lightgreen")
+    ax2.plot(timeline, recovered, "-",  color="lightgreen")
+
     locs, _ = plt.yticks()
     formatter = EngFormatter(locs)
     plt.yticks(locs, [formatter.format_eng(int(iter_loc))
                       for iter_loc in locs])
 
-    ax3 = plt.subplot(3, 1, 3)
+    plt.sca(ax3)
+    ax3.set_ylim(bottom=0., top=max(deaths))
     ax3.xaxis.label.set_color('white')
     ax3.yaxis.label.set_color('white')
     ax3.tick_params(axis='x', colors='white')
     ax3.tick_params(axis='y', colors='white')
-    plt.xticks(ticks, ha="center")
+
     labels = ["Deaths"]
     handles = [plt.Rectangle((0, 0), 1, 1, color="#e62712")
                for label in labels]
@@ -194,16 +202,24 @@ async def plot_bar_daily(path, confirmed, recovered, deaths):
     ax3.spines['top'].set_visible(False)
     ax3.spines['right'].set_visible(False)
     ax3.spines['left'].set_visible(False)
-    ax3.bar(timeline, deaths, color="#e62712")
+    ax3.plot(timeline, deaths, "-", color="#e62712")
+    fig.autofmt_xdate()
+    ax3.fmt_xdata = mdates.DateFormatter("%M/%d/%y")
+
     locs, _ = plt.yticks()
     formatter = EngFormatter(locs)
     plt.yticks(locs, [formatter.format_eng(int(iter_loc))
                       for iter_loc in locs])
     plt.xlabel("Timeline (mm/dd/yy)")
+    ticks = [i for i in range(len(timeline)) if i % 90 == 0]
+
+    plt.xticks(ticks, ha="center")
+
 
     for leg in legs:
         for text in leg.get_texts():
             text.set_color("white")
+
     plt.savefig(path, transparent=True)
     plt.close('all')
 
