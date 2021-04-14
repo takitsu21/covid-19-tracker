@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.0.8 - 2021-04-15
+
+### Changed
+
+- Improve charts for `c!daily` command which is prettier and more accurate.
+- Cooldown command prettier [(#17)](https://github.com/takitsu21/covid-19-tracker/pull/17). 
+
+### Fixed
+
+- Fixed minor typos & grammatical errors [(#18)](https://github.com/takitsu21/covid-19-tracker/pull/18)
+
 ## 0.0.7 - 2020-04-11
 
 ### Added
