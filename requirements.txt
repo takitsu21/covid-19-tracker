@@ -2,6 +2,7 @@ requests
 python-decouple
 git+https://github.com/Rapptz/discord.py
 matplotlib
-pymysql
+aiomysql
+sentry-sdk
 aiohttp
 psutil
