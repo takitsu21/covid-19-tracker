@@ -102,6 +102,7 @@ This project is licensed under the MIT License - see the [LICENSE.md] file for d
 
 - `c!notification <enable | disable>` -> `c!nofitication <country | disable> <every NUMBER> <hours | days | weeks>` you can have a notification about a country in a specific channel of your server.
 - `c!stats [log]` -> `c!<s | stats> [log | country | log [country]]` you can now have a log graph for countries.
+
 - Graph display Total confirmed - active.
 
 ## 0.0.5 - 2020-03-29
@@ -133,15 +134,16 @@ This project is licensed under the MIT License - see the [LICENSE.md] file for d
 
 ### Changed
 
-- `c!stats` changed to -> `c!stats [country | log]` and can now show specific graphic for each countries, you can also get the logarithmic graphic.
+- `c!stats` changed to -> `c!stats [country | log]` and can now show specific graphic for each countries, you can also
+  get the logarithmic graphic.
 - change `c!help` for `c!stats`.
 
 ## 0.0.3 - 2020-03-17
 
 ### Added
 
-- New command : `c!<r | region> <STATE/PROVINCE | all> in <COUNTRY>`,
-  now you can get stats from state/province in supported countries
+- New command : `c!<r | region> <STATE/PROVINCE | all> in <COUNTRY>`, now you can get stats from state/province in
+  supported countries
   (**China, Canada, United States, Australia, Cruise Ship**).
 - New field in `c!help` for `c!<r | region>` command.
 - [Patreon] field added in `c!about`.
@@ -188,7 +190,12 @@ This project is licensed under the MIT License - see the [LICENSE.md] file for d
 - You can use country code to get a country data with `c!country <COUNTRY>`
 
 [Patreon]: https://www.patreon.com/takitsu
+
 [Changelog]: CHANGELOG
+
 [discord.py]: https://discordpy.readthedocs.io/en/latest/
+
 [**takitsu21**]: https://github.com/takitsu21/
+
 [LICENSE.md]: LICENCE
+

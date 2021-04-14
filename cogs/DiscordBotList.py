@@ -1,8 +1,9 @@
 import asyncio
 import datetime
+import logging
+
 import dbl
 import discord
-import logging
 from decouple import config
 from discord.ext import commands
 

@@ -1,6 +1,6 @@
-import aiomysql
 import logging
-from decouple import config
+
+import aiomysql
 
 logger = logging.getLogger("covid-19")
 

@@ -1,7 +1,7 @@
 import datetime as dt
-import discord
-import gc
 import time
+
+import discord
 from discord.ext import commands
 from pymysql.err import IntegrityError
 
