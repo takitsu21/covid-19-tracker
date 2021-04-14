@@ -1,15 +1,16 @@
 import asyncio
 import datetime as dt
-import discord
 import functools
 import logging
 import os
 import pickle
 import time
+from typing import IO, List, Tuple
+
+import discord
 from aiohttp import ClientSession
 from decouple import config
 from discord.ext import commands
-from typing import IO, List, Tuple
 
 logger = logging.getLogger("covid-19")
 
