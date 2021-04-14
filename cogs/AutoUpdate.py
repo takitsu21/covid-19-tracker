@@ -1,10 +1,10 @@
 import asyncio
 import datetime as dt
-from attr import has
-import discord
 import logging
 import os
 import time
+
+import discord
 from aiohttp import ClientSession
 from discord.ext import commands
 
@@ -53,7 +53,7 @@ class AutoUpdater(commands.Cog):
                     path = (country.replace(" ", "_") + utils.STATS_PATH).lower()
 
                 data = utils.get_country(all_data, country)
-                if data is None or True in (data['newCases'] > 0, data['newDeaths'] > 0):
+                if data is None or (data['newCases'] <= 0 and data['newDeaths'] <= 0):
                     continue
 
                 confirmed = data["totalCases"]
@@ -157,7 +157,7 @@ class AutoUpdater(commands.Cog):
                     country = t["country"]
                     path = (country.replace(" ", "_") + utils.STATS_PATH).lower()
                 data = utils.get_country(all_data, country)
-                if data is None or True in (data['newCases'] > 0, data['newDeaths'] > 0):
+                if data is None or (data['newCases'] <= 0 and data['newDeaths'] <= 0):
                     continue
                 confirmed = data["totalCases"]
                 recovered = data["totalRecovered"]

@@ -1,11 +1,11 @@
 import datetime as dt
-import discord
 import logging
 import os
-import psutil
 import time
+import traceback
+import discord
+import psutil
 from discord.ext import commands
-from matplotlib.pyplot import title
 from pymysql.err import IntegrityError
 
 import src.utils as utils
@@ -893,7 +893,8 @@ class Datacmds(commands.Cog):
                 await plot_bar_daily(path, data_confirmed, data_recovered, data_deaths)
 
 
-        except:
+        except Exception as e:
+            traceback.print_exc()
             return await ctx.send("Please provide a valid country.")
         embed.add_field(
             name="<:confirmed:688686089548202004> Recent confirmed",
