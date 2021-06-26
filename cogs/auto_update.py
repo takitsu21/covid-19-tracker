@@ -21,7 +21,6 @@ class AutoUpdater(commands.Cog):
         self.bot = bot
         self.interval_update = 0
         self.bot.loop.create_task(self.main())
-        # self.bot.loop.create_task(self.bot._clear_free_conn())
 
     async def send_notifications(self):
         channels_id = await self.bot.to_send()
@@ -50,7 +49,8 @@ class AutoUpdater(commands.Cog):
                     country = "World"
                 else:
                     country = guild["country"]
-                    path = (country.replace(" ", "_") + utils.STATS_PATH).lower()
+                    path = (country.replace(" ", "_") +
+                            utils.STATS_PATH).lower()
 
                 data = utils.get_country(all_data, country)
                 if data is None or (data['newCases'] <= 0 and data['newDeaths'] <= 0):
@@ -123,7 +123,8 @@ class AutoUpdater(commands.Cog):
                 channel = self.bot.get_channel(int(guild["channel_id"]))
                 try:
                     embed.set_footer(
-                        text="coronavirus.jessicoh.com/api/ | " + utils.last_update(all_data[0]['lastUpdate'])
+                        text="coronavirus.jessicoh.com/api/ | " +
+                        utils.last_update(all_data[0]['lastUpdate'])
                     )
                 except Exception as e:
                     pass
@@ -155,7 +156,8 @@ class AutoUpdater(commands.Cog):
                     country = "World"
                 else:
                     country = t["country"]
-                    path = (country.replace(" ", "_") + utils.STATS_PATH).lower()
+                    path = (country.replace(" ", "_") +
+                            utils.STATS_PATH).lower()
                 data = utils.get_country(all_data, country)
                 if data is None or (data['newCases'] <= 0 and data['newDeaths'] <= 0):
                     continue
@@ -226,7 +228,8 @@ class AutoUpdater(commands.Cog):
                 embed.set_thumbnail(url=self.bot.thumb + str(time.time()))
                 try:
                     embed.set_footer(
-                        text="coronavirus.jessicoh.com/api/ | " + utils.last_update(all_data[0]['lastUpdate'])
+                        text="coronavirus.jessicoh.com/api/ | " +
+                        utils.last_update(all_data[0]['lastUpdate'])
                     )
                 except Exception as e:
                     pass
@@ -259,9 +262,6 @@ class AutoUpdater(commands.Cog):
                     await self.send_tracker()
                 else:
                     starting = False
-
-
-
 
             except Exception as e:
                 logger.exception(e, exc_info=True)

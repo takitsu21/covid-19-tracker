@@ -9,6 +9,7 @@ from decouple import config
 from discord.ext import commands
 from discord.ext.commands import when_mentioned_or
 from discord.utils import find
+from discord_slash import SlashCommand
 
 import src.utils as utils
 from src.database import Pool
@@ -35,30 +36,34 @@ class Covid(commands.AutoShardedBot, Pool):
         "news",
         "pool",
         "auto_update_running",
-        "msg_read",
-        "commands_used",
-        "script_start_dt"
+        "script_start_dt",
+        "slash",
+        "debug"
     )
 
-    def __init__(self, *args, loop=None, **kwargs):
+    def __init__(self, *args, loop=None, debug=False, **kwargs):
         super().__init__(
             command_prefix=self._get_prefix,
             activity=discord.Game(name="c!help | Loading shards..."),
             status=discord.Status.dnd
         )
         super(Pool, self).__init__()
+        self.slash = SlashCommand(
+            self,
+            sync_commands=True,
+            sync_on_cog_reload=True
+        )
         self.remove_command("help")
         self._load_extensions()
+        self.debug = kwargs.get("debug")
         self.news = None
         self.http_session = None
         self.pool = None
         self.auto_update_running = False
-        self.msg_read = 0
-        self.commands_used = 0
         self.script_start_dt = datetime.datetime.now()
         self.thumb = "https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/COVID-19_Outbreak_World_Map.svg/langfr-1000px-COVID-19_Outbreak_World_Map.svg.png?t="
         self.author_thumb = "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/International_Flag_of_Planet_Earth.svg/1200px-International_Flag_of_Planet_Earth.svg.png"
-        self.loop.create_task(self.init_async())
+        self.loop.create_task(self.startup_tasks())
 
     async def _get_prefix(self, bot, message):
         try:
@@ -90,14 +95,17 @@ class Covid(commands.AutoShardedBot, Pool):
 
     async def on_command_error(self, ctx, error):
         if isinstance(error, commands.CommandNotFound):
-            await ctx.send(
-                "That command does not exist :confused:\nPlease use `{}help` for a list of commands".format(self.command_prefix)
+            return await ctx.send(
+                "That command does not exist :confused:\nPlease use `{}help` for a list of commands".format(
+                    ctx.prefix)
             )
             # Handling Command Not Found Errors
         if isinstance(error, commands.CommandOnCooldown):
-            await ctx.send('{}'.format(ctx.author.mention),embed=discord.Embed(title=":alarm_clock: Cooldown Error",
-                                  description='Please cooldown a little, try again in `{}s`'.format(error.retry_after:.2),
-                                  color=utils.COLOR),delete_after=5)
+            await ctx.send('{}'.format(ctx.author.mention), embed=discord.Embed(
+                title=":alarm_clock: Cooldown Error",
+                description='Please cooldown a little, try again in `{:.2}s`'.format(
+                    error.retry_after),
+                color=utils.COLOR), delete_after=5)
             # A little artistic touch won't hurt, I'll attach a screenshot in the PR description
         else:
             # raise error
@@ -151,7 +159,7 @@ class Covid(commands.AutoShardedBot, Pool):
                 embed.add_field(
                     name="<:hashtag:693056105076621342> Channels", value=channels)
                 embed.add_field(name="<:stack:693054261512110091> Shards",
-                                value=f"{ctx.guild.shard_id + 1}/{self.bot.shard_count}")
+                                value=f"{guild.shard_id + 1}/{self.bot.shard_count}")
                 embed.set_footer(text="Made by Taki#0853 (WIP) " + utils.last_update(utils.DATA_PATH),
                                  icon_url=guild.me.avatar_url)
                 await general.send(embed=embed)
@@ -185,7 +193,7 @@ class Covid(commands.AutoShardedBot, Pool):
         except:
             pass
 
-    async def init_async(self):
+    async def startup_tasks(self):
         if self.http_session is None:
             self.http_session = ClientSession(loop=self.loop)
         if self.pool is None:
@@ -196,7 +204,6 @@ class Covid(commands.AutoShardedBot, Pool):
                     user=config("db_user"),
                     password=config("db_token"),
                     db=config("db_user"),
-                    minsize=5,
                     maxsize=10,
                     loop=self.loop,
                     autocommit=True
@@ -206,18 +213,16 @@ class Covid(commands.AutoShardedBot, Pool):
                 logger.exception(e, exc_info=True)
 
     async def on_ready(self):
-        await self.init_async()
+        await self.startup_tasks()
         await self.change_presence(
             activity=discord.Game(
                 name=f"c!help | coronavirus.jessicoh.com/api/"
             )
         )
 
-    async def on_command(self, ctx):
-        self.commands_used += 1
-
     async def on_message(self, message):
-        self.msg_read += 1
+        if message.author.bot:
+            return
         return await self.process_commands(message)
 
     def run(self, token, *args, **kwargs):
@@ -234,6 +239,14 @@ class Covid(commands.AutoShardedBot, Pool):
                 exit(1)
 
 
+    @property
+    def topgg(self):
+        return self.get_cog("TopGG").topgg
+
+    @property
+    def continent_code(self):
+        return self.get_cog("Statistics").continent_code
+
 if __name__ == "__main__":
     import sentry_sdk
     from sentry_sdk.integrations.aiohttp import AioHttpIntegration
@@ -244,4 +257,4 @@ if __name__ == "__main__":
         integrations=[AioHttpIntegration()]
     )
     bot = Covid()
-    bot.run(config("token"), reconnect=True)
+    bot.run(config("debug"), reconnect=True, debug=True)

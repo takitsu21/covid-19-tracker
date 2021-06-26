@@ -28,7 +28,9 @@ DISCORD_LIMIT = 2 ** 11  # 2048
 MAX_SIZE_FIELD_VALUE = 2 ** 10  # 1024
 MAX_MAX_SIZE_FIELD_VALUE = 5000  # max embed size
 
-USER_AGENT = {'User-Agent': 'Mozilla/5.0 (X11; Linux i586; rv:31.0) Gecko/20100101 Firefox/73.0'}
+USER_AGENT = {
+    'User-Agent': 'Mozilla/5.0 (X11; Linux i586; rv:31.0) Gecko/20100101 Firefox/73.0'
+}
 STATS_PATH = "stats.png"
 STATS_LOG_PATH = "log_stats.png"
 
