@@ -1,8 +1,9 @@
-requests
 python-decouple
-git+https://github.com/Rapptz/discord.py
 matplotlib
 aiomysql
 sentry-sdk
 aiohttp
 psutil
+discord.py
+discord-py-slash-command
+topggpy
