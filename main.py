@@ -29,19 +29,8 @@ logger.addHandler(handler)
 
 
 class Covid(commands.AutoShardedBot, Pool):
-    __slots__ = (
-        "thumb",
-        "http_session",
-        "author_thumb",
-        "news",
-        "pool",
-        "auto_update_running",
-        "script_start_dt",
-        "slash",
-        "debug"
-    )
 
-    def __init__(self, *args, loop=None, debug=False, **kwargs):
+    def __init__(self, *args, loop=None, **kwargs):
         super().__init__(
             command_prefix=self._get_prefix,
             activity=discord.Game(name="c!help | Loading shards..."),
@@ -55,7 +44,7 @@ class Covid(commands.AutoShardedBot, Pool):
         )
         self.remove_command("help")
         self._load_extensions()
-        self.debug = kwargs.get("debug")
+        self.debug_token = kwargs.get("debug_token", False)
         self.news = None
         self.http_session = None
         self.pool = None
@@ -225,9 +214,9 @@ class Covid(commands.AutoShardedBot, Pool):
             return
         return await self.process_commands(message)
 
-    def run(self, token, *args, **kwargs):
+    def run(self, *args, **kwargs):
         try:
-            super().run(token, *args, **kwargs)
+            super().run(config("debug") if self.debug_token else config("token"), *args, **kwargs)
         except KeyboardInterrupt:
             try:
                 self.loop.run_until_complete(self._close())
@@ -238,7 +227,6 @@ class Covid(commands.AutoShardedBot, Pool):
                 logger.exception(e, exc_info=True)
                 exit(1)
 
-
     @property
     def topgg(self):
         return self.get_cog("TopGG").topgg
@@ -246,6 +234,7 @@ class Covid(commands.AutoShardedBot, Pool):
     @property
     def continent_code(self):
         return self.get_cog("Statistics").continent_code
+
 
 if __name__ == "__main__":
     import sentry_sdk
@@ -256,5 +245,5 @@ if __name__ == "__main__":
         traces_sample_rate=1.0,
         integrations=[AioHttpIntegration()]
     )
-    bot = Covid()
-    bot.run(config("debug"), reconnect=True, debug=True)
+    bot = Covid(debug_token=True)
+    bot.run(reconnect=True)
