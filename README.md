@@ -4,7 +4,7 @@
   <img src="https://top.gg/api/widget/status/682946560417333283.svg" alt="Coronavirus COVID-19" />
 </a>
 
-[![PyPI pyversions](https://img.shields.io/badge/python-3.8-blue)](https://www.python.org/)  ![AppVeyor](https://img.shields.io/appveyor/ci/takitsu21/WarframeTrader) [![Discord](https://img.shields.io/discord/556268083681951759?color=blue&label=discord)](http://discord.gg/wTxbQYb) ![GitHub pull requests](https://img.shields.io/github/issues-pr/takitsu21/covid-19-tracker) ![GitHub issues](https://img.shields.io/github/issues/takitsu21/covid-19-tracker) [![GitHub](https://img.shields.io/github/license/takitsu21/covid-19-tracker)](LICENCE)
+[![PyPI pyversions](https://img.shields.io/badge/python-3.9-blue)](https://www.python.org/)  ![AppVeyor](https://img.shields.io/appveyor/ci/takitsu21/WarframeTrader) [![Discord](https://img.shields.io/discord/556268083681951759?color=blue&label=discord)](http://discord.gg/wTxbQYb) ![GitHub pull requests](https://img.shields.io/github/issues-pr/takitsu21/covid-19-tracker) ![GitHub issues](https://img.shields.io/github/issues/takitsu21/covid-19-tracker) [![GitHub](https://img.shields.io/github/license/takitsu21/covid-19-tracker)](LICENCE)
 <p align="left"><a href="https://discordbots.org/bot/682946560417333283" >
   <img src="https://top.gg/api/widget/682946560417333283.svg?usernamecolor=FFFFFF&topcolor=000000" alt="Coronavirus COVID-19" />
 </a></p>
@@ -83,7 +83,7 @@ This project is licensed under the MIT License - see the [LICENSE.md] file for d
 ### Changed
 
 - Improve charts for `c!daily` command which is prettier and more accurate [(#19)](https://github.com/takitsu21/covid-19-tracker/pull/19).
-- Cooldown command prettier [(#17)](https://github.com/takitsu21/covid-19-tracker/pull/17). 
+- Cooldown command prettier [(#17)](https://github.com/takitsu21/covid-19-tracker/pull/17).
 
 ### Fixed
 

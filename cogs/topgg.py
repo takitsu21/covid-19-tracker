@@ -14,7 +14,7 @@ class TopGG(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.topgg = topgg.DBLClient(bot, config('dbl_token'))
-        if not self.bot.debug:
+        if not self.bot.debug_token:
             self.update_stats().start()
 
     @tasks.loop(minutes=30, reconnect=True)

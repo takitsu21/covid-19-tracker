@@ -5,9 +5,10 @@ import time
 from typing import Union
 
 import discord
+from aiomysql import IntegrityError
 from discord.ext import commands
 from discord_slash.context import SlashContext
-from aiomysql import IntegrityError
+
 import src.utils as utils
 from src.plotting import plot_bar_daily, plot_csv
 

@@ -1,11 +1,25 @@
 # Changelog
 
+## 0.0.9 - 2021-07-01
+
+### Added
+
+- Slash commands availaible !
+
+### Changed
+
+- Python 3.8 to Python 3.9
+
+### Fixed
+
+- Minor fixes
+
 ## 0.0.8 - 2021-04-15
 
 ### Changed
 
 - Improve charts for `c!daily` command which is prettier and more accurate.
-- Cooldown command prettier [(#17)](https://github.com/takitsu21/covid-19-tracker/pull/17). 
+- Cooldown command prettier [(#17)](https://github.com/takitsu21/covid-19-tracker/pull/17).
 
 ### Fixed
 

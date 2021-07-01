@@ -245,5 +245,5 @@ if __name__ == "__main__":
         traces_sample_rate=1.0,
         integrations=[AioHttpIntegration()]
     )
-    bot = Covid(debug_token=True)
+    bot = Covid()
     bot.run(reconnect=True)

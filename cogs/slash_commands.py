@@ -37,16 +37,14 @@ class SlashCommands(commands.Cog):
                      )
                 ]
             )
-        ],
-        guild_ids=[627261287881113620]
+        ]
     )
     async def _help(self, ctx: SlashContext, help_type=""):
         await help.help_command(self.bot, ctx, help_type)
 
     @cog_ext.cog_slash(
         name="getprefix",
-        description="Shows current guild prefix",
-        guild_ids=[627261287881113620]
+        description="Shows current guild prefix"
     )
     async def _getg_prefix(self, ctx: SlashContext):
         await help.get_guild_prefix_command(self.bot, ctx)
@@ -54,7 +52,6 @@ class SlashCommands(commands.Cog):
     @cog_ext.cog_slash(
         name="setprefix",
         description="Set new prefix for your guild",
-        guild_ids=[627261287881113620],
 
     )
     async def _set_prefix(self, ctx: SlashContext, new_prefix):
@@ -62,24 +59,21 @@ class SlashCommands(commands.Cog):
 
     @cog_ext.cog_slash(
         name="list",
-        description="List all the countries that the bot can find",
-        guild_ids=[627261287881113620]
+        description="List all the countries that the bot can find"
     )
     async def _list_countries(self, ctx):
         await data.list_countries_command(self.bot, ctx)
 
     @cog_ext.cog_slash(
         name="info",
-        description="Shows some symbolic numbers about the pandemic",
-        guild_ids=[627261287881113620]
+        description="Shows some symbolic numbers about the pandemic"
     )
     async def _info(self, ctx):
         await data.info_command(self.bot, ctx)
 
     @cog_ext.cog_slash(
         name="country",
-        description="Shows information about country.ies",
-        guild_ids=[627261287881113620]
+        description="Shows information about country.ies"
     )
     async def _country(self, ctx, countries):
         countries = countries.split(" ")
@@ -89,8 +83,7 @@ class SlashCommands(commands.Cog):
 
     @cog_ext.cog_slash(
         name="stats",
-        description="Shows statistics about a country",
-        guild_ids=[627261287881113620]
+        description="Shows statistics about a country"
     )
     async def _stats(self, ctx, country):
         country = country.split(" ")
@@ -122,7 +115,7 @@ class SlashCommands(commands.Cog):
                          name="Hours",
                          value="hours"
                      ),
-                     manage_commands.create_choice(
+                    manage_commands.create_choice(
                          name="Days",
                          value="days"
                      ),
@@ -132,8 +125,7 @@ class SlashCommands(commands.Cog):
                      )
                 ]
             )
-        ],
-        guild_ids=[627261287881113620]
+        ]
     )
     async def _notification(self, ctx: SlashContext, country, interval, interval_type):
         await data.notification_command(
@@ -146,8 +138,7 @@ class SlashCommands(commands.Cog):
 
     @cog_ext.cog_slash(
         name="track",
-        description="Track a specific country",
-        guild_ids=[627261287881113620]
+        description="Track a specific country"
     )
     async def _track(self, ctx, country):
         country = country.split(" ")
@@ -155,8 +146,7 @@ class SlashCommands(commands.Cog):
 
     @cog_ext.cog_slash(
         name="region",
-        description="Get stats about a region",
-        guild_ids=[627261287881113620]
+        description="Get stats about a region"
     )
     async def _region(self, ctx, country):
         country = country.split(" ")
@@ -164,8 +154,7 @@ class SlashCommands(commands.Cog):
 
     @cog_ext.cog_slash(
         name="daily",
-        description="Daily stats",
-        guild_ids=[627261287881113620]
+        description="Daily stats"
     )
     async def _daily(self, ctx, country):
         country = country.split(" ")
@@ -173,8 +162,7 @@ class SlashCommands(commands.Cog):
 
     @cog_ext.cog_slash(
         name="news",
-        description="Get the latest news about Covid 19",
-        guild_ids=[627261287881113620]
+        description="Get the latest news about Covid 19"
     )
     async def _news(self, ctx: SlashContext):
         await data.news_command(self.bot, ctx)
