@@ -5,12 +5,13 @@ import logging
 import os
 import pickle
 import time
-from typing import IO, List, Tuple
+from typing import IO, List, Tuple, Union
 
 import discord
 from aiohttp import ClientSession
 from decouple import config
 from discord.ext import commands
+from discord_slash.context import SlashContext
 
 logger = logging.getLogger("covid-19")
 
@@ -28,7 +29,9 @@ DISCORD_LIMIT = 2 ** 11  # 2048
 MAX_SIZE_FIELD_VALUE = 2 ** 10  # 1024
 MAX_MAX_SIZE_FIELD_VALUE = 5000  # max embed size
 
-USER_AGENT = {'User-Agent': 'Mozilla/5.0 (X11; Linux i586; rv:31.0) Gecko/20100101 Firefox/73.0'}
+USER_AGENT = {
+    'User-Agent': 'Mozilla/5.0 (X11; Linux i586; rv:31.0) Gecko/20100101 Firefox/73.0'
+}
 STATS_PATH = "stats.png"
 STATS_LOG_PATH = "log_stats.png"
 
@@ -140,7 +143,7 @@ def percentage(total, x):
     return "{:.2f}%".format(x * 100 / total) if total > 0 else 0
 
 
-def parse_state_input(*params: list) -> Tuple[str, str]:
+def parse_state_input(params: list):
     country = ""
     state = ""
     sep_found = False

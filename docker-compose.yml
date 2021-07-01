@@ -1,0 +1,7 @@
+version: "3.3"
+
+services:
+    bot:
+        image: covid19
+        build: .
+        command: python main.py
