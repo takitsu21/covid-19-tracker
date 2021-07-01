@@ -1,10 +1,8 @@
 import logging
 
-from decouple import config
-from discord.ext import commands
-from discord.ext import tasks
-
 import topgg
+from decouple import config
+from discord.ext import commands, tasks
 
 logger = logging.getLogger("covid-19")
 
@@ -17,7 +15,7 @@ class TopGG(commands.Cog):
         self.bot = bot
         self.topgg = topgg.DBLClient(bot, config('dbl_token'))
         if not self.bot.debug:
-            self.update_stats()
+            self.update_stats().start()
 
     @tasks.loop(minutes=30, reconnect=True)
     async def update_stats(self):

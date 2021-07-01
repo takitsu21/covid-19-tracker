@@ -1,11 +1,16 @@
+import datetime as dt
+import time
+from typing import Union
+
 import discord
 from discord.ext import commands
-import src.utils as utils
-import time
-import datetime as dt
+from discord_slash.context import SlashContext
 from pymysql import IntegrityError
 
-async def help_command(bot, ctx, help_type=""):
+import src.utils as utils
+
+
+async def help_command(bot, ctx: Union[commands.Context, SlashContext], help_type=""):
     try:
         prefix = await bot.getg_prefix(ctx.guild.id)
     except:
@@ -149,7 +154,7 @@ async def help_command(bot, ctx, help_type=""):
     await ctx.send(embed=embed)
 
 
-async def vote_command(bot, ctx):
+async def vote_command(bot, ctx: Union[commands.Context, SlashContext]):
     embed = discord.Embed(
         description="[Click here](https://top.gg/bot/682946560417333283/vote)",
         timestamp=utils.discord_timestamp(),
@@ -163,7 +168,7 @@ async def vote_command(bot, ctx):
     await ctx.send(embed=embed)
 
 
-async def invite_command(bot, ctx):
+async def invite_command(bot, ctx: Union[commands.Context, SlashContext]):
     embed = discord.Embed(
         description="[Click here](https://discordapp.com/oauth2/authorize?client_id=682946560417333283&scope=bot&permissions=313408)",
         timestamp=utils.discord_timestamp(),
@@ -177,7 +182,7 @@ async def invite_command(bot, ctx):
     await ctx.send(embed=embed)
 
 
-async def about_command(bot, ctx):
+async def about_command(bot, ctx: Union[commands.Context, SlashContext]):
     try:
         prefix = await bot.getg_prefix(ctx.guild.id)
     except:
@@ -226,7 +231,7 @@ async def about_command(bot, ctx):
     await ctx.send(embed=embed)
 
 
-async def ping_command(bot, ctx):
+async def ping_command(bot, ctx: Union[commands.Context, SlashContext]):
     """Ping's Bot"""
     before = time.monotonic()
     message = await ctx.send("🏓Ping!")
@@ -244,7 +249,7 @@ async def ping_command(bot, ctx):
     await message.edit(content="", embed=embed)
 
 
-async def suggestion_command(bot, ctx, message):
+async def suggestion_command(bot, ctx: Union[commands.Context, SlashContext], message):
     if len(message) < 3:
         embed = discord.Embed(title="Suggestion",
                               color=utils.COLOR,
@@ -269,7 +274,7 @@ async def suggestion_command(bot, ctx, message):
     return await ctx.send(embed=embed)
 
 
-async def bug_command(bot, ctx, message):
+async def bug_command(bot, ctx: Union[commands.Context, SlashContext], message):
     if len(message) < 3:
         embed = discord.Embed(title="Bug report",
                               color=utils.COLOR,
@@ -294,7 +299,7 @@ async def bug_command(bot, ctx, message):
     return await ctx.send(embed=embed)
 
 
-async def get_guild_prefix_command(bot, ctx):
+async def get_guild_prefix_command(bot, ctx: Union[commands.Context, SlashContext]):
     embed = discord.Embed(
         title=f"Guild prefix",
         timestamp=dt.datetime.utcnow(),
@@ -312,7 +317,7 @@ async def get_guild_prefix_command(bot, ctx):
     await ctx.send(embed=embed)
 
 
-async def sources_command(bot, ctx):
+async def sources_command(bot, ctx: Union[commands.Context, SlashContext]):
     embed = discord.Embed(
         description="<:api:752610700177965146> [API](coronavirus.jessicoh.com/api)\nFor now sources comes from [JHU](https://github.com/CSSEGISandData/COVID-19/) and [worldometer](https://www.worldometers.info/coronavirus/). The API will be improved day by day and surely use other sources.\nYou can access to the API <:github:693519776022003742> [source code](https://github.com/takitsu21/covid19-api).",
         color=utils.COLOR,
@@ -329,8 +334,12 @@ async def sources_command(bot, ctx):
     )
     await ctx.send(embed=embed)
 
-async def setprefix_command(bot, ctx, new_prefix):
-    if not ctx.message.author.guild_permissions.administrator():
+async def setprefix_command(bot, ctx: Union[commands.Context, SlashContext], new_prefix):
+    if isinstance(ctx, SlashContext):
+        guild_permissions = ctx.author.guild_permissions
+    else:
+        guild_permissions = ctx.message.author.guild_permissions
+    if not guild_permissions.administrator:
         return await ctx.send("You need to have Administrator permission to set a new prefix !")
     if len(new_prefix):
         try:

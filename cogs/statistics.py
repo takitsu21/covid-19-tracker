@@ -3,14 +3,15 @@ import logging
 import os
 import time
 import traceback
+
 import discord
 import psutil
 from discord.ext import commands
 from pymysql.err import IntegrityError
-import src.utils as utils
-from src.plotting import plot_bar_daily, plot_csv
-from src.commands import data
 
+import src.utils as utils
+from src.commands import data
+from src.plotting import plot_bar_daily, plot_csv
 
 logger = logging.getLogger("covid-19")
 
@@ -249,330 +250,23 @@ class Statistics(commands.Cog):
     @commands.command(name="notification", aliases=["notif", "notifications"])
     @commands.has_permissions(administrator=True)
     @commands.cooldown(5, 30, commands.BucketType.user)
-    async def notification(self, ctx, *state):
+    async def notification(self, ctx: commands.Context, *state):
         await data.notification_command(self.bot, ctx, state)
 
     @commands.command(name="track", aliases=["tracker"])
     @commands.cooldown(3, 30, commands.BucketType.user)
     async def track(self, ctx, *country):
-        if not len(country):
-            embed = discord.Embed(
-                description=f"No country provided. **`{ctx.prefix}track <COUNTRY>`** work like **`{ctx.prefix}country <COUNTRY>`** see `{ctx.prefix}help`",
-                color=utils.COLOR,
-                timestamp=utils.discord_timestamp()
-            )
-            embed.set_author(
-                name=f"{ctx.prefix}track",
-                icon_url=self.bot.author_thumb
-            )
-        elif ''.join(country) == "disable":
-            embed = discord.Embed(
-                description=f"If you want to reactivate the tracker : **`{ctx.prefix}track <COUNTRY>`**",
-                color=utils.COLOR,
-                timestamp=utils.discord_timestamp()
-            )
-            embed.set_author(
-                name="Tracker has been disabled!",
-                icon_url=self.bot.author_thumb
-            )
-            try:
-                await self.bot.delete_tracker(str(ctx.author.id))
-            except:
-                pass
-        else:
-
-            all_data = await utils.get(self.bot.http_session, "/all/")
-            country = ' '.join(country)
-            data = utils.get_country(all_data, country)
-            if data is not None:
-                try:
-                    await self.bot.insert_tracker(str(ctx.author.id), str(ctx.guild.id), country)
-                except IntegrityError:
-                    await self.bot.update_tracker(str(ctx.author.id), country)
-                embed = discord.Embed(
-                    description=f"{utils.mkheader()}You will receive stats about {data['country']} in DM",
-                    color=utils.COLOR,
-                    timestamp=utils.discord_timestamp()
-                )
-                embed.set_author(
-                    name="Tracker has been set up!",
-                    icon_url=f"https://raw.githubusercontent.com/hjnilsson/country-flags/master/png250px/{data['iso2'].lower()}.png"
-                )
-            else:
-                embed = discord.Embed(
-                    description="Wrong country selected.",
-                    color=utils.COLOR,
-                    timestamp=utils.discord_timestamp()
-                )
-                embed.set_author(
-                    name=f"{ctx.prefix}track",
-                    icon_url=self.bot.author_thumb
-                )
-        embed.set_thumbnail(url=self.bot.thumb + str(time.time()))
-        embed.set_footer(
-            text="coronavirus.jessicoh.com/api/",
-            icon_url=ctx.me.avatar_url
-        )
-        await ctx.send(embed=embed)
+        await data.track_command(self.bot, ctx, country)
 
     @commands.command(name="region", aliases=["r"])
     @commands.cooldown(5, 30, commands.BucketType.user)
     async def region(self, ctx, *params):
-        if len(params):
-            country, state = utils.parse_state_input(*params)
-            try:
-                if state == "all":
-                    history_confirmed = await utils.get(self.bot.http_session, f"/history/confirmed/{country}/regions")
-                    history_recovered = await utils.get(self.bot.http_session, f"/history/recovered/{country}/regions")
-                    history_deaths = await utils.get(self.bot.http_session, f"/history/deaths/{country}/regions")
-                    embeds = utils.region_format(
-                        history_confirmed, history_recovered, history_deaths)
-                    for i, _embed in enumerate(embeds):
-                        _embed.set_author(
-                            name=f"All regions in {country}",
-                            icon_url=self.bot.author_thumb
-                        )
-                        _embed.set_footer(
-                            text=f"coronavirus.jessicoh.com/api/ | Page {i + 1}",
-                            icon_url=ctx.me.avatar_url)
-                        _embed.set_thumbnail(
-                            url=self.bot.thumb + str(time.time()))
-                        await ctx.send(embed=_embed)
-                    return
-                else:
-                    path = state.lower().replace(" ", "_") + utils.STATS_PATH
-                    history_confirmed = await utils.get(self.bot.http_session, f"/history/confirmed/{country}/{state}")
-                    history_recovered = await utils.get(self.bot.http_session, f"/history/recovered/{country}/{state}")
-                    history_deaths = await utils.get(self.bot.http_session, f"/history/deaths/{country}/{state}")
-                    confirmed = list(history_confirmed["history"].values())[-1]
-                    deaths = list(history_deaths["history"].values())[-1]
-
-                    try:
-                        is_us = False
-                        recovered = list(
-                            history_recovered["history"].values())[-1]
-                        active = confirmed - (recovered + deaths)
-                    except:
-                        is_us = True
-                        recovered = 0
-                        active = 0
-
-                    if not os.path.exists(path):
-                        await plot_csv(
-                            path,
-                            history_confirmed,
-                            history_recovered,
-                            history_deaths,
-                            is_us=is_us)
-
-                    embed = discord.Embed(
-                        description=utils.mkheader(),
-                        timestamp=dt.datetime.utcnow(),
-                        color=utils.COLOR
-                    )
-                    embed.set_author(
-                        name=f"Coronavirus COVID-19 - {state.capitalize()}",
-                        icon_url=self.bot.author_thumb
-                    )
-                    embed.add_field(
-                        name="<:confirmed:688686089548202004> Confirmed",
-                        value=f"{confirmed:,}"
-                    )
-                    embed.add_field(
-                        name="<:_death:688686194917244928> Deaths",
-                        value=f"{deaths:,} (**{utils.percentage(confirmed, deaths)}**)"
-                    )
-                    if recovered:
-                        embed.add_field(
-                            name="<:recov:688686059567185940> Recovered",
-                            value=f"{recovered:,} (**{utils.percentage(confirmed, recovered)}**)"
-                        )
-                        embed.add_field(
-                            name="<:bed_hospital:692857285499682878> Active",
-                            value=f"{active:,} (**{utils.percentage(confirmed, active)}**)"
-                        )
-
-            except Exception as e:
-                logger.exception(e, exc_info=True)
-                raise utils.RegionNotFound(
-                    "Region not found, it might be possible that the region isn't yet available in the data.")
-        else:
-            return await ctx.send("No arguments provided.")
-
-        with open(path, "rb") as p:
-            img = discord.File(p, filename=path)
-
-        embed.set_footer(
-            text=f"coronavirus.jessicoh.com/api/ | {list(history_confirmed['history'].keys())[-1]}",
-            icon_url=ctx.me.avatar_url
-        )
-        embed.set_thumbnail(
-            url=self.bot.thumb + str(time.time())
-        )
-        embed.set_image(url=f'attachment://{path}')
-        await ctx.send(file=img, embed=embed)
-
-    @commands.command(name="continent")
-    # @commands.cooldown(3, 30, commands.BucketType.user)
-    async def continent(self, ctx, continent="", graph_type=""):
-        embed = discord.Embed(
-            title="API REWORK",
-            description="This command is down for now, sorry (all the command left in c!help are still available)",
-            color=utils.COLOR,
-            timestamp=utils.discord_timestamp()
-        )
-        embed.set_thumbnail(url=self.bot.thumb + str(time.time()))
-        embed.set_footer(
-            text="coronavirus.jessicoh.com/api/",
-            icon_url=ctx.me.avatar_url
-        )
-        await ctx.send(embed=embed)
-
-    #     embed = discord.Embed(
-    #         description="You can support me on <:kofi:693473314433138718>[Kofi](https://ko-fi.com/takitsu) and vote on [top.gg](https://top.gg/bot/682946560417333283/vote) for the bot. <:github:693519776022003742> [Source code](https://github.com/takitsu21/covid-19-tracker)",
-    #         timestamp=dt.datetime.utcnow(),
-    #         color=utils.COLOR
-    #     )
-    #     if len(continent) and continent in self.continent_code:
-    #         continent = continent.lower()
-    #         data = utils.filter_continent(self.bot._data, continent)
-
-    #         if graph_type == "log":
-    #             graph_type = "logarihmic"
-    #             is_log = True
-    #             path = continent + utils.STATS_LOG_PATH
-    #         else:
-    #             graph_type = "linear"
-    #             path = continent + utils.STATS_PATH
-    #             is_log = False
-    #         if not os.path.exists(path):
-    #             history_confirmed = await utils.get(self.bot.http_session, f"/history/confirmed/{joined}")
-    #             history_recovered = await utils.get(self.bot.http_session, f"/history/recovered/{joined}")
-    #             history_deaths = await utils.get(self.bot.http_session, f"/history/deaths/{joined}")
-    #             await plot_csv(
-    #                 path,
-    #                 history_confirmed,
-    #                 history_recovered,
-    #                 history_deaths,
-    #                 logarithmic=is_log)
-
-    #         embed.set_author(
-    #             name=f"Coronavirus COVID-19 {graph_type} stats | {continent.upper()}",
-    #             icon_url=self.bot.author_thumb
-    #         )
-    #         embed.set_thumbnail(
-    #             url=self.bot.thumb + str(time.time())
-    #             )
-    #         embed.add_field(
-    #             name="<:confirmed:688686089548202004> Confirmed",
-    #             value=f"{data['total']['confirmed']}",
-    #             )
-    #         embed.add_field(
-    #                 name="<:recov:688686059567185940> Recovered",
-    #                 value=f"{data['total']['recovered']} (**{utils.percentage(data['total']['confirmed'], data['total']['recovered'])}**)",
-    #             )
-    #         embed.add_field(
-    #             name="<:_death:688686194917244928> Deaths",
-    #             value=f"{data['total']['deaths']} (**{utils.percentage(data['total']['confirmed'], data['total']['deaths'])}**)",
-    #         )
-
-    #         embed.add_field(
-    #             name="<:_calendar:692860616930623698> Today confirmed",
-    #             value=f"+{data['today']['confirmed']} (**{utils.percentage(data['total']['confirmed'], data['today']['confirmed'])}**)"
-    #         )
-    #         embed.add_field(
-    #             name="<:_calendar:692860616930623698> Today recovered",
-    #             value=f"+{data['today']['recovered']} (**{utils.percentage(data['total']['confirmed'], data['today']['recovered'])}**)"
-    #         )
-    #         embed.add_field(
-    #             name="<:_calendar:692860616930623698> Today deaths",
-    #             value=f"+{data['today']['deaths']} (**{utils.percentage(data['total']['confirmed'], data['today']['deaths'])}**)"
-    #         )
-    #         embed.add_field(
-    #                 name="<:bed_hospital:692857285499682878> Active",
-    #                 value=f"{data['total']['active']} (**{utils.percentage(data['total']['confirmed'], data['total']['active'])}**)"
-    #             )
-    #         with open(path, "rb") as p:
-    #             img = discord.File(p, filename=path)
-
-    #     else:
-    #         embed.set_author(
-    #             name=f"Coronavirus COVID-19 available continent",
-    #             icon_url=self.bot.author_thumb
-    #         )
-    #         text = '**' + ', '.join(self.continent_code).upper() + '**'
-    #         embed.description = "\n\n" + text
-
-    #     embed.set_footer(
-    #         text=utils.last_update(utils.DATA_PATH),
-    #         icon_url=ctx.me.avatar_url
-    #     )
-    #     try:
-    #         embed.set_image(url=f'attachment://{path}')
-    #         await ctx.send(embed=embed, file=img)
-    #     except:
-    #         embed.set_image(url=self.bot.thumb + str(time.time()))
-    #         await ctx.send(embed=embed)
+        await data.region_command(self.bot, ctx, params)
 
     @commands.command(aliases=["d"])
     @commands.cooldown(3, 30, commands.BucketType.user)
     async def daily(self, ctx: commands.Context, *country):
-        embed = discord.Embed(
-            description=utils.mkheader(),
-            timestamp=dt.datetime.utcnow(),
-            color=utils.COLOR
-        )
-        try:
-            if country:
-                data_confirmed = await utils.get(self.bot.http_session, f"/daily/confirmed/{' '.join(country).lower()}")
-                data_recovered = await utils.get(self.bot.http_session, f"/daily/recovered/{' '.join(country).lower()}")
-                data_deaths = await utils.get(self.bot.http_session, f"/daily/deaths/{' '.join(country).lower()}")
-                path = data_confirmed["iso2"] + "daily.png"
-                embed.set_author(
-                    name=f"Coronavirus COVID-19 Daily cases graph - {data_confirmed['name']}",
-                    icon_url=f"https://raw.githubusercontent.com/hjnilsson/country-flags/master/png250px/{data_confirmed['iso2'].lower()}.png"
-                )
-
-            else:
-                data_confirmed = await utils.get(self.bot.http_session, f"/daily/confirmed/total")
-                data_recovered = await utils.get(self.bot.http_session, f"/daily/recovered/total")
-                data_deaths = await utils.get(self.bot.http_session, f"/daily/deaths/total")
-                path = "daily_world.png"
-                embed.set_author(
-                    name=f"Coronavirus COVID-19 Daily cases graph - World",
-                    icon_url=self.bot.author_thumb
-                )
-
-            if not os.path.exists(path):
-                await plot_bar_daily(path, data_confirmed, data_recovered, data_deaths)
-
-        except Exception as e:
-            traceback.print_exc()
-            return await ctx.send("Please provide a valid country.")
-        embed.add_field(
-            name="<:confirmed:688686089548202004> Recent confirmed",
-            value=f"{list(data_confirmed['daily'].keys())[-1]} : {list(data_confirmed['daily'].values())[-1]:,}"
-        )
-        embed.add_field(
-            name="<:recov:688686059567185940> Recent recovered",
-            value=f"{list(data_recovered['daily'].keys())[-1]} : {list(data_recovered['daily'].values())[-1]:,}"
-        )
-        embed.add_field(
-            name="<:_death:688686194917244928> Recent deaths",
-            value=f"{list(data_deaths['daily'].keys())[-1]} : {list(data_deaths['daily'].values())[-1]:,}",
-            inline=False
-        )
-        embed.set_thumbnail(
-            url=self.bot.thumb + str(time.time())
-        )
-        with open(path, "rb") as p:
-            img = discord.File(p, filename=path)
-        embed.set_image(url=f'attachment://{path}')
-        embed.set_footer(
-            text="coronavirus.jessicoh.com/api/",
-            icon_url=ctx.me.avatar_url
-        )
-        await ctx.send(file=img, embed=embed)
+        await data.daily_command(self.bot, ctx, *country)
 
     @commands.command()
     async def messages_stats(self, ctx):

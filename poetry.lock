@@ -82,7 +82,7 @@ six = "*"
 
 [[package]]
 name = "discord-py-slash-command"
-version = "2.0.4"
+version = "2.1.0"
 description = "A simple interaction handler for discord.py."
 category = "main"
 optional = false
@@ -367,8 +367,8 @@ cycler = [
     {file = "cycler-0.10.0.tar.gz", hash = "sha256:cd7b2d1018258d7247a71425e9f26463dfb444d411c39569972f4ce586b0c9d8"},
 ]
 discord-py-slash-command = [
-    {file = "discord-py-slash-command-2.0.4.tar.gz", hash = "sha256:e58801520f99ebcba7f3221b3b08cbaa79f2bd0089d1ca5ecc30fb5d799ce42f"},
-    {file = "discord_py_slash_command-2.0.4-py3-none-any.whl", hash = "sha256:62e364a4dac46296f77cf8ed7e30296f6c0771b0a72f654e9df39254c9bdf086"},
+    {file = "discord-py-slash-command-2.1.0.tar.gz", hash = "sha256:ac5404e641da740601ab972dbf91f239d40bb123fddd23c6a1ca22a4f44e6a79"},
+    {file = "discord_py_slash_command-2.1.0-py3-none-any.whl", hash = "sha256:01aa99345e658c6509f45b9ca769d05306b98376afd6945d0d6a64075403b8a7"},
 ]
 "discord.py" = [
     {file = "discord.py-1.7.3-py3-none-any.whl", hash = "sha256:c6f64db136de0e18e090f6752ea68bdd4ab0a61b82dfe7acecefa22d6477bb0c"},
