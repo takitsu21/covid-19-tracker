@@ -304,25 +304,35 @@ def unpack_notif(args, val):
     except:
         interval = 1
         country = " ".join(args)
-
+    print(country.lower(), interval * convert_interval_type(interval_type), interval_type)
     return country.lower(), interval * convert_interval_type(interval_type), interval_type
 
 
-async def notification_command(bot, ctx: Union[commands.Context, SlashContext], country=None, interval: int = None, interval_type=None, *state):
-    if len(state) and isinstance(ctx, commands.Context):
+class ContextError(Exception):
+    def __init__(self, *args: object) -> None:
+        super().__init__(*args)
+
+
+async def notification_command(bot, ctx: Union[commands.Context, SlashContext], country="all", interval: int = None, interval_type=None, state: list=[]):
+    if type(ctx) == commands.Context:
         country, interval, interval_type = unpack_notif(
-            state, "every")
+            state,
+            "every"
+        )
+        print(country, interval, interval_type)
         guild_permissions = ctx.message.author.guild_permissions
-    elif isinstance(ctx, SlashContext):
+    elif type(ctx) == SlashContext:
         interval = int(interval)
         guild_permissions = ctx.author.guild_permissions
+    else:
+        raise ContextError(f"Context error : {ctx}")
     if not guild_permissions.administrator:
         return await ctx.send("You need to have Administrator permission to set notification on !")
     try:
         prefix = await bot.getg_prefix(ctx.guild.id)
     except:
         prefix = "c!"
-    if len(state) or country is not None:
+    if len(state) or interval is not None:
         all_data = await utils.get(bot.http_session, "/all/")
         try:
             data = utils.get_country(all_data, country)
@@ -338,7 +348,7 @@ async def notification_command(bot, ctx: Union[commands.Context, SlashContext], 
                     )
                     embed.set_author(
                         name="Notifications successfully enabled",
-                        icon_url=bot.author_thumb
+                        icon_url=f"https://raw.githubusercontent.com/hjnilsson/country-flags/master/png250px/{data['iso2'].lower()}.png"
                     )
                     embed.add_field(
                         name="Country",
@@ -354,7 +364,7 @@ async def notification_command(bot, ctx: Union[commands.Context, SlashContext], 
                     )
                     embed.set_author(
                         name="Notifications successfully enabled",
-                        icon_url=f"https://raw.githubusercontent.com/hjnilsson/country-flags/master/png250px/{data['iso2'].lower()}.png"
+                        icon_url=bot.author_thumb
                     )
 
                     embed.add_field(
@@ -370,7 +380,11 @@ async def notification_command(bot, ctx: Union[commands.Context, SlashContext], 
                 title=f"{prefix}notification",
                 description=f"Make sure that you didn't have made any mistake, please retry\n`{prefix}notification <country | disable> [every NUMBER] [hours | days | weeks]`\n__Examples__ : `{prefix}notification usa every 3 hours` (send a message to the current channel every 3 hours about United States), `{prefix}notification united states every 1 day`, `{prefix}notification disable`"
             )
-            print(e)
+            embed.add_field(
+                name="Report this error to the developer please ! :heart:",
+                value=f"{type(e).__name__} : {e}"
+            )
+            logger.exception(e, exc_info=True)
 
         if country == "disable":
             await bot.delete_notif(str(ctx.guild.id))

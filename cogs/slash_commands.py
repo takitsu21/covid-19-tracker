@@ -128,6 +128,7 @@ class SlashCommands(commands.Cog):
         ]
     )
     async def _notification(self, ctx: SlashContext, country, interval, interval_type):
+        logger.info(interval_type)
         await data.notification_command(
             self.bot,
             ctx,

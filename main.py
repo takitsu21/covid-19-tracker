@@ -30,7 +30,7 @@ logger.addHandler(handler)
 
 class Covid(commands.AutoShardedBot, Pool):
 
-    def __init__(self, *args, loop=None, **kwargs):
+    def __init__(self, *args, **kwargs):
         super().__init__(
             command_prefix=self._get_prefix,
             activity=discord.Game(name="c!help | Loading shards..."),
@@ -42,9 +42,9 @@ class Covid(commands.AutoShardedBot, Pool):
             sync_commands=True,
             sync_on_cog_reload=True
         )
+        self.debug_token = kwargs.get("debug_token", False)
         self.remove_command("help")
         self._load_extensions()
-        self.debug_token = kwargs.get("debug_token", False)
         self.news = None
         self.http_session = None
         self.pool = None
