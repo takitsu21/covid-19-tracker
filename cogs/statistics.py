@@ -251,7 +251,8 @@ class Statistics(commands.Cog):
     @commands.has_permissions(administrator=True)
     @commands.cooldown(5, 30, commands.BucketType.user)
     async def notification(self, ctx: commands.Context, *state):
-        await data.notification_command(self.bot, ctx, state)
+        print(state)
+        await data.notification_command(self.bot, ctx, state=state)
 
     @commands.command(name="track", aliases=["tracker"])
     @commands.cooldown(3, 30, commands.BucketType.user)
