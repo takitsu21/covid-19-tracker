@@ -78,6 +78,13 @@ async def plot_csv(path,
 
     plt.close('all')
 
+def fix_variations(data, value):
+    next_value = value
+    if not len(data) or data[-1] < value:
+        next_value = value
+    else:
+        next_value = data[-1]
+    data.append(next_value)
 
 async def make_courbe(
         total_confirmed,
@@ -96,11 +103,16 @@ async def make_courbe(
                            total_recovered["history"],
                            total_deaths["history"]):
             try:
-                confirmed.append(total_confirmed["history"][c])
-                recovered.append(total_recovered["history"][r])
-                deaths.append(total_deaths["history"][d])
-                active.append(
-                    total_confirmed["history"][c] - total_recovered["history"][r])
+                fix_variations(confirmed, total_confirmed["history"][c])
+                fix_variations(recovered, total_recovered["history"][r])
+                fix_variations(deaths, total_deaths["history"][d])
+                fix_variations(active, total_confirmed["history"][c] -
+                               recovered[-1])
+                # confirmed.append(total_confirmed["history"][c])
+                # recovered.append(total_recovered["history"][r])
+                # deaths.append(total_deaths["history"][d])
+                # active.append(
+                #     total_confirmed["history"][c] - total_recovered["history"][r])
             except TypeError:
                 pass
     else:
