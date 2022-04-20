@@ -1,9 +1,9 @@
+discord.py
 python-decouple
 matplotlib
 aiomysql
 sentry-sdk
 aiohttp
 psutil
-discord.py
 discord-py-slash-command
 topggpy

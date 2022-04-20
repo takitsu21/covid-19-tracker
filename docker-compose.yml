@@ -1,7 +1,8 @@
-version: "3.3"
+version: "3.4"
 
 services:
     bot:
-        image: covid19
+        image: covid19-bot
+        restart: always
         build: .
         command: python main.py
