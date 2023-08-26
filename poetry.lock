@@ -158,13 +158,13 @@ voice = ["PyNaCl (>=1.3.0,<1.5)"]
 
 [[package]]
 name = "discord-py-slash-command"
-version = "2.1.0"
+version = "2.4.2"
 description = "A simple interaction handler for discord.py."
 optional = false
 python-versions = ">=3.6"
 files = [
-    {file = "discord-py-slash-command-2.1.0.tar.gz", hash = "sha256:ac5404e641da740601ab972dbf91f239d40bb123fddd23c6a1ca22a4f44e6a79"},
-    {file = "discord_py_slash_command-2.1.0-py3-none-any.whl", hash = "sha256:01aa99345e658c6509f45b9ca769d05306b98376afd6945d0d6a64075403b8a7"},
+    {file = "discord-py-slash-command-2.4.2.tar.gz", hash = "sha256:12491cb2e79778da5539f88b21834dad024f4ff5576341737f0d1c5e6a24ee2c"},
+    {file = "discord_py_slash_command-2.4.2-py3-none-any.whl", hash = "sha256:00aabfc11b905785c55a199f896812b6986a1d1d378ca248264e4fdbfc58ca05"},
 ]
 
 [package.dependencies]
