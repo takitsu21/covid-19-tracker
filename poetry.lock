@@ -691,13 +691,13 @@ files = [
 
 [[package]]
 name = "topggpy"
-version = "1.1.0"
+version = "1.4.0"
 description = "A simple API wrapper for Top.gg written in Python."
 optional = false
 python-versions = ">= 3.6"
 files = [
-    {file = "topggpy-1.1.0-py3-none-any.whl", hash = "sha256:479de0ad14f8a1f86e4acfdb0da457d4598f6b6a9b6a93f44487a73a2709f67e"},
-    {file = "topggpy-1.1.0.tar.gz", hash = "sha256:99eeb228c2c09e95231093d2b18fd2c8278c467dccb0fe309726aee93edca1d6"},
+    {file = "topggpy-1.4.0-py3-none-any.whl", hash = "sha256:d0c9e329c6613d6a4889ad56295554e60440a5c5025d92ea3bf0b7a816dae27c"},
+    {file = "topggpy-1.4.0.tar.gz", hash = "sha256:75a2f3011a073c058238b740989155cc85598250ed605b788b5de28c4314ec04"},
 ]
 
 [package.dependencies]
